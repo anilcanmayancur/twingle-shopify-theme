@@ -184,21 +184,24 @@
     color: #7b3ff2;
   }
 
-  .twingle-cart-popup__cart-meta {
-    display: flex;
-    justify-content: space-between;
+  .twingle-cart-popup__btn-count {
+    display: inline-flex;
     align-items: center;
-    padding: 10px 12px;
-    background: rgba(123, 63, 242, 0.06);
-    border-radius: 10px;
-    margin-bottom: 18px;
-    font-size: 13px;
-    color: #5a4f75;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    margin-left: 2px;
   }
 
-  .twingle-cart-popup__cart-meta strong {
-    color: #1f1342;
-    font-weight: 700;
+  .twingle-cart-popup__btn-count[hidden] {
+    display: none;
   }
 
   .twingle-cart-popup__actions {
@@ -362,17 +365,13 @@
       </div>
     </div>
 
-    <div class="twingle-cart-popup__cart-meta">
-      <span>Sepetinizdeki ürün sayısı</span>
-      <strong data-twingle-cart-count>0</strong>
-    </div>
-
     <div class="twingle-cart-popup__actions">
       <button type="button" class="twingle-cart-popup__btn twingle-cart-popup__btn--ghost" data-twingle-close>
         Alışverişe Devam Et
       </button>
       <a href="{{ routes.cart_url | default: '/cart' }}" class="twingle-cart-popup__btn twingle-cart-popup__btn--primary">
-        Sepete İlerle
+        <span>Sepete İlerle</span>
+        <span class="twingle-cart-popup__btn-count" data-twingle-cart-count hidden></span>
         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
     </div>
@@ -407,8 +406,21 @@
   var imgEl = popup.querySelector('[data-twingle-product-img]');
   var titleEl = popup.querySelector('[data-twingle-product-title]');
   var priceEl = popup.querySelector('[data-twingle-product-price]');
-  var countEl = popup.querySelector('[data-twingle-cart-count]');
+  var subheadingEl = popup.querySelector('.twingle-cart-popup__subheading');
+  var countBadge = popup.querySelector('[data-twingle-cart-count]');
   var lastFocused = null;
+  var defaultSubheading = subheadingEl ? subheadingEl.textContent : '';
+
+  function setCartCount(count) {
+    if (count == null) return;
+    if (countBadge) {
+      countBadge.textContent = count;
+      countBadge.hidden = false;
+    }
+    if (subheadingEl) {
+      subheadingEl.textContent = 'Sepetinizde ' + count + ' ürün var.';
+    }
+  }
 
   function openPopup(detail) {
     if (detail.imageUrl) {
@@ -421,7 +433,12 @@
     }
     titleEl.textContent = detail.title || '';
     priceEl.textContent = detail.priceFormatted || '';
-    countEl.textContent = detail.cartCount != null ? detail.cartCount : '';
+
+    if (subheadingEl) subheadingEl.textContent = defaultSubheading;
+    if (countBadge) {
+      countBadge.textContent = '';
+      countBadge.hidden = true;
+    }
 
     lastFocused = document.activeElement;
     popup.classList.add('is-open');
@@ -484,11 +501,12 @@
     });
   }
 
-  function fetchCartAndUpdate(addedItem) {
+  function refreshCart(addedItem) {
     return fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
       .then(function(r) { return r.json(); })
       .then(function(cart) {
         updateCartCountBadges(cart.item_count);
+        setCartCount(cart.item_count);
         return cart;
       })
       .catch(function() { return null; });
@@ -532,14 +550,18 @@
           ? item.final_line_price
           : (typeof item.price === 'number' ? item.price : 0);
 
-        return fetchCartAndUpdate(item).then(function(cart) {
-          openPopup({
-            title: fallbackTitle,
-            imageUrl: fallbackImg,
-            priceFormatted: formatMoney(priceCents),
-            cartCount: cart ? cart.item_count : null
-          });
+        openPopup({
+          title: fallbackTitle,
+          imageUrl: fallbackImg,
+          priceFormatted: formatMoney(priceCents)
+        });
 
+        if (btn) {
+          btn.dataset.loading = 'false';
+          btn.innerHTML = originalLabel;
+        }
+
+        refreshCart(item).then(function(cart) {
           document.dispatchEvent(new CustomEvent('twingle:cart:added', {
             detail: { item: item, cart: cart }
           }));
@@ -547,8 +569,6 @@
       })
       .catch(function(err) {
         showToast(err && err.message ? err.message : 'Sepete eklenemedi.', true);
-      })
-      .finally(function() {
         if (btn) {
           btn.dataset.loading = 'false';
           btn.innerHTML = originalLabel;
