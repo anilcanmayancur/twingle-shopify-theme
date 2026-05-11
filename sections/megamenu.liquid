@@ -517,9 +517,13 @@
   .pet-nav-w-{{ section.id }} { display: none; }
 
   .pet-main-{{ section.id }} {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto;
     padding: 12px 16px;
     gap: 12px;
+  }
+
+  .pet-actions-{{ section.id }} {
+    justify-self: end;
   }
 
   .pet-mobile-btn-{{ section.id }} { display: inline-flex; }
