@@ -369,7 +369,7 @@
       <button type="button" class="twingle-cart-popup__btn twingle-cart-popup__btn--ghost" data-twingle-close>
         Alışverişe Devam Et
       </button>
-      <a href="{{ routes.cart_url | default: '/cart' }}" class="twingle-cart-popup__btn twingle-cart-popup__btn--primary">
+      <a href="{{ routes.cart_url | default: '/cart' }}" class="twingle-cart-popup__btn twingle-cart-popup__btn--primary" data-twingle-cart-open data-twingle-popup-go-to-cart>
         <span>Sepete İlerle</span>
         <span class="twingle-cart-popup__btn-count" data-twingle-cart-count hidden></span>
         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
@@ -462,6 +462,12 @@
     if (e.target.closest('[data-twingle-close]')) {
       e.preventDefault();
       closePopup();
+      return;
+    }
+    if (e.target.closest('[data-twingle-popup-go-to-cart]')) {
+      e.preventDefault();
+      closePopup();
+      document.dispatchEvent(new CustomEvent('twingle:cart:open'));
     }
   });
 
