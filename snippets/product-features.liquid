@@ -1,18 +1,52 @@
+{%- comment -%}
+  Per-product features via metafield `custom.features` (Multi-line text)
+  Format (one per line):  icon|title|description
+  Example:
+    🌿|%85 Hayvansal Protein|Doğal kaynaklı formül
+    🦷|Kemik & Diş Sağlığı|Kalsiyum & Fosfor dengeli
+
+  Fallback: block settings (feat_1..feat_4)
+{%- endcomment -%}
+
+{%- assign meta_features = product.metafields.custom.features -%}
+{%- assign meta_text = meta_features | default: '' -%}
+
 <div class="sec" {{ block.shopify_attributes }}>
   <div class="feats">
-    {%- assign feat_icons  = block.settings.feat_1_icon  | append: '||' | append: block.settings.feat_2_icon  | append: '||' | append: block.settings.feat_3_icon  | append: '||' | append: block.settings.feat_4_icon  | split: '||' -%}
-    {%- assign feat_titles = block.settings.feat_1_title | append: '||' | append: block.settings.feat_2_title | append: '||' | append: block.settings.feat_3_title | append: '||' | append: block.settings.feat_4_title | split: '||' -%}
-    {%- assign feat_descs  = block.settings.feat_1_desc  | append: '||' | append: block.settings.feat_2_desc  | append: '||' | append: block.settings.feat_3_desc  | append: '||' | append: block.settings.feat_4_desc  | split: '||' -%}
-    {%- for i in (0..3) -%}
-      {%- if feat_titles[i] != blank -%}
-        <div class="feat">
-          <span class="feat-icon" aria-hidden="true">{{ feat_icons[i] }}</span>
-          <div class="feat-text">
-            <b>{{ feat_titles[i] }}</b>
-            {{ feat_descs[i] }}
+    {%- if meta_text != blank -%}
+      {%- assign feat_lines = meta_text | strip | newline_to_br | replace: '<br />', '|||' | replace: '<br/>', '|||' | replace: '<br>', '|||' | split: '|||' -%}
+      {%- for line in feat_lines -%}
+        {%- assign trimmed = line | strip -%}
+        {%- if trimmed == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign parts = trimmed | split: '|' -%}
+        {%- assign f_icon = parts[0] | strip -%}
+        {%- assign f_title = parts[1] | strip -%}
+        {%- assign f_desc = parts[2] | strip -%}
+        {%- if f_title != blank -%}
+          <div class="feat">
+            {%- if f_icon != blank -%}<span class="feat-icon" aria-hidden="true">{{ f_icon }}</span>{%- endif -%}
+            <div class="feat-text">
+              <b>{{ f_title }}</b>
+              {%- if f_desc != blank -%}{{ f_desc }}{%- endif -%}
+            </div>
           </div>
-        </div>
-      {%- endif -%}
-    {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- assign feat_icons  = block.settings.feat_1_icon  | append: '||' | append: block.settings.feat_2_icon  | append: '||' | append: block.settings.feat_3_icon  | append: '||' | append: block.settings.feat_4_icon  | split: '||' -%}
+      {%- assign feat_titles = block.settings.feat_1_title | append: '||' | append: block.settings.feat_2_title | append: '||' | append: block.settings.feat_3_title | append: '||' | append: block.settings.feat_4_title | split: '||' -%}
+      {%- assign feat_descs  = block.settings.feat_1_desc  | append: '||' | append: block.settings.feat_2_desc  | append: '||' | append: block.settings.feat_3_desc  | append: '||' | append: block.settings.feat_4_desc  | split: '||' -%}
+      {%- for i in (0..3) -%}
+        {%- if feat_titles[i] != blank -%}
+          <div class="feat">
+            <span class="feat-icon" aria-hidden="true">{{ feat_icons[i] }}</span>
+            <div class="feat-text">
+              <b>{{ feat_titles[i] }}</b>
+              {{ feat_descs[i] }}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
   </div>
 </div>

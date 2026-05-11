@@ -1,26 +1,29 @@
-<div class="sec" {{ block.shopify_attributes }}>
-  <div class="trust-row">
+<div class="sec sec-trust" {{ block.shopify_attributes }}>
+  <ul class="trust-strip" role="list">
     {%- assign badge_nums = '1,2,3,4' | split: ',' -%}
     {%- for n in badge_nums -%}
       {%- assign icon_key  = 'badge' | append: n | append: '_icon' -%}
       {%- assign label_key = 'badge' | append: n | append: '_label' -%}
       {%- if block.settings[label_key] != blank -%}
-        <div class="t-b">
-          <div class="ti" aria-hidden="true">{{ block.settings[icon_key] }}</div>
-          <span>{{ block.settings[label_key] }}</span>
-        </div>
+        <li class="ts-i">
+          <span class="ts-ico" aria-hidden="true">{{ block.settings[icon_key] }}</span>
+          <span class="ts-lbl">{{ block.settings[label_key] }}</span>
+        </li>
       {%- endif -%}
     {%- endfor -%}
-  </div>
+  </ul>
 
-  <div class="pay-row" aria-label="Ödeme yöntemleri">
-    {%- if block.settings.show_visa -%}<div class="pi v">VISA</div>{%- endif -%}
-    {%- if block.settings.show_mc -%}<div class="pi m">MC</div>{%- endif -%}
-    {%- if block.settings.show_iyzico -%}<div class="pi i">iyzico</div>{%- endif -%}
-    {%- if block.settings.show_troy -%}<div class="pi tr">TROY</div>{%- endif -%}
-    {%- if block.settings.show_kapida -%}<div class="pi k">{{ block.settings.kapida_label }}</div>{%- endif -%}
-    {%- if block.settings.installment_text != blank -%}
-      <div class="pi" style="background:var(--p1);color:var(--p)">{{ block.settings.installment_text }}</div>
-    {%- endif -%}
+  <div class="pay-strip" aria-label="Ödeme yöntemleri">
+    <span class="ps-lbl">Güvenli Ödeme</span>
+    <div class="ps-items">
+      {%- if block.settings.show_visa -%}<span class="pi v">VISA</span>{%- endif -%}
+      {%- if block.settings.show_mc -%}<span class="pi m">MC</span>{%- endif -%}
+      {%- if block.settings.show_iyzico -%}<span class="pi i">iyzico</span>{%- endif -%}
+      {%- if block.settings.show_troy -%}<span class="pi tr">TROY</span>{%- endif -%}
+      {%- if block.settings.show_kapida -%}<span class="pi k">{{ block.settings.kapida_label }}</span>{%- endif -%}
+      {%- if block.settings.installment_text != blank -%}
+        <span class="pi pi-ins">{{ block.settings.installment_text }}</span>
+      {%- endif -%}
+    </div>
   </div>
 </div>
