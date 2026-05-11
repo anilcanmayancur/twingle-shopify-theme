@@ -23,10 +23,11 @@
 
 /* Topbar */
 .pet-tb-{{ section.id }} {
-  background: var(--ink);
+  background: linear-gradient(90deg, #0F0A26 0%, #1A1140 50%, #0F0A26 100%);
   color: #fff;
   font-size: 12.5px;
   font-weight: 500;
+  position: relative;
 }
 
 .pet-tb-inner-{{ section.id }} {
@@ -42,17 +43,47 @@
 .pet-tb-item-{{ section.id }} {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.85);
-  transition: color 0.2s ease;
+  color: rgba(255, 255, 255, 0.78);
+  transition: color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
 }
 
 .pet-tb-item-{{ section.id }}:hover { color: #fff; }
+.pet-tb-item-{{ section.id }} .pet-tb-ico {
+  font-size: 14px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pet-tb-item-{{ section.id }}.is-promo {
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.18), rgba(124, 58, 237, 0.18));
+  padding: 5px 12px 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.pet-tb-item-{{ section.id }}.is-promo .pet-tb-ico {
+  font-size: 15px;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5));
+}
+
+.pet-tb-item-{{ section.id }}.is-promo b {
+  background: linear-gradient(90deg, #FCD34D, #F59E0B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
 
 .pet-tb-dot-{{ section.id }} {
   width: 3px; height: 3px; border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Main */
@@ -502,7 +533,7 @@
 @media screen and (max-width: 1024px) {
   .pet-tb-inner-{{ section.id }} {
     gap: 14px;
-    padding: 8px 16px;
+    padding: 7px 14px;
     font-size: 11.5px;
     overflow-x: auto;
     justify-content: flex-start;
@@ -512,6 +543,8 @@
 
   .pet-tb-inner-{{ section.id }}::-webkit-scrollbar { display: none; }
   .pet-tb-item-{{ section.id }} { flex-shrink: 0; white-space: nowrap; }
+  .pet-tb-item-{{ section.id }}.is-promo { padding: 4px 10px 4px 9px; font-size: 11.5px; }
+  .pet-tb-item-{{ section.id }}.is-promo .pet-tb-ico { font-size: 13px; }
 
   .pet-search-{{ section.id }},
   .pet-nav-w-{{ section.id }} { display: none; }
@@ -606,27 +639,36 @@
 }
 
 /* Drawer */
+html.pet-drawer-locked { overflow: hidden; }
+html.pet-drawer-locked body { overflow: hidden; }
+
 .pet-drawer-{{ section.id }} {
-  position: fixed; top: 0; left: -360px;
+  position: fixed; top: 0; left: 0;
   width: 320px; max-width: 85vw; height: 100dvh;
   background: #fff; z-index: 9999;
-  transition: left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform: translate3d(-100%, 0, 0);
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
   box-shadow: 8px 0 40px rgba(15, 10, 38, 0.2);
   display: flex; flex-direction: column;
+  contain: layout paint;
+  visibility: hidden;
 }
 
-.pet-drawer-{{ section.id }}.is-open { left: 0; }
+.pet-drawer-{{ section.id }}.is-open { transform: translate3d(0, 0, 0); visibility: visible; }
 
 .pet-overlay-{{ section.id }} {
   position: fixed; inset: 0;
   background: rgba(15, 10, 38, 0.5);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 9998; opacity: 0; visibility: hidden;
-  transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  z-index: 9998; opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+  will-change: opacity;
 }
 
-.pet-overlay-{{ section.id }}.is-open { opacity: 1; visibility: visible; }
+.pet-overlay-{{ section.id }}.is-open { opacity: 1; pointer-events: auto; }
 
 .pet-dh-{{ section.id }} {
   padding: 18px 20px;
@@ -682,6 +724,43 @@
 
 .pet-db-link-{{ section.id }}:hover { color: var(--pp); }
 .pet-db-link-{{ section.id }}.is-hl { color: #DC2626; }
+
+/* Drawer account card */
+.pet-db-acc {
+  margin: 4px 0 14px;
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--pp-tint), #F5F2FF);
+  border: 1px solid rgba(124, 58, 237, 0.18);
+}
+.pet-db-acc-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.pet-db-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--pp);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 17px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.25);
+}
+.pet-db-avatar--guest { background: #fff; color: var(--pp); border: 1.5px solid rgba(124, 58, 237, 0.3); box-shadow: none; }
+.pet-db-acc-text { display: flex; flex-direction: column; min-width: 0; }
+.pet-db-acc-hi { font-size: 11px; color: var(--muted); font-weight: 600; }
+.pet-db-acc-name { font-size: 14px; color: var(--ink); font-weight: 700; line-height: 1.25; }
+.pet-db-acc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pet-db-btn {
+  height: 38px;
+  border-radius: 10px;
+  font-size: 13px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+.pet-db-btn--primary { background: var(--pp); color: #fff; }
+.pet-db-btn--primary:hover { filter: brightness(1.06); }
+.pet-db-btn--ghost { background: #fff; color: var(--ink); border: 1.5px solid rgba(15, 10, 38, 0.1); }
+.pet-db-btn--ghost:hover { border-color: var(--pp); color: var(--pp); }
 </style>
 
 <header class="pet-h-{{ section.id }}" id="PetH-{{ section.id }}">
@@ -689,15 +768,24 @@
   <div class="pet-tb-{{ section.id }}">
     <div class="pet-tb-inner-{{ section.id }}">
       {% if section.settings.top_text_1 != blank %}
-        <a href="{{ section.settings.top_link_1 | default: '#' }}" class="pet-tb-item-{{ section.id }}">{{ section.settings.top_text_1 }}</a>
+        <a href="{{ section.settings.top_link_1 | default: '#' }}" class="pet-tb-item-{{ section.id }} is-promo">
+          {%- if section.settings.top_icon_1 != blank -%}<span class="pet-tb-ico" aria-hidden="true">{{ section.settings.top_icon_1 }}</span>{%- endif -%}
+          <span>{{ section.settings.top_text_1 }}</span>
+        </a>
       {% endif %}
       {% if section.settings.top_text_2 != blank %}
         <span class="pet-tb-dot-{{ section.id }}"></span>
-        <a href="{{ section.settings.top_link_2 | default: '#' }}" class="pet-tb-item-{{ section.id }}">{{ section.settings.top_text_2 }}</a>
+        <a href="{{ section.settings.top_link_2 | default: '#' }}" class="pet-tb-item-{{ section.id }}">
+          {%- if section.settings.top_icon_2 != blank -%}<span class="pet-tb-ico" aria-hidden="true">{{ section.settings.top_icon_2 }}</span>{%- endif -%}
+          <span>{{ section.settings.top_text_2 }}</span>
+        </a>
       {% endif %}
       {% if section.settings.top_text_3 != blank %}
         <span class="pet-tb-dot-{{ section.id }}"></span>
-        <a href="{{ section.settings.top_link_3 | default: '#' }}" class="pet-tb-item-{{ section.id }}">{{ section.settings.top_text_3 }}</a>
+        <a href="{{ section.settings.top_link_3 | default: '#' }}" class="pet-tb-item-{{ section.id }}">
+          {%- if section.settings.top_icon_3 != blank -%}<span class="pet-tb-ico" aria-hidden="true">{{ section.settings.top_icon_3 }}</span>{%- endif -%}
+          <span>{{ section.settings.top_text_3 }}</span>
+        </a>
       {% endif %}
     </div>
   </div>
@@ -980,6 +1068,39 @@
     </button>
   </div>
   <div class="pet-db-{{ section.id }}">
+
+    {%- if customer -%}
+      <div class="pet-db-acc pet-db-acc--in" role="region" aria-label="Hesap">
+        <div class="pet-db-acc-row">
+          <div class="pet-db-avatar" aria-hidden="true">{{ customer.first_name | default: customer.email | slice: 0, 1 | upcase }}</div>
+          <div class="pet-db-acc-text">
+            <span class="pet-db-acc-hi">Merhaba 👋</span>
+            <strong class="pet-db-acc-name">{{ customer.first_name | default: customer.email }}</strong>
+          </div>
+        </div>
+        <div class="pet-db-acc-actions">
+          <a href="{{ routes.account_url }}" class="pet-db-btn pet-db-btn--primary">Hesabım</a>
+          <a href="{{ routes.account_logout_url }}" class="pet-db-btn pet-db-btn--ghost">Çıkış</a>
+        </div>
+      </div>
+    {%- else -%}
+      <div class="pet-db-acc pet-db-acc--out" role="region" aria-label="Giriş yap veya kayıt ol">
+        <div class="pet-db-acc-row">
+          <div class="pet-db-avatar pet-db-avatar--guest" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="pet-db-acc-text">
+            <span class="pet-db-acc-hi">Hoş geldin!</span>
+            <strong class="pet-db-acc-name">Üye ol, fırsatları kaçırma</strong>
+          </div>
+        </div>
+        <div class="pet-db-acc-actions">
+          <a href="{{ routes.account_login_url }}" class="pet-db-btn pet-db-btn--primary">Giriş Yap</a>
+          <a href="{{ routes.account_register_url }}" class="pet-db-btn pet-db-btn--ghost">Kayıt Ol</a>
+        </div>
+      </div>
+    {%- endif -%}
+
     {% for link in linklists[section.settings.menu].links %}
       {% assign is_hl = false %}
       {% if section.settings.highlight_keyword != blank and link.title contains section.settings.highlight_keyword %}
@@ -1001,12 +1122,23 @@
   var ov = document.getElementById('MOver-{{ section.id }}');
   var hd = document.getElementById('PetH-{{ section.id }}');
 
-  function open() { dr.classList.add('is-open'); ov.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
-  function close() { dr.classList.remove('is-open'); ov.classList.remove('is-open'); document.body.style.overflow = ''; }
+  function open() {
+    dr.classList.add('is-open');
+    ov.classList.add('is-open');
+    document.documentElement.classList.add('pet-drawer-locked');
+  }
+  function close() {
+    dr.classList.remove('is-open');
+    ov.classList.remove('is-open');
+    document.documentElement.classList.remove('pet-drawer-locked');
+  }
 
-  if (bO) bO.addEventListener('click', open);
-  if (bC) bC.addEventListener('click', close);
-  if (ov) ov.addEventListener('click', close);
+  if (bO) bO.addEventListener('click', open, { passive: true });
+  if (bC) bC.addEventListener('click', close, { passive: true });
+  if (ov) ov.addEventListener('click', close, { passive: true });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && dr.classList.contains('is-open')) close();
+  });
 
   if (hd) {
     var sh = function() {
@@ -1041,11 +1173,15 @@
       "default": 1300
     },
     { "type": "header", "content": "Üst Bar" },
-    { "type": "text", "id": "top_text_1", "label": "Metin 1", "default": "Tüm siparişlerde ücretsiz kargo" },
-    { "type": "url", "id": "top_link_1", "label": "Link 1" },
-    { "type": "text", "id": "top_text_2", "label": "Metin 2", "default": "İlk siparişe %15 indirim: HOSGELDIN" },
+    { "type": "paragraph", "content": "1. öğe promo olarak öne çıkar (altın gradient). 2 ve 3. öğeler hızlı erişim linkleri." },
+    { "type": "text", "id": "top_icon_1", "label": "Promo İkonu", "default": "🎁" },
+    { "type": "text", "id": "top_text_1", "label": "Promo Metni", "default": "İlk siparişe özel %25 hoş geldin indirimi" },
+    { "type": "url", "id": "top_link_1", "label": "Promo Link" },
+    { "type": "text", "id": "top_icon_2", "label": "İkon 2", "default": "📦" },
+    { "type": "text", "id": "top_text_2", "label": "Metin 2", "default": "Siparişlerim" },
     { "type": "url", "id": "top_link_2", "label": "Link 2" },
-    { "type": "text", "id": "top_text_3", "label": "Metin 3", "default": "7/24 Müşteri Desteği" },
+    { "type": "text", "id": "top_icon_3", "label": "İkon 3", "default": "🚚" },
+    { "type": "text", "id": "top_text_3", "label": "Metin 3", "default": "Kargo Takip" },
     { "type": "url", "id": "top_link_3", "label": "Link 3" },
     { "type": "header", "content": "Logo" },
     { "type": "image_picker", "id": "logo", "label": "Logo Görseli" },
