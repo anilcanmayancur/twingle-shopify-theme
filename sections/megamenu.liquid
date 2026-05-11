@@ -379,6 +379,69 @@
 .pet-nav-chev-{{ section.id }} { transition: transform 0.25s ease; }
 .pet-nav-item-{{ section.id }}:hover .pet-nav-chev-{{ section.id }} { transform: rotate(180deg); }
 
+/* Petim İçin Öneri CTA pill (desktop nav) */
+.pet-nav-cta-item-{{ section.id }} { margin-left: 6px; }
+.pet-nav-cta-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px 8px 11px;
+  background: linear-gradient(135deg, var(--pp) 0%, #5B2FB2 100%);
+  color: #fff !important;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none !important;
+  border-radius: 999px;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  box-shadow: 0 4px 14px -4px rgba(124, 58, 237, 0.45);
+  transition: filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  white-space: nowrap;
+}
+.pet-nav-cta-{{ section.id }}::after { display: none; }
+.pet-nav-cta-{{ section.id }}:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px -6px rgba(124, 58, 237, 0.55);
+}
+.pet-nav-cta-{{ section.id }} svg { flex-shrink: 0; }
+
+/* Mobile drawer CTA card */
+.pet-db-rec-{{ section.id }} {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 16px 6px;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.07) 0%, rgba(124, 58, 237, 0.02) 100%);
+  border: 1px solid rgba(124, 58, 237, 0.16);
+  text-decoration: none !important;
+  color: var(--ink) !important;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.pet-db-rec-{{ section.id }}:hover { background: rgba(124, 58, 237, 0.10); border-color: rgba(124, 58, 237, 0.3); }
+.pet-db-rec-icon-{{ section.id }} {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--pp) 0%, #5B2FB2 100%);
+  color: #fff;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px -4px rgba(124, 58, 237, 0.45);
+}
+.pet-db-rec-text-{{ section.id }} { flex: 1; display: flex; flex-direction: column; gap: 2px; line-height: 1.25; }
+.pet-db-rec-text-{{ section.id }} strong { font-size: 14px; font-weight: 800; color: var(--ink); }
+.pet-db-rec-text-{{ section.id }} small { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+
+/* Hide pill on small screens; mobile drawer handles it */
+@media screen and (max-width: 1024px) {
+  .pet-nav-cta-item-{{ section.id }} { display: none; }
+}
+
 /* Mega Menu */
 .pet-mega-{{ section.id }} {
   position: absolute;
@@ -1071,6 +1134,15 @@ html.pet-drawer-locked body { overflow: hidden; }
           {% endif %}
         </li>
       {% endfor %}
+      <li class="pet-nav-item-{{ section.id }} pet-nav-cta-item-{{ section.id }}">
+        <a href="{{ routes.root_url }}#pet-recommender" class="pet-nav-cta-{{ section.id }} pet-rec-trigger" data-pet-recommender>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/>
+            <path d="M20 3v4"/><path d="M22 5h-4"/>
+          </svg>
+          <span>Petim İçin Öneri</span>
+        </a>
+      </li>
     </ul>
   </div>
 </header>
@@ -1116,6 +1188,20 @@ html.pet-drawer-locked body { overflow: hidden; }
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
     {% endfor %}
+
+    <a href="{{ routes.root_url }}#pet-recommender" class="pet-db-rec-{{ section.id }} pet-rec-trigger" data-pet-recommender>
+      <span class="pet-db-rec-icon-{{ section.id }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/>
+          <path d="M20 3v4"/><path d="M22 5h-4"/>
+        </svg>
+      </span>
+      <span class="pet-db-rec-text-{{ section.id }}">
+        <strong>Petim İçin Öneri</strong>
+        <small>30 sn'lik akıllı eşleştirme</small>
+      </span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
   </div>
 </aside>
 

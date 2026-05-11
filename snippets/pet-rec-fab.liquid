@@ -1,0 +1,150 @@
+{%- comment -%}
+  Pet Recommender Floating Action Button (FAB)
+  - Sağ altta sabit duran ikon
+  - Üzerinde pet-recommender modal'ı mount edilmişse (homepage) onu açar
+  - Diğer sayfalarda /#pet-recommender'a yönlendirir; homepage yüklenince auto-open olur
+{%- endcomment -%}
+
+<style>
+  .tw-pet-fab {
+    position: fixed;
+    right: 20px;
+    bottom: 22px;
+    z-index: 9990;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px 12px 14px;
+    background: linear-gradient(135deg, #7C3AED 0%, #5B2FB2 100%);
+    color: #fff !important;
+    text-decoration: none !important;
+    border: none;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 12px 28px -8px rgba(124, 58, 237, 0.55), 0 2px 8px -2px rgba(20, 14, 40, 0.18);
+    cursor: pointer;
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s ease, filter 0.18s ease;
+    font-family: inherit;
+  }
+  .tw-pet-fab:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow: 0 18px 36px -10px rgba(124, 58, 237, 0.6), 0 4px 12px -2px rgba(20, 14, 40, 0.22);
+  }
+  .tw-pet-fab:active { transform: translateY(0); }
+
+  .tw-pet-fab__icon {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tw-pet-fab__icon svg { width: 16px; height: 16px; }
+
+  /* Pulse halo */
+  .tw-pet-fab::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #7C3AED, #5B2FB2);
+    z-index: -1;
+    filter: blur(8px);
+    opacity: 0.35;
+    animation: twFabPulse 3s ease-in-out infinite;
+  }
+  @keyframes twFabPulse {
+    0%, 100% { opacity: 0.25; transform: scale(1); }
+    50%      { opacity: 0.5;  transform: scale(1.04); }
+  }
+
+  /* Mobile: hide label, show icon only */
+  @media (max-width: 640px) {
+    .tw-pet-fab {
+      right: 14px;
+      bottom: 14px;
+      padding: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      justify-content: center;
+      gap: 0;
+    }
+    .tw-pet-fab__label { display: none; }
+    .tw-pet-fab__icon { background: transparent; width: auto; height: auto; }
+    .tw-pet-fab__icon svg { width: 22px; height: 22px; }
+  }
+
+  /* Don't cover the mobile sticky add-to-cart bar */
+  body:has(.petibi-stickybar.is-visible) .tw-pet-fab {
+    bottom: 86px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tw-pet-fab::before { animation: none; }
+    .tw-pet-fab { transition: none; }
+  }
+</style>
+
+<a href="{{ routes.root_url }}#pet-recommender"
+   class="tw-pet-fab pet-rec-trigger"
+   data-pet-recommender
+   data-tw-pet-fab
+   aria-label="Petim İçin Öneri">
+  <span class="tw-pet-fab__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/>
+      <path d="M20 3v4"/><path d="M22 5h-4"/>
+    </svg>
+  </span>
+  <span class="tw-pet-fab__label">Petim İçin Öneri</span>
+</a>
+
+<script>
+(function() {
+  // Auto-open recommender on /#pet-recommender or /#pet-quiz hash
+  function tryAutoOpen() {
+    var hash = (window.location.hash || '').toLowerCase();
+    if (hash !== '#pet-recommender' && hash !== '#pet-quiz') return;
+    var modal = document.querySelector('[id^="PRecModal-"]');
+    if (!modal) return;
+    var trigger = modal.previousElementSibling;
+    // Fire a synthetic click on a known trigger so the section JS handles the rest
+    var fakeTrigger = document.querySelector('.pet-rec-trigger,[data-pet-recommender]');
+    if (fakeTrigger) {
+      setTimeout(function () { fakeTrigger.click(); }, 60);
+    }
+    // Clean hash without scrolling
+    if (history.replaceState) history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryAutoOpen);
+  } else {
+    tryAutoOpen();
+  }
+  window.addEventListener('hashchange', tryAutoOpen);
+
+  // If user clicks the FAB on a page WITHOUT the recommender modal, fall back
+  // to navigating to homepage with the hash.
+  document.addEventListener('click', function (e) {
+    var fab = e.target.closest('[data-tw-pet-fab]');
+    if (!fab) return;
+    var modalExists = document.querySelector('[id^="PRecModal-"]');
+    if (modalExists) {
+      // Modal is on this page: open it and prevent navigation
+      e.preventDefault();
+      // The pet-recommender section listens for clicks on .pet-rec-trigger /
+      // [data-pet-recommender], so the click event will already bubble up to it.
+      // Nothing more to do.
+    }
+    // Otherwise let the link navigate to /#pet-recommender naturally.
+  });
+})();
+</script>
