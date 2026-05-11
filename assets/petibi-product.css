@@ -9,7 +9,7 @@
 .petibi-toast { position: fixed; bottom: 18px; right: 18px; background: var(--g900); color: white; padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: 600; z-index: 9999; transform: translateY(60px); opacity: 0; transition: all .3s; display: flex; align-items: center; gap: 7px; pointer-events: none; }
 .petibi-toast.show { transform: translateY(0); opacity: 1; }
 
-.petibi-wrap { max-width: 1440px; margin: 0 auto; padding: 16px 24px; background: white; border-radius: 16px; }
+.petibi-wrap { max-width: 1400px; margin: 0 auto; padding: 16px 24px; background: white; border-radius: 16px; }
 .petibi-bc { font-size: 11px; color: var(--g400); display: flex; align-items: center; gap: 5px; margin-bottom: 16px; flex-wrap: wrap; }
 .petibi-bc a { color: var(--g500); text-decoration: none; }
 .petibi-bc a:hover { color: var(--p); }
