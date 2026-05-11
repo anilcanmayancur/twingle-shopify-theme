@@ -11,17 +11,17 @@
     position: fixed;
     inset: 0;
     z-index: 9997;
-    display: none;
+    visibility: hidden;
     pointer-events: none;
   }
   .twingle-account.is-open {
-    display: block;
-    pointer-events: auto;
+    visibility: visible;
   }
   .twingle-account__backdrop {
     position: absolute;
     inset: 0;
     background: transparent;
+    pointer-events: none;
   }
   .twingle-account__panel {
     position: absolute;
@@ -35,11 +35,27 @@
     opacity: 0;
     transform: translateY(-8px);
     transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
   }
-  .twingle-account.is-open .twingle-account__panel { opacity: 1; transform: translateY(0); }
+  .twingle-account.is-open .twingle-account__panel { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  /* Invisible bridge above the panel to keep hover continuous across the 8px gap */
+  .twingle-account__panel::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: transparent;
+    pointer-events: auto;
+  }
 
   @media (max-width: 749px) {
-    .twingle-account__backdrop { background: rgba(20, 14, 40, 0.45); }
+    .twingle-account.is-open .twingle-account__backdrop {
+      background: rgba(20, 14, 40, 0.45);
+      pointer-events: auto;
+    }
     .twingle-account__panel {
       bottom: 0 !important;
       top: auto !important;
@@ -51,6 +67,7 @@
       transform: translateY(100%);
     }
     .twingle-account.is-open .twingle-account__panel { transform: translateY(0); }
+    .twingle-account__panel::before { display: none; }
   }
 
   .twingle-account__header {
