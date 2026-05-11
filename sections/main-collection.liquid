@@ -313,61 +313,81 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 14px;
-    padding: 10px 0 14px;
+    gap: 12px;
+    padding: 4px 0 16px;
+    margin-bottom: 18px;
     border-bottom: 1px solid var(--c-line);
-    margin-bottom: 20px;
     flex-wrap: wrap;
   }
   .tw-coll-{{ section.id }}__tool-left {
-    font-size: 13.5px;
+    font-size: 13px;
     color: var(--c-muted);
     font-weight: 500;
   }
   .tw-coll-{{ section.id }}__tool-left strong {
     color: var(--c-ink);
-    font-weight: 800;
+    font-weight: 700;
   }
   .tw-coll-{{ section.id }}__tool-right {
     display: inline-flex;
     align-items: center;
-    gap: 18px;
+    gap: 8px;
   }
+
+  /* Sort styled as a button */
   .tw-coll-{{ section.id }}__sort-wrap {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--c-ink);
-    font-weight: 600;
+    height: 38px;
+    padding: 0 32px 0 36px;
+    background: #fff;
+    border: 1.5px solid var(--c-line);
+    border-radius: var(--c-r-btn);
+    transition: border-color 0.18s ease, background 0.18s ease;
     cursor: pointer;
   }
-  .tw-coll-{{ section.id }}__sort-label {
-    color: var(--c-muted);
-    font-weight: 500;
-    letter-spacing: 0.02em;
+  .tw-coll-{{ section.id }}__sort-wrap:hover {
+    border-color: var(--c-primary);
+    background: var(--c-soft);
+  }
+  .tw-coll-{{ section.id }}__sort-wrap::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f1342' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><line x1='3' y1='6' x2='14' y2='6'/><line x1='3' y1='12' x2='11' y2='12'/><line x1='3' y1='18' x2='8' y2='18'/><polyline points='15 14 18 18 21 14'/><line x1='18' y1='6' x2='18' y2='18'/></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  .tw-coll-{{ section.id }}__sort-wrap::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px; height: 10px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f1342' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+    pointer-events: none;
   }
   .tw-coll-{{ section.id }}__sort {
     appearance: none;
     -webkit-appearance: none;
-    padding: 6px 22px 6px 4px;
     border: none;
     background: transparent;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--c-ink);
     cursor: pointer;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%231f1342' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 0 center;
     font-family: inherit;
     outline: none;
-    border-bottom: 1.5px solid transparent;
-    transition: border-color 0.18s ease;
+    padding: 0;
+    line-height: 1;
   }
-  .tw-coll-{{ section.id }}__sort:hover,
-  .tw-coll-{{ section.id }}__sort:focus { border-bottom-color: var(--c-ink); }
 
   /* Active filter chips */
   .tw-coll-{{ section.id }}__active {
@@ -507,23 +527,23 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 9px 16px;
-    background: transparent;
+    height: 38px;
+    padding: 0 14px;
+    background: #fff;
     color: var(--c-ink);
     border: 1.5px solid var(--c-line);
-    border-radius: 100px;
+    border-radius: var(--c-r-btn);
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     font-family: inherit;
     transition: border-color 0.18s ease, background 0.18s ease;
-    letter-spacing: 0.02em;
   }
   .tw-coll-{{ section.id }}__mobile-toggle:hover {
-    border-color: var(--c-ink);
+    border-color: var(--c-primary);
     background: var(--c-soft);
   }
-  .tw-coll-{{ section.id }}__mobile-toggle svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+  .tw-coll-{{ section.id }}__mobile-toggle svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
   .tw-coll-{{ section.id }}__mobile-toggle-count {
     display: inline-flex;
     align-items: center;
@@ -533,7 +553,7 @@
     padding: 0 5px;
     background: var(--c-primary);
     color: #fff;
-    border-radius: 100px;
+    border-radius: 5px;
     font-size: 11px;
     font-weight: 700;
     margin-left: 4px;
@@ -823,9 +843,8 @@
                   <span class="tw-coll-{{ section.id }}__mobile-toggle-count">{{ active_filter_count }}</span>
                 {% endif %}
               </button>
-              <label class="tw-coll-{{ section.id }}__sort-wrap">
-                <span class="tw-coll-{{ section.id }}__sort-label">Sırala</span>
-                <select class="tw-coll-{{ section.id }}__sort" aria-label="Sırala"
+              <label class="tw-coll-{{ section.id }}__sort-wrap" aria-label="Sıralama">
+                <select class="tw-coll-{{ section.id }}__sort"
                         onchange="document.querySelector('#CollectionFiltersForm-{{ section.id }} input[name=sort_by]').value = this.value; document.getElementById('CollectionFiltersForm-{{ section.id }}').submit();">
                   {% for option in collection.sort_options %}
                     <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
@@ -994,7 +1013,7 @@
       "type": "checkbox",
       "id": "show_hero_badge",
       "label": "Üst rozeti göster",
-      "default": true
+      "default": false
     },
     {
       "type": "text",
