@@ -103,7 +103,7 @@
   }
 </style>
 
-<a href="{{ routes.root_url }}#pet-recommender"
+<button type="button"
    class="tw-pet-fab pet-rec-trigger"
    data-pet-recommender
    data-tw-pet-fab
@@ -115,24 +115,24 @@
     </svg>
   </span>
   <span class="tw-pet-fab__label">Petim İçin Öneri</span>
-</a>
+</button>
 
 <script>
 (function() {
-  // Auto-open recommender on /#pet-recommender or /#pet-quiz hash
+  // Auto-open recommender on #pet-recommender / #pet-quiz hash (any page)
   function tryAutoOpen() {
     var hash = (window.location.hash || '').toLowerCase();
     if (hash !== '#pet-recommender' && hash !== '#pet-quiz') return;
-    var modal = document.querySelector('[id^="PRecModal-"]');
-    if (!modal) return;
-    var trigger = modal.previousElementSibling;
-    // Fire a synthetic click on a known trigger so the section JS handles the rest
-    var fakeTrigger = document.querySelector('.pet-rec-trigger,[data-pet-recommender]');
-    if (fakeTrigger) {
-      setTimeout(function () { fakeTrigger.click(); }, 60);
+    function fire() {
+      if (window.TwinklePetRecommender && typeof window.TwinklePetRecommender.open === 'function') {
+        window.TwinklePetRecommender.open();
+      } else {
+        var t = document.querySelector('.pet-rec-trigger,[data-pet-recommender]');
+        if (t) t.click();
+      }
+      if (history.replaceState) history.replaceState(null, '', window.location.pathname + window.location.search);
     }
-    // Clean hash without scrolling
-    if (history.replaceState) history.replaceState(null, '', window.location.pathname + window.location.search);
+    setTimeout(fire, 60);
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', tryAutoOpen);
@@ -156,21 +156,5 @@
   } else {
     watchStickyBar();
   }
-
-  // If user clicks the FAB on a page WITHOUT the recommender modal, fall back
-  // to navigating to homepage with the hash.
-  document.addEventListener('click', function (e) {
-    var fab = e.target.closest('[data-tw-pet-fab]');
-    if (!fab) return;
-    var modalExists = document.querySelector('[id^="PRecModal-"]');
-    if (modalExists) {
-      // Modal is on this page: open it and prevent navigation
-      e.preventDefault();
-      // The pet-recommender section listens for clicks on .pet-rec-trigger /
-      // [data-pet-recommender], so the click event will already bubble up to it.
-      // Nothing more to do.
-    }
-    // Otherwise let the link navigate to /#pet-recommender naturally.
-  });
 })();
 </script>
