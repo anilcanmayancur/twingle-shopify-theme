@@ -21,6 +21,11 @@
     </div>
 
     <div class="petibi-info-col">
+      {%- assign delivery_block = nil -%}
+      {%- for b in section.blocks -%}
+        {%- if b.type == 'delivery_info' -%}{%- assign delivery_block = b -%}{%- endif -%}
+      {%- endfor -%}
+
       {%- for block in section.blocks -%}
 
         {%- case block.type -%}
@@ -36,12 +41,15 @@
             product: product,
             block: block
           -%}
+          {%- if delivery_block -%}
+            {%- render 'product-shipping-highlight', block: delivery_block -%}
+          {%- endif -%}
 
         {%- when 'vet_note' -%}
           {%- render 'product-vet-note', block: block -%}
 
         {%- when 'features' -%}
-          {%- render 'product-features', block: block -%}
+          {%- render 'product-features', product: product, block: block -%}
 
         {%- when 'variant_picker' -%}
           {%- render 'product-variant-picker',
@@ -61,9 +69,12 @@
             section: section,
             block: block
           -%}
+          {%- if delivery_block -%}
+            {%- render 'product-cart-info', block: delivery_block -%}
+          {%- endif -%}
 
         {%- when 'delivery_info' -%}
-          {%- render 'product-delivery', block: block -%}
+          {%- comment -%} Rendered inline after product_price (highlight) and buy_buttons (cart-info). {%- endcomment -%}
 
         {%- when 'trust_badges' -%}
           {%- render 'product-trust', block: block -%}
