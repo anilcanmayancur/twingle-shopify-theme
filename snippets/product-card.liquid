@@ -262,8 +262,17 @@
       {% endif %}
     </div>
 
-    <form method="post" action="/cart/add" class="forspaceon-pc-add-form">
+    <form
+      method="post"
+      action="{{ routes.cart_add_url | default: '/cart/add' }}"
+      class="forspaceon-pc-add-form"
+      data-product-title="{{ product.title | escape }}"
+      data-product-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 200 }}{% endif %}"
+      data-product-price="{{ product.price }}"
+      data-product-url="{{ product.url }}"
+    >
       <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <input type="hidden" name="quantity" value="1">
       <button type="submit" class="forspaceon-pc-add-btn">
         Sepete Ekle
       </button>

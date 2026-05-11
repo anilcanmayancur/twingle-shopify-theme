@@ -1,0 +1,559 @@
+{%- comment -%}
+  Cart Added Popup
+  ------------------
+  Site geneli AJAX sepete ekleme bildirimi.
+  product-card.liquid (ve dilersen başka kart/snippet) submit event'ine
+  preventDefault uygulayıp /cart/add.js'e gönderir; sonrasında bu popup açılır.
+
+  Tetiklemek için bir <form>'da:
+    - method="post"
+    - action="/cart/add"
+    - class="forspaceon-pc-add-form" (veya .twingle-ajax-add)
+    - data-product-title, data-product-image, data-product-price, data-product-url (opsiyonel)
+{%- endcomment -%}
+
+<style>
+  .twingle-cart-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .twingle-cart-popup.is-open {
+    display: flex;
+  }
+
+  .twingle-cart-popup__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 14, 40, 0.55);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .twingle-cart-popup.is-open .twingle-cart-popup__backdrop {
+    opacity: 1;
+  }
+
+  .twingle-cart-popup__dialog {
+    position: relative;
+    background: #ffffff;
+    border-radius: 18px;
+    max-width: 440px;
+    width: 100%;
+    padding: 28px 24px 24px;
+    margin: auto;
+    box-shadow: 0 20px 60px -10px rgba(31, 19, 66, 0.35);
+    transform: translateY(16px) scale(0.97);
+    opacity: 0;
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  }
+
+  .twingle-cart-popup.is-open .twingle-cart-popup__dialog {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .twingle-cart-popup__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f5f3fa;
+    border: none;
+    color: #5a4f75;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .twingle-cart-popup__close:hover {
+    background: #ece6f7;
+    color: #1f1342;
+  }
+
+  .twingle-cart-popup__close svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .twingle-cart-popup__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .twingle-cart-popup__check {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px -4px rgba(34, 197, 94, 0.45);
+  }
+
+  .twingle-cart-popup__check svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .twingle-cart-popup__heading {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1f1342;
+    letter-spacing: -0.015em;
+  }
+
+  .twingle-cart-popup__subheading {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #5a4f75;
+  }
+
+  .twingle-cart-popup__product {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    border: 1px solid rgba(123, 63, 242, 0.12);
+    border-radius: 12px;
+    background: #faf7ff;
+    margin-bottom: 18px;
+  }
+
+  .twingle-cart-popup__product-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+    background: #ffffff;
+    object-fit: contain;
+    flex-shrink: 0;
+    padding: 6px;
+    border: 1px solid rgba(123, 63, 242, 0.08);
+    mix-blend-mode: multiply;
+  }
+
+  .twingle-cart-popup__product-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .twingle-cart-popup__product-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f1342;
+    margin: 0 0 4px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .twingle-cart-popup__product-price {
+    font-size: 14px;
+    font-weight: 800;
+    color: #7b3ff2;
+  }
+
+  .twingle-cart-popup__cart-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: rgba(123, 63, 242, 0.06);
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    color: #5a4f75;
+  }
+
+  .twingle-cart-popup__cart-meta strong {
+    color: #1f1342;
+    font-weight: 700;
+  }
+
+  .twingle-cart-popup__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .twingle-cart-popup__btn {
+    appearance: none;
+    border: none;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 12px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .twingle-cart-popup__btn--ghost {
+    background: #ffffff;
+    color: #1f1342;
+    border: 1.5px solid rgba(123, 63, 242, 0.18);
+  }
+
+  .twingle-cart-popup__btn--ghost:hover {
+    background: #faf7ff;
+    border-color: rgba(123, 63, 242, 0.35);
+  }
+
+  .twingle-cart-popup__btn--primary {
+    background: linear-gradient(135deg, #7b3ff2 0%, #5b2fb2 100%);
+    color: #ffffff;
+    box-shadow: 0 8px 18px -8px rgba(123, 63, 242, 0.5);
+  }
+
+  .twingle-cart-popup__btn--primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px -10px rgba(123, 63, 242, 0.55);
+  }
+
+  .twingle-cart-popup__btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Loading state on add buttons */
+  .forspaceon-pc-add-btn[data-loading="true"],
+  .twingle-ajax-add-btn[data-loading="true"] {
+    opacity: 0.75;
+    cursor: progress;
+    pointer-events: none;
+  }
+
+  /* Toast errors */
+  .twingle-cart-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: #1f1342;
+    color: #ffffff;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+    box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.35);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    max-width: calc(100vw - 32px);
+    text-align: center;
+  }
+
+  .twingle-cart-toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .twingle-cart-toast--error {
+    background: #b91c1c;
+  }
+
+  @media (max-width: 520px) {
+    .twingle-cart-popup__dialog {
+      padding: 22px 18px 18px;
+      border-radius: 16px;
+    }
+    .twingle-cart-popup__actions {
+      grid-template-columns: 1fr;
+    }
+    .twingle-cart-popup__heading {
+      font-size: 16px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .twingle-cart-popup__backdrop,
+    .twingle-cart-popup__dialog,
+    .twingle-cart-popup__btn--primary,
+    .twingle-cart-toast {
+      transition: none !important;
+    }
+  }
+</style>
+
+<div
+  id="TwingleCartPopup"
+  class="twingle-cart-popup"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="TwingleCartPopupHeading"
+  aria-hidden="true"
+>
+  <div class="twingle-cart-popup__backdrop" data-twingle-close></div>
+
+  <div class="twingle-cart-popup__dialog">
+    <button type="button" class="twingle-cart-popup__close" data-twingle-close aria-label="Kapat">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="twingle-cart-popup__header">
+      <span class="twingle-cart-popup__check" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <div>
+        <h3 id="TwingleCartPopupHeading" class="twingle-cart-popup__heading">Sepete eklendi</h3>
+        <p class="twingle-cart-popup__subheading">Ürün başarıyla sepetinize kaydedildi.</p>
+      </div>
+    </div>
+
+    <div class="twingle-cart-popup__product" data-twingle-product-row>
+      <img
+        class="twingle-cart-popup__product-img"
+        data-twingle-product-img
+        src=""
+        alt=""
+        width="64"
+        height="64"
+        loading="lazy"
+      >
+      <div class="twingle-cart-popup__product-info">
+        <p class="twingle-cart-popup__product-title" data-twingle-product-title></p>
+        <span class="twingle-cart-popup__product-price" data-twingle-product-price></span>
+      </div>
+    </div>
+
+    <div class="twingle-cart-popup__cart-meta">
+      <span>Sepetinizdeki ürün sayısı</span>
+      <strong data-twingle-cart-count>0</strong>
+    </div>
+
+    <div class="twingle-cart-popup__actions">
+      <button type="button" class="twingle-cart-popup__btn twingle-cart-popup__btn--ghost" data-twingle-close>
+        Alışverişe Devam Et
+      </button>
+      <a href="{{ routes.cart_url | default: '/cart' }}" class="twingle-cart-popup__btn twingle-cart-popup__btn--primary">
+        Sepete İlerle
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="TwingleCartToast" class="twingle-cart-toast" role="status" aria-live="polite"></div>
+
+<script>
+(function() {
+  if (window.__twingleCartInit) return;
+  window.__twingleCartInit = true;
+
+  var moneyFormat = {{ shop.money_format | json }};
+
+  function formatMoney(cents) {
+    if (typeof cents !== 'number') return '';
+    var value = (cents / 100).toFixed(2);
+    var parts = value.split('.');
+    var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    var formatted = intPart + ',' + parts[1];
+    if (moneyFormat && /\{\{.*\}\}/.test(moneyFormat)) {
+      return moneyFormat.replace(/\{\{\s*amount[^}]*\}\}/, formatted);
+    }
+    return formatted + ' ₺';
+  }
+
+  var popup = document.getElementById('TwingleCartPopup');
+  var toast = document.getElementById('TwingleCartToast');
+  if (!popup) return;
+
+  var imgEl = popup.querySelector('[data-twingle-product-img]');
+  var titleEl = popup.querySelector('[data-twingle-product-title]');
+  var priceEl = popup.querySelector('[data-twingle-product-price]');
+  var countEl = popup.querySelector('[data-twingle-cart-count]');
+  var lastFocused = null;
+
+  function openPopup(detail) {
+    if (detail.imageUrl) {
+      imgEl.src = detail.imageUrl;
+      imgEl.alt = detail.title || '';
+      imgEl.style.display = '';
+    } else {
+      imgEl.removeAttribute('src');
+      imgEl.style.display = 'none';
+    }
+    titleEl.textContent = detail.title || '';
+    priceEl.textContent = detail.priceFormatted || '';
+    countEl.textContent = detail.cartCount != null ? detail.cartCount : '';
+
+    lastFocused = document.activeElement;
+    popup.classList.add('is-open');
+    popup.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    var focusTarget = popup.querySelector('.twingle-cart-popup__btn--primary');
+    if (focusTarget) setTimeout(function() { focusTarget.focus(); }, 50);
+  }
+
+  function closePopup() {
+    popup.classList.remove('is-open');
+    popup.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocused && typeof lastFocused.focus === 'function') {
+      try { lastFocused.focus(); } catch (e) {}
+    }
+  }
+
+  popup.addEventListener('click', function(e) {
+    if (e.target.closest('[data-twingle-close]')) {
+      e.preventDefault();
+      closePopup();
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && popup.classList.contains('is-open')) {
+      closePopup();
+    }
+  });
+
+  function showToast(message, isError) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.toggle('twingle-cart-toast--error', !!isError);
+    toast.classList.add('is-visible');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function() {
+      toast.classList.remove('is-visible');
+    }, 2800);
+  }
+
+  function updateCartCountBadges(count) {
+    var selectors = [
+      '[data-cart-count]',
+      '.cart-count',
+      '.header__cart-count',
+      '.cart-item-count',
+      '.js-cart-count',
+      '#cart-icon-bubble',
+      '#CartCount'
+    ];
+    selectors.forEach(function(sel) {
+      document.querySelectorAll(sel).forEach(function(el) {
+        el.textContent = count;
+        el.dataset.cartCount = count;
+        el.classList.toggle('is-empty', count === 0);
+      });
+    });
+  }
+
+  function fetchCartAndUpdate(addedItem) {
+    return fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+      .then(function(r) { return r.json(); })
+      .then(function(cart) {
+        updateCartCountBadges(cart.item_count);
+        return cart;
+      })
+      .catch(function() { return null; });
+  }
+
+  document.addEventListener('submit', function(event) {
+    var form = event.target.closest('.forspaceon-pc-add-form, .twingle-ajax-add');
+    if (!form) return;
+    if (form.dataset.twingleSkipAjax === 'true') return;
+
+    event.preventDefault();
+
+    var btn = form.querySelector('button[type="submit"], .forspaceon-pc-add-btn, .twingle-ajax-add-btn');
+    if (btn && btn.dataset.loading === 'true') return;
+
+    var originalLabel = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.dataset.loading = 'true';
+      btn.innerHTML = 'Ekleniyor…';
+    }
+
+    var formData = new FormData(form);
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: formData
+    })
+      .then(function(response) {
+        return response.json().then(function(data) {
+          if (!response.ok) {
+            throw new Error(data && data.description ? data.description : 'Sepete eklenemedi.');
+          }
+          return data;
+        });
+      })
+      .then(function(item) {
+        var fallbackImg = form.dataset.productImage || (item.featured_image && item.featured_image.url) || item.image || '';
+        var fallbackTitle = form.dataset.productTitle || item.product_title || item.title || 'Ürün';
+        var priceCents = typeof item.final_line_price === 'number'
+          ? item.final_line_price
+          : (typeof item.price === 'number' ? item.price : 0);
+
+        return fetchCartAndUpdate(item).then(function(cart) {
+          openPopup({
+            title: fallbackTitle,
+            imageUrl: fallbackImg,
+            priceFormatted: formatMoney(priceCents),
+            cartCount: cart ? cart.item_count : null
+          });
+
+          document.dispatchEvent(new CustomEvent('twingle:cart:added', {
+            detail: { item: item, cart: cart }
+          }));
+        });
+      })
+      .catch(function(err) {
+        showToast(err && err.message ? err.message : 'Sepete eklenemedi.', true);
+      })
+      .finally(function() {
+        if (btn) {
+          btn.dataset.loading = 'false';
+          btn.innerHTML = originalLabel;
+        }
+      });
+  }, false);
+})();
+</script>
