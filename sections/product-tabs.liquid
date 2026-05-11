@@ -1,0 +1,419 @@
+<div class="petibi-wrap">
+
+  <div class="tabs" id="petibiTabNav">
+    <div class="tab act" onclick="petibiSwitchTab('desc')">{{ section.settings.tab1_label }}</div>
+    <div class="tab" onclick="petibiSwitchTab('nut')">{{ section.settings.tab2_label }}</div>
+    <div class="tab" onclick="petibiSwitchTab('rvw')">{{ section.settings.tab3_label }} ({{ section.settings.review_count }})</div>
+    <div class="tab" onclick="petibiSwitchTab('faq')">{{ section.settings.tab4_label }}</div>
+  </div>
+
+  <div class="tc act" id="petibiTab-desc">
+    <p class="desc-p">{{ product.description }}</p>
+    {% if section.settings.description_features != blank %}
+      <div class="feat-grid2">
+        {% assign features = section.settings.description_features | newline_to_br | split: '<br />' %}
+        {% for feat in features %}
+          {% assign feat_clean = feat | strip %}
+          {% if feat_clean != blank %}
+            <div class="fi"><span class="fc">✓</span>{{ feat_clean }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="tc" id="petibiTab-nut">
+    <div class="ng">
+      <div class="nc">
+        <h4>{{ section.settings.analytics_title }}</h4>
+        {% assign analytics = section.settings.analytics_rows | newline_to_br | split: '<br />' %}
+        {% for row in analytics %}
+          {% assign row_clean = row | strip %}
+          {% if row_clean != blank %}
+            {% assign parts = row_clean | split: '|' %}
+            <div class="nr"><span>{{ parts[0] }}</span><span class="v">{{ parts[1] }}</span></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="nc">
+        <h4>{{ section.settings.ingredients_title }}</h4>
+        <p style="font-size:11px;color:var(--g600);line-height:1.6;margin-bottom:8px">{{ section.settings.ingredients_text }}</p>
+        {% assign extras = section.settings.ingredients_extras | newline_to_br | split: '<br />' %}
+        {% for row in extras %}
+          {% assign row_clean = row | strip %}
+          {% if row_clean != blank %}
+            {% assign parts = row_clean | split: '|' %}
+            <div class="nr"><span>{{ parts[0] }}</span><span class="v">{{ parts[1] }}</span></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% if section.settings.feeding_note != blank %}
+      <div style="margin-top:12px;background:#FEF3C7;border-radius:9px;padding:11px;font-size:12px;color:#92400E;line-height:1.5">
+        <strong>⚠️ {{ section.settings.feeding_note_title }}:</strong> {{ section.settings.feeding_note }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="tc" id="petibiTab-rvw">
+    <div class="rv-sum">
+      <div>
+        <span class="rv-big">{{ section.settings.review_avg }}</span>
+        <span class="rv-st">★★★★★</span>
+        <span style="font-size:11px;color:var(--g400);display:block;text-align:center">{{ section.settings.review_count }} {{ section.settings.reviews_label }}</span>
+      </div>
+      <div>
+        {% assign bars = section.settings.rating_bars | newline_to_br | split: '<br />' %}
+        {% for bar in bars %}
+          {% assign bar_clean = bar | strip %}
+          {% if bar_clean != blank %}
+            {% assign parts = bar_clean | split: '|' %}
+            <div class="br">
+              <span>{{ parts[0] }}</span>
+              <div class="bb"><div class="bf" style="width:{{ parts[1] }}%"></div></div>
+              <span class="bc2">{{ parts[2] }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {% for block in section.blocks %}
+      {% if block.type == 'review' %}
+        <div class="rv-card" {{ block.shopify_attributes }}>
+          <div class="rv-head">
+            <div style="display:flex;align-items:center;gap:7px">
+              <div class="rv-av">{{ block.settings.initials }}</div>
+              <div>
+                <div class="rv-nm">{{ block.settings.name }}</div>
+                <div class="rv-pet">{{ block.settings.location }}</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div style="color:var(--amber);font-size:12px">
+                {% for i in (1..block.settings.stars) %}★{% endfor %}
+              </div>
+              <div style="font-size:10px;color:var(--g400)">{{ block.settings.date }}</div>
+            </div>
+          </div>
+          <p class="rv-txt">{{ block.settings.text }}</p>
+          {% if block.settings.tag != blank %}
+            <span class="rv-b">{{ block.settings.tag }}</span>
+          {% endif %}
+          {% if block.settings.verified %}
+            <div style="font-size:10px;color:var(--green);font-weight:600;margin-top:5px">✓ {{ section.settings.verified_label }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if section.settings.show_all_reviews_text != blank %}
+      <button class="btn-all-reviews" onclick="petibiShowToast('💬', '...')">
+        {{ section.settings.show_all_reviews_text }}
+      </button>
+    {% endif %}
+  </div>
+
+  <div class="tc" id="petibiTab-faq">
+    {% for block in section.blocks %}
+      {% if block.type == 'faq_item' %}
+        <div class="faq-item" {{ block.shopify_attributes }}>
+          <div class="faq-q" onclick="petibiToggleFaq(this)">
+            {{ block.settings.question }}
+            <span class="far">▾</span>
+          </div>
+          <div class="faq-a">{{ block.settings.answer }}</div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
+
+<style>
+  .tabs { border-bottom: 1.5px solid var(--g200); display: flex; overflow-x: auto; margin-top: 8px; margin-bottom: 20px; }
+  .tab { padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--g500); border-bottom: 2px solid transparent; margin-bottom: -1.5px; transition: all .15s; white-space: nowrap; }
+  .tab.act { color: var(--p); border-bottom-color: var(--p); }
+  .tab:hover { color: var(--p); }
+  .tc { display: none; }
+  .tc.act { display: block; }
+  .desc-p { font-size: 13px; color: var(--g600); line-height: 1.7; margin-bottom: 14px; }
+  .feat-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 14px; }
+  .fi { display: flex; align-items: flex-start; gap: 6px; font-size: 13px; color: var(--g700); }
+  .fc { width: 17px; height: 17px; background: var(--green1); color: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .ng { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .nc { background: var(--g50); border: 1px solid var(--g200); border-radius: 9px; padding: 12px; }
+  .nc h4 { font-size: 10px; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .nr { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--g100); font-size: 12px; }
+  .nr:last-child { border-bottom: none; }
+  .nr .v { font-weight: 700; color: var(--p); }
+  .rv-sum { display: grid; grid-template-columns: 90px 1fr; gap: 18px; background: var(--g50); border: 1px solid var(--g200); border-radius: 11px; padding: 14px; margin-bottom: 14px; }
+  .rv-big { font-size: 38px; font-weight: 800; color: var(--p); display: block; line-height: 1; text-align: center; }
+  .rv-st { font-size: 15px; color: var(--amber); display: block; text-align: center; margin: 3px 0; }
+  .br { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+  .br span { font-size: 11px; color: var(--g500); width: 12px; text-align: right; }
+  .bb { flex: 1; height: 6px; background: var(--g200); border-radius: 3px; overflow: hidden; }
+  .bf { height: 100%; background: var(--amber); border-radius: 3px; }
+  .bc2 { font-size: 10px; color: var(--g400); width: 20px; }
+  .rv-card { background: white; border: 1px solid var(--g200); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+  .rv-head { display: flex; justify-content: space-between; margin-bottom: 7px; }
+  .rv-av { width: 32px; height: 32px; border-radius: 50%; background: var(--p1); color: var(--p); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rv-nm { font-size: 12px; font-weight: 700; color: var(--g800); }
+  .rv-pet { font-size: 10px; color: var(--g400); }
+  .rv-txt { font-size: 12px; color: var(--g600); line-height: 1.55; margin-bottom: 5px; }
+  .rv-b { font-size: 9px; background: var(--green1); color: #065F46; padding: 2px 6px; border-radius: 7px; font-weight: 600; display: inline-block; margin-right: 3px; }
+  .btn-all-reviews { width: 100%; background: white; border: 1.5px solid var(--g200); padding: 10px; border-radius: 9px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--p); margin-top: 5px; }
+  .faq-item { border-bottom: 1px solid var(--g200); }
+  .faq-q { padding: 12px 0; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; color: var(--g800); }
+  .faq-q:hover { color: var(--p); }
+  .far { font-size: 10px; color: var(--g400); transition: transform .2s; }
+  .far.open { transform: rotate(180deg); }
+  .faq-a { padding: 0 0 12px; font-size: 12px; color: var(--g600); line-height: 1.6; display: none; }
+  .faq-a.open { display: block; }
+  @media(max-width:600px) {
+    .feat-grid2 { grid-template-columns: 1fr; }
+    .ng { grid-template-columns: 1fr; }
+    .rv-sum { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  function petibiSwitchTab(id) {
+    var nav = document.getElementById('petibiTabNav');
+    nav.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('act'); });
+    document.querySelectorAll('.tc').forEach(function(c) { c.classList.remove('act'); });
+    var tab = document.getElementById('petibiTab-' + id);
+    if (tab) tab.classList.add('act');
+    var tabs = nav.querySelectorAll('.tab');
+    var map = { desc: 0, nut: 1, rvw: 2, faq: 3 };
+    if (tabs[map[id]]) tabs[map[id]].classList.add('act');
+  }
+  function petibiToggleFaq(el) {
+    var answer = el.nextElementSibling;
+    var arrow = el.querySelector('.far');
+    answer.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Tabs",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tab Labels"
+    },
+    {
+      "type": "text",
+      "id": "tab1_label",
+      "label": "Tab 1 Label",
+      "default": "Ürün Açıklaması"
+    },
+    {
+      "type": "text",
+      "id": "tab2_label",
+      "label": "Tab 2 Label",
+      "default": "Beslenme Değerleri"
+    },
+    {
+      "type": "text",
+      "id": "tab3_label",
+      "label": "Tab 3 Label",
+      "default": "Yorumlar"
+    },
+    {
+      "type": "text",
+      "id": "tab4_label",
+      "label": "Tab 4 Label",
+      "default": "Sıkça Sorulanlar"
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "textarea",
+      "id": "description_features",
+      "label": "Feature Checklist (one per line)",
+      "default": "%85 hayvansal kaynaklı protein\nSağlıklı kas gelişimini destekler\nKemik & eklem sağlığını güçlendirir\nParlak tüy & sağlıklı cilt formülü\nPrebiyotik ile sindirim desteği\nOmega-3 bağışıklık güçlendirici\nDüşük tahıllı formül\n0-1 yaş özel geliştirme"
+    },
+    {
+      "type": "header",
+      "content": "Nutrition"
+    },
+    {
+      "type": "text",
+      "id": "analytics_title",
+      "label": "Analytics Column Title",
+      "default": "Analitik Bileşenler"
+    },
+    {
+      "type": "textarea",
+      "id": "analytics_rows",
+      "label": "Analytics Rows (Label|Value, one per line)",
+      "default": "Ham Protein|%34\nHam Yağ|%16\nHam Kül|%8\nNem|%10\nKalsiyum|%1,2\nFosfor|%0,9"
+    },
+    {
+      "type": "text",
+      "id": "ingredients_title",
+      "label": "Ingredients Column Title",
+      "default": "İçindekiler"
+    },
+    {
+      "type": "textarea",
+      "id": "ingredients_text",
+      "label": "Ingredients Description",
+      "default": "Tavuk eti (%40), Pirinç, Tavuk yağı, Alabalık unu, Bezelye proteini, Prebiyotik, Omega-3, Vitamin E & C..."
+    },
+    {
+      "type": "textarea",
+      "id": "ingredients_extras",
+      "label": "Ingredients Extra Rows (Label|Value, one per line)",
+      "default": "Metabolik Enerji|380 kcal/100g\nGünlük Porsiyon|60-80g"
+    },
+    {
+      "type": "text",
+      "id": "feeding_note_title",
+      "label": "Feeding Note Title",
+      "default": "Besleme Talimatı"
+    },
+    {
+      "type": "textarea",
+      "id": "feeding_note",
+      "label": "Feeding Note",
+      "default": "Daima taze su bulundurun. 7 günde yavaşça eski mamadan yenisine geçin."
+    },
+    {
+      "type": "header",
+      "content": "Reviews"
+    },
+    {
+      "type": "text",
+      "id": "review_avg",
+      "label": "Average Rating",
+      "default": "4.9"
+    },
+    {
+      "type": "number",
+      "id": "review_count",
+      "label": "Total Review Count",
+      "default": 128
+    },
+    {
+      "type": "text",
+      "id": "reviews_label",
+      "label": "Reviews Label",
+      "default": "yorum"
+    },
+    {
+      "type": "textarea",
+      "id": "rating_bars",
+      "label": "Rating Bars (Star|Width%|Count, one per line)",
+      "default": "5|88|113\n4|9|11\n3|2|3\n2|1|1\n1|0|0"
+    },
+    {
+      "type": "text",
+      "id": "verified_label",
+      "label": "Verified Purchase Label",
+      "default": "Doğrulanmış Alım"
+    },
+    {
+      "type": "text",
+      "id": "show_all_reviews_text",
+      "label": "Show All Reviews Button Text",
+      "default": "Tüm Yorumları Gör →"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "initials",
+          "label": "Initials",
+          "default": "AY"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Ayşe Yılmaz"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location",
+          "default": "🐱 İstanbul"
+        },
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "12 Nisan 2026"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Review Text",
+          "default": "Harika bir ürün!"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag Badge (optional)",
+          "default": "test"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified Purchase",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Soru buraya gelecek?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Cevap buraya gelecek."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Tabs",
+      "blocks": [
+        { "type": "review", "settings": { "initials": "AY", "name": "Ayşe Yılmaz", "location": "🐱 İstanbul", "stars": 5, "date": "12 Nisan 2026", "text": "Kedim bu mamayı çok seviyor, tüyleri çok daha parlak oldu!", "tag": "✓ Tüy sağlığı", "verified": true } },
+        { "type": "review", "settings": { "initials": "EÇ", "name": "Elif Çelik", "location": "🐱 Ankara", "stars": 5, "date": "8 Nisan 2026", "text": "Quiz özelliğinden bu mamayı önerdiler, mükemmel seçim oldu!", "tag": "✓ Quiz ile buldu", "verified": true } },
+        { "type": "faq_item", "settings": { "question": "Kaç yaşındaki kediler için uygundur?", "answer": "0-12 ay arası yavru kediler için geliştirilmiştir." } },
+        { "type": "faq_item", "settings": { "question": "4 in 1 ne anlama geliyor?", "answer": "Pakette 4 farklı lezzet: Tavuklu, Balıklı, Hindili, Ördekli. Her biri ayrı ambalajda gelir." } },
+        { "type": "faq_item", "settings": { "question": "Günde ne kadar vermem gerekiyor?", "answer": "4 aylık, 1 kg yavru için günde 60-80g önerilir." } },
+        { "type": "faq_item", "settings": { "question": "Kargo süresi?", "answer": "16:00'a kadar siparişler aynı gün kargoya verilir. 200₺ üzeri kargo ücretsizdir." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

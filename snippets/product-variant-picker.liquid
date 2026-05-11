@@ -1,0 +1,62 @@
+{% unless product.has_only_default_variant %}
+<div class="sec" {{ block.shopify_attributes }}>
+  <div class="var-label">
+    {{ block.settings.label }} —
+    <span id="petibiSelectedVariantLabel" style="color:var(--p);font-weight:700">
+      {{ product.selected_or_first_available_variant.title }} {{ block.settings.selected_suffix }}
+    </span>
+  </div>
+  <div class="var-grid" id="petibiVarGrid">
+    {%- for variant in product.variants -%}
+      <button
+        type="button"
+        class="vbtn {% if variant.id == product.selected_or_first_available_variant.id %}act{% endif %}"
+        data-variant-id="{{ variant.id }}"
+        data-price="{{ variant.price }}"
+        data-price-formatted="{{ variant.price | money }}"
+        data-compare="{{ variant.compare_at_price }}"
+        data-compare-formatted="{{ variant.compare_at_price | money }}"
+        data-title="{{ variant.title | escape }}"
+        data-available="{{ variant.available }}"
+        onclick="petibiSelectVariant(this)"
+        {% unless variant.available %}aria-disabled="true"{% endunless %}
+      >
+        {{ variant.title }}
+        <small>{{ variant.price | money }}</small>
+        {%- if variant.metafields.custom.badge != blank -%}
+          <span class="bv">{{ variant.metafields.custom.badge }}</span>
+        {%- endif -%}
+      </button>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+  function petibiSelectVariant(el) {
+    document.querySelectorAll('.vbtn').forEach(function(b) { b.classList.remove('act'); });
+    el.classList.add('act');
+
+    var title     = el.getAttribute('data-title');
+    var price     = el.getAttribute('data-price-formatted');
+    var compare   = el.getAttribute('data-compare-formatted');
+    var variantId = el.getAttribute('data-variant-id');
+    var suffix    = '{{ block.settings.selected_suffix }}';
+
+    var labelEl = document.getElementById('petibiSelectedVariantLabel');
+    if (labelEl) labelEl.textContent = title + ' ' + suffix;
+
+    var priceEl = document.getElementById('petibiPriceMain');
+    if (priceEl) priceEl.textContent = price;
+
+    var compareEl = document.getElementById('petibiPriceOld');
+    if (compareEl) compareEl.textContent = (compare !== price) ? compare : '';
+
+    var variantInput = document.getElementById('petibiVariantId');
+    if (variantInput) variantInput.value = variantId;
+
+    var url = new URL(window.location.href);
+    url.searchParams.set('variant', variantId);
+    window.history.replaceState({}, '', url.toString());
+  }
+</script>
+{% endunless %}

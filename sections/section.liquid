@@ -1,0 +1,407 @@
+{%- liquid
+  assign content_direction = section.settings.content_direction | default: 'column'
+  assign vertical_on_mobile = section.settings.vertical_on_mobile
+  assign section_width = section.settings.section_width | default: 'page-width'
+  assign section_height = section.settings.section_height
+  assign section_height_custom = section.settings.section_height_custom | default: 50
+  assign gap = section.settings.gap | default: 0
+  assign color_scheme = section.settings.color_scheme
+  assign background_media = section.settings.background_media | default: 'none'
+  assign border = section.settings.border | default: 'none'
+  assign border_width = section.settings.border_width | default: 1
+  assign border_opacity = section.settings.border_opacity | default: 100
+  assign border_radius = section.settings.border_radius | default: 0
+  assign toggle_overlay = section.settings.toggle_overlay
+  assign overlay_color = section.settings.overlay_color | default: '#00000026'
+  assign overlay_style = section.settings.overlay_style | default: 'solid'
+  assign gradient_direction = section.settings.gradient_direction | default: 'to top'
+  assign padding_block_start = section.settings.padding-block-start | default: 0
+  assign padding_block_end = section.settings.padding-block-end | default: 0
+
+  if content_direction == 'column'
+    assign h_align = section.settings.horizontal_alignment_flex_direction_column | default: 'center'
+    assign v_align = section.settings.vertical_alignment_flex_direction_column | default: 'center'
+  else
+    assign h_align = section.settings.horizontal_alignment | default: 'flex-start'
+    assign v_align = section.settings.vertical_alignment | default: 'center'
+  endif
+
+  case section_height
+    when 'small'
+      assign min_height_css = '300px'
+    when 'medium'
+      assign min_height_css = '500px'
+    when 'large'
+      assign min_height_css = '700px'
+    when 'screen'
+      assign min_height_css = '100vh'
+    when 'custom'
+      assign min_height_css = section_height_custom | append: 'vh'
+    else
+      assign min_height_css = 'auto'
+  endcase
+
+  case section_width
+    when 'page-width'
+      assign max_width_css = 'var(--page-width, 1200px)'
+    when 'full-width'
+      assign max_width_css = '100%'
+    when 'narrow'
+      assign max_width_css = '720px'
+    else
+      assign max_width_css = 'var(--page-width, 1200px)'
+  endcase
+-%}
+
+<style>
+  .section-{{ section.id }} {
+    --section-gap: {{ gap }}px;
+    --section-min-height: {{ min_height_css }};
+    --section-max-width: {{ max_width_css }};
+    --section-border-radius: {{ border_radius }}px;
+    padding-block-start: {{ padding_block_start }}px;
+    padding-block-end: {{ padding_block_end }}px;
+    position: relative;
+  }
+
+  .section-{{ section.id }}__inner {
+    display: flex;
+    flex-direction: {{ content_direction }};
+    justify-content: {% if content_direction == 'column' %}{{ v_align }}{% else %}{{ h_align }}{% endif %};
+    align-items: {% if content_direction == 'column' %}{{ h_align }}{% else %}{{ v_align }}{% endif %};
+    gap: var(--section-gap);
+    max-width: var(--section-max-width);
+    margin-inline: auto;
+    padding-inline: 16px;
+    min-height: var(--section-min-height);
+    border-radius: var(--section-border-radius);
+    position: relative;
+    z-index: 1;
+  }
+
+  {%- if border != 'none' -%}
+    .section-{{ section.id }}__inner {
+      border: {{ border_width }}px {{ border }} rgba(0,0,0,{{ border_opacity | divided_by: 100.0 }});
+    }
+  {%- endif -%}
+
+  {%- if toggle_overlay -%}
+    .section-{{ section.id }}::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      {% if overlay_style == 'gradient' %}
+        background: linear-gradient({{ gradient_direction }}, {{ overlay_color }}, transparent);
+      {% else %}
+        background: {{ overlay_color }};
+      {% endif %}
+      z-index: 0;
+    }
+  {%- endif -%}
+
+  {%- if vertical_on_mobile -%}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}__inner {
+        flex-direction: column;
+      }
+    }
+  {%- endif -%}
+</style>
+
+<div
+  class="section section-{{ section.id }}{% if color_scheme != blank %} color-{{ color_scheme }}{% endif %}"
+  {{ section.shopify_attributes }}
+>
+  <div class="section-{{ section.id }}__inner">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Section",
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "Content direction",
+      "options": [
+        { "value": "column", "label": "Vertical" },
+        { "value": "row", "label": "Horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "checkbox",
+      "id": "vertical_on_mobile",
+      "label": "Stack on mobile",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "Horizontal alignment (row)",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" },
+        { "value": "space-between", "label": "Space between" }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ section.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment (row)",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "align_baseline",
+      "label": "Align to baseline",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_flex_direction_column",
+      "label": "Horizontal alignment (column)",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction == 'column' }}"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment_flex_direction_column",
+      "label": "Vertical alignment (column)",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.content_direction == 'column' }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        { "value": "page-width", "label": "Page width" },
+        { "value": "full-width", "label": "Full width" },
+        { "value": "narrow", "label": "Narrow" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "Section height",
+      "options": [
+        { "value": "", "label": "Auto" },
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "screen", "label": "Screen" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "range",
+      "id": "section_height_custom",
+      "label": "Custom height (vh)",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 50,
+      "visible_if": "{{ section.settings.section_height == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "background_media",
+      "label": "Background media",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "Video position",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "background_image_position",
+      "label": "Background image position",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "header",
+      "content": "Border"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "Border style",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "solid", "label": "Solid" },
+        { "value": "dashed", "label": "Dashed" },
+        { "value": "dotted", "label": "Dotted" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "label": "Border opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "Enable overlay",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#00000026"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay style",
+      "options": [
+        { "value": "solid", "label": "Solid" },
+        { "value": "gradient", "label": "Gradient" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Gradient direction",
+      "options": [
+        { "value": "to top", "label": "To top" },
+        { "value": "to bottom", "label": "To bottom" },
+        { "value": "to left", "label": "To left" },
+        { "value": "to right", "label": "To right" }
+      ],
+      "default": "to top"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Section",
+      "category": "Layout"
+    }
+  ]
+}
+{% endschema %}

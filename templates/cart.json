@@ -1,0 +1,51 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {
+        "bg_color": "#ffffff",
+        "box_bg_color": "#ffffff",
+        "light_bg_color": "#f9f9f9",
+        "border_color": "#eeeeee",
+        "primary_color": "#8a3b8e",
+        "text_color": "#333333",
+        "danger_color": "#e53e3e",
+        "warning_color": "#f6ad55",
+        "info_bg_color": "#fcfbfe",
+        "info_icon_color": "#5c6c9a",
+        "page_title": "Sepetim",
+        "summary_title": "Sepet Özeti",
+        "th_product": "Ürün",
+        "th_price": "Fiyat",
+        "th_quantity": "Adet",
+        "th_subtotal": "Ara Toplam",
+        "coupon_placeholder": "Kupon Kodu",
+        "btn_apply": "Kuponu Uygula",
+        "coupon_alert_text": "Kupon kodu ödeme adımında (Checkout) uygulanacaktır. Lütfen ödemeye geçiniz.",
+        "btn_update": "Sepeti Güncelle",
+        "show_shipping_bar": true,
+        "shipping_threshold": 1000,
+        "shipping_text": "Bedava kargo için sepete <strong>[amount]</strong> değerinde ürün ekleyin!",
+        "shipping_success_text": "<strong>Tebrikler!</strong> Bedava kargo kazandınız.",
+        "totals_title": "Sipariş Özeti",
+        "lbl_subtotal": "Ara Toplam",
+        "lbl_total": "Toplam",
+        "btn_checkout": "Ödemeye Geç",
+        "safe_checkout_title": "Güvenli Alışveriş & Hızlı Ödeme",
+        "info_1_title": "Binlerce Mutlu Müşteri",
+        "info_1_text": "Bizi tercih eden mutlu ve memnun müşterilerimize katılın!",
+        "info_2_title": "Kolay İade",
+        "info_2_text": "Zahmetsiz iade ve değişim sürecinin tadını çıkarın.",
+        "info_3_title": "Hemen Sipariş Ver & Hediye Kazan",
+        "info_3_text": "Siparişinize özel sürpriz hediyeler paketinizde!",
+        "empty_cart_text": "Sepetiniz şu an boş görünüyor.",
+        "empty_cart_btn": "Alışverişe Başla",
+        "padding_top": 0,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

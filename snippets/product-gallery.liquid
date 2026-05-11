@@ -1,0 +1,46 @@
+<div class="petibi-gallery">
+  <div class="main-img">
+    {%- if product.featured_image -%}
+      <img
+        id="petibiMainImg"
+        src="{{ product.featured_image | img_url: '800x800' }}"
+        alt="{{ product.featured_image.alt | escape }}"
+        width="800"
+        height="800"
+        loading="eager"
+      >
+    {%- else -%}
+      <div class="no-img-placeholder">{{ 'image' | placeholder_svg_tag }}</div>
+    {%- endif -%}
+    {%- if badge_text != blank -%}
+      <span class="img-badge">{{ badge_text }}</span>
+    {%- endif -%}
+    {%- if show_zoom_hint -%}
+      <span class="zoom-hint">🔍 {{ zoom_label }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- if product.images.size > 1 -%}
+    <div class="thumbs">
+      {%- for image in product.images limit: 6 -%}
+        <button
+          class="th {% if forloop.first %}act{% endif %}"
+          type="button"
+          onclick="petibiGallerySet(this, '{{ image | img_url: '800x800' }}', '{{ image.alt | escape }}')"
+          aria-label="{{ image.alt | default: product.title | escape }}"
+        >
+          <img src="{{ image | img_url: '120x120', crop: 'center' }}" alt="{{ image.alt | escape }}" loading="lazy" width="120" height="120">
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+<script>
+  function petibiGallerySet(el, src, alt) {
+    document.querySelectorAll('.th').forEach(function(t) { t.classList.remove('act'); });
+    el.classList.add('act');
+    var img = document.getElementById('petibiMainImg');
+    if (img) { img.src = src; img.alt = alt; }
+  }
+</script>

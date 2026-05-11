@@ -1,0 +1,18 @@
+<div class="sec" {{ block.shopify_attributes }}>
+  <div class="feats">
+    {%- assign feat_icons  = block.settings.feat_1_icon  | append: '||' | append: block.settings.feat_2_icon  | append: '||' | append: block.settings.feat_3_icon  | append: '||' | append: block.settings.feat_4_icon  | split: '||' -%}
+    {%- assign feat_titles = block.settings.feat_1_title | append: '||' | append: block.settings.feat_2_title | append: '||' | append: block.settings.feat_3_title | append: '||' | append: block.settings.feat_4_title | split: '||' -%}
+    {%- assign feat_descs  = block.settings.feat_1_desc  | append: '||' | append: block.settings.feat_2_desc  | append: '||' | append: block.settings.feat_3_desc  | append: '||' | append: block.settings.feat_4_desc  | split: '||' -%}
+    {%- for i in (0..3) -%}
+      {%- if feat_titles[i] != blank -%}
+        <div class="feat">
+          <span class="feat-icon" aria-hidden="true">{{ feat_icons[i] }}</span>
+          <div class="feat-text">
+            <b>{{ feat_titles[i] }}</b>
+            {{ feat_descs[i] }}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>

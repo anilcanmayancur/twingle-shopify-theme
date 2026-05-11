@@ -1,0 +1,429 @@
+{% style %}
+  :root {
+    --tw-primary: {{ section.settings.primary_color }};
+    --tw-text: {{ section.settings.text_color }};
+    --tw-bg: {{ section.settings.bg_color }};
+    --tw-border: {{ section.settings.border_color }};
+    --tw-tab-font: {{ section.settings.tab_font_size }}px;
+    --tw-max-width: {{ section.settings.container_max_width }}px;
+  }
+
+  .twinkle-tabs-section-{{ section.id }} {
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: var(--tw-bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--tw-text);
+    border-top: 1px solid var(--tw-border);
+  }
+
+  .twinkle-tabs-container {
+    max-width: var(--tw-max-width);
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .twinkle-tabs-nav {
+    display: flex;
+    justify-content: {{ section.settings.tab_alignment }};
+    gap: 40px;
+    border-bottom: 1px solid var(--tw-border);
+    margin-bottom: 40px;
+  }
+
+  .twinkle-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 0 0 15px 0;
+    font-size: var(--tw-tab-font);
+    font-weight: 600;
+    color: var(--tw-text);
+    opacity: 0.6;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .twinkle-tab-btn:hover {
+    color: var(--tw-primary);
+    opacity: 1;
+  }
+
+  .twinkle-tab-btn.active {
+    color: var(--tw-primary);
+    opacity: 1;
+  }
+
+  .twinkle-tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--tw-primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .twinkle-tab-btn.active::after {
+    transform: scaleX(1);
+  }
+
+  .twinkle-tabs-content {
+    position: relative;
+  }
+
+  .twinkle-tab-pane {
+    display: none;
+    animation: fadeIn 0.5s ease;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .twinkle-tab-pane.active {
+    display: block;
+  }
+
+  .twinkle-tab-pane img, 
+  .twinkle-tab-pane iframe, 
+  .twinkle-tab-pane video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+
+  .twinkle-tab-pane table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .twinkle-tab-pane th, 
+  .twinkle-tab-pane td {
+    border: 1px solid var(--tw-border);
+    padding: 10px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media screen and (max-width: 768px) {
+    .twinkle-tabs-nav {
+      justify-content: flex-start;
+      gap: 25px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+    .twinkle-tabs-nav::-webkit-scrollbar {
+      display: none;
+    }
+    .twinkle-tab-btn {
+      font-size: calc(var(--tw-tab-font) - 2px);
+    }
+  }
+{% endstyle %}
+
+<div class="twinkle-tabs-section-{{ section.id }}">
+  <div class="twinkle-tabs-container">
+    
+    {% assign is_first_tab = true %}
+    
+    <div class="twinkle-tabs-nav" role="tablist">
+      
+      {% if section.settings.show_description %}
+        <button class="twinkle-tab-btn {% if is_first_tab %}active{% endif %}" data-target="tab-desc-{{ section.id }}" role="tab">
+          {{ section.settings.description_title }}
+        </button>
+        {% assign is_first_tab = false %}
+      {% endif %}
+
+      {% for block in section.blocks %}
+        <button class="twinkle-tab-btn {% if is_first_tab %}active{% endif %}" data-target="tab-{{ block.id }}-{{ section.id }}" role="tab" {{ block.shopify_attributes }}>
+          {{ block.settings.title }}
+        </button>
+        {% assign is_first_tab = false %}
+      {% endfor %}
+
+      {% if section.settings.show_reviews %}
+        <button class="twinkle-tab-btn {% if is_first_tab %}active{% endif %}" data-target="tab-reviews-{{ section.id }}" role="tab">
+          {{ section.settings.reviews_title }}
+        </button>
+      {% endif %}
+      
+    </div>
+
+    {% assign is_first_pane = true %}
+
+    <div class="twinkle-tabs-content">
+      
+      {% if section.settings.show_description %}
+        <div id="tab-desc-{{ section.id }}" class="twinkle-tab-pane {% if is_first_pane %}active{% endif %}" role="tabpanel">
+          {% if product.description != blank %}
+            {{ product.description }}
+          {% else %}
+            <p>{{ section.settings.empty_description_text }}</p>
+          {% endif %}
+        </div>
+        {% assign is_first_pane = false %}
+      {% endif %}
+
+      {% for block in section.blocks %}
+        <div id="tab-{{ block.id }}-{{ section.id }}" class="twinkle-tab-pane {% if is_first_pane %}active{% endif %}" role="tabpanel">
+          {% if block.settings.content != blank %}
+            <div class="twinkle-tab-richtext">{{ block.settings.content }}</div>
+          {% endif %}
+          {% if block.settings.page != blank %}
+            <div class="twinkle-tab-page">{{ pages[block.settings.page].content }}</div>
+          {% endif %}
+          {% if block.settings.custom_liquid != blank %}
+            <div class="twinkle-tab-liquid">{{ block.settings.custom_liquid }}</div>
+          {% endif %}
+        </div>
+        {% assign is_first_pane = false %}
+      {% endfor %}
+
+      {% if section.settings.show_reviews %}
+        <div id="tab-reviews-{{ section.id }}" class="twinkle-tab-pane {% if is_first_pane %}active{% endif %}" role="tabpanel">
+          {% render 'judgeme_widgets', widget_type: 'judgeme_review_widget', concierge_install: true, product: product %}
+          
+          {% if product.metafields.judgeme.widget == blank %}
+            <div style="text-align:center; padding: 40px 0; background: var(--tw-bg); border: 1px dashed var(--tw-border); border-radius: 8px;">
+              <p style="margin:0; font-weight: 600;">Yorumlar Yükleniyor...</p>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabsSection = document.querySelector('.twinkle-tabs-section-{{ section.id }}');
+    if (!tabsSection) return;
+
+    const tabBtns = tabsSection.querySelectorAll('.twinkle-tab-btn');
+    const tabPanes = tabsSection.querySelectorAll('.twinkle-tab-pane');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.remove('active'));
+
+        this.classList.add('active');
+        const targetId = this.getAttribute('data-target');
+        const targetPane = document.getElementById(targetId);
+        
+        if (targetPane) {
+          targetPane.classList.add('active');
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Twinkle Product Tabs",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Sabit Sekme: Ürün Açıklaması"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Ürün Açıklamasını Göster",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "description_title",
+      "label": "Sekme Başlığı",
+      "default": "Ürün Açıklaması"
+    },
+    {
+      "type": "text",
+      "id": "empty_description_text",
+      "label": "Açıklama Yoksa Gösterilecek Metin",
+      "default": "Bu ürün için henüz bir açıklama girilmemiştir."
+    },
+    {
+      "type": "header",
+      "content": "Sabit Sekme: Yorumlar (Judge.me)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reviews",
+      "label": "Yorumlar Sekmesini Göster",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "reviews_title",
+      "label": "Sekme Başlığı",
+      "default": "Yorumlar"
+    },
+    {
+      "type": "header",
+      "content": "Tasarım ve Renkler"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Arkaplan Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Vurgu Rengi (Aktif Sekme/Hover)",
+      "default": "#8a3b8e"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Metin Rengi",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Çizgi ve Kenarlık Rengi",
+      "default": "#eeeeee"
+    },
+    {
+      "type": "header",
+      "content": "Tipografi ve Düzen"
+    },
+    {
+      "type": "range",
+      "id": "tab_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Sekme Yazı Boyutu",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "tab_alignment",
+      "label": "Sekme Hizalaması",
+      "options": [
+        { "value": "flex-start", "label": "Sola Yasla" },
+        { "value": "center", "label": "Ortala" },
+        { "value": "flex-end", "label": "Sağa Yasla" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "İçerik Genişliği",
+      "default": 1200
+    },
+    {
+      "type": "header",
+      "content": "Boşluk Ayarları"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Dış Üst Boşluk (Margin Top)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Dış Alt Boşluk (Margin Bottom)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "İç Üst Boşluk (Padding Top)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "İç Alt Boşluk (Padding Bottom)",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "custom_tab",
+      "name": "Özel Sekme",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Sekme Başlığı",
+          "default": "Yeni Sekme"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "İçerik (Metin/Metafield)"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Sayfa İçeriği Bağla"
+        },
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Özel Liquid / HTML"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Twinkle Product Tabs",
+      "blocks": [
+        {
+          "type": "custom_tab",
+          "settings": {
+            "title": "İptal ve İade Koşulları",
+            "content": "<p>Siparişlerinizi teslim aldığınız tarihten itibaren <strong>14 gün içerisinde</strong> iade edebilirsiniz.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

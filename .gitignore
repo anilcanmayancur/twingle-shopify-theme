@@ -1,0 +1,10 @@
+.shopify/
+.DS_Store
+node_modules/
+.env
+.env.local
+.vscode/
+.idea/
+*.log
+.cache/
+*.tmp

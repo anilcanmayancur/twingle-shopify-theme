@@ -1,0 +1,20 @@
+<div class="sec" id="petibiPriceBlock" {{ block.shopify_attributes }}>
+  <div class="price-row">
+    <span class="price-main" id="petibiPriceMain">
+      {{ product.selected_or_first_available_variant.price | money }}
+    </span>
+    {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+      <span class="price-old" id="petibiPriceOld">
+        {{ product.selected_or_first_available_variant.compare_at_price | money }}
+      </span>
+      {%- assign discount_pct = product.selected_or_first_available_variant.compare_at_price
+        | minus: product.selected_or_first_available_variant.price
+        | times: 100
+        | divided_by: product.selected_or_first_available_variant.compare_at_price -%}
+      <span class="price-tag" id="petibiDiscountTag">%{{ discount_pct }} {{ block.settings.discount_label }}</span>
+    {%- endif -%}
+  </div>
+  {%- if block.settings.price_note != blank -%}
+    <div class="price-per" id="petibiPriceNote">{{ block.settings.price_note }}</div>
+  {%- endif -%}
+</div>

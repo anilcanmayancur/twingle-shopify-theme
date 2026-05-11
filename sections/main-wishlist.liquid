@@ -1,0 +1,330 @@
+{% comment %}
+  Twinkle Wishlist sayfası - localStorage'daki favorileri listeler.
+  Sayfa şablonu: page.wishlist
+  Shopify'da "Wishlist" veya "Favoriler" adında bir sayfa oluşturup şablon olarak "page.wishlist" seçin.
+{% endcomment %}
+
+<div class="twinkle-wishlist-page" id="twinkle-wishlist-section"
+  data-cart-add-url="{{ routes.cart_add_url | append: '.js' }}"
+  data-money-format="{{ shop.money_format | strip_html | escape }}">
+  <div class="twinkle-wishlist-container">
+    <header class="twinkle-wishlist-header">
+      <h1 class="twinkle-wishlist-title">{{ section.settings.title }}</h1>
+      <p class="twinkle-wishlist-subtitle">{{ section.settings.subtitle }}</p>
+    </header>
+
+    <div id="twinkle-wishlist-empty" class="twinkle-wishlist-empty" hidden>
+      <div class="twinkle-wishlist-empty-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </div>
+      <p class="twinkle-wishlist-empty-text">{{ section.settings.empty_text }}</p>
+      <a href="{{ section.settings.empty_button_link }}" class="twinkle-wishlist-empty-btn">{{ section.settings.empty_button_text }}</a>
+    </div>
+
+    <div id="twinkle-wishlist-grid" class="twinkle-wishlist-grid"></div>
+  </div>
+</div>
+
+<style>
+  .twinkle-wishlist-page {
+    padding: 40px 0 80px;
+    min-height: 60vh;
+  }
+  .twinkle-wishlist-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .twinkle-wishlist-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .twinkle-wishlist-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 8px 0;
+  }
+  .twinkle-wishlist-subtitle {
+    font-size: 15px;
+    color: #666;
+    margin: 0;
+  }
+  .twinkle-wishlist-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--tw-light-gray, #f7f7f7);
+    border-radius: 16px;
+  }
+  .twinkle-wishlist-empty[hidden] { display: none !important; }
+  .twinkle-wishlist-empty-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    color: var(--tw-primary, #8a3b8e);
+    opacity: 0.5;
+  }
+  .twinkle-wishlist-empty-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+  .twinkle-wishlist-empty-text {
+    font-size: 16px;
+    color: #555;
+    margin: 0 0 20px 0;
+  }
+  .twinkle-wishlist-empty-btn {
+    display: inline-block;
+    background: var(--tw-primary, #8a3b8e);
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.3s;
+  }
+  .twinkle-wishlist-empty-btn:hover { opacity: 0.9; color: #fff; }
+  .twinkle-wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .twinkle-wl-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    transition: box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .twinkle-wl-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+  .twinkle-wl-card-image-wrap {
+    position: relative;
+    aspect-ratio: 1;
+    background: #f7f7f7;
+  }
+  .twinkle-wl-card-image-wrap a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .twinkle-wl-card-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+  .twinkle-wl-remove {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.3s;
+  }
+  .twinkle-wl-remove:hover { background: #fee; }
+  .twinkle-wl-remove svg { width: 18px; height: 18px; stroke: #333; fill: none; stroke-width: 2; }
+  .twinkle-wl-card-body {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .twinkle-wl-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .twinkle-wl-card-title a {
+    color: #222;
+    text-decoration: none;
+  }
+  .twinkle-wl-card-title a:hover { color: var(--tw-primary, #8a3b8e); }
+  .twinkle-wl-card-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--tw-primary, #8a3b8e);
+    margin-bottom: 12px;
+  }
+  .twinkle-wl-card-price s {
+    font-size: 14px;
+    color: #999;
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .twinkle-wl-add-cart {
+    margin-top: auto;
+    width: 100%;
+    background: var(--tw-primary, #8a3b8e);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  .twinkle-wl-add-cart:hover { opacity: 0.9; }
+  .twinkle-wl-add-cart:disabled { background: #ccc; cursor: not-allowed; }
+  @media (max-width: 768px) {
+    .twinkle-wishlist-title { font-size: 24px; }
+    .twinkle-wishlist-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+  }
+</style>
+
+<script>
+(function() {
+  var section = document.getElementById('twinkle-wishlist-section');
+  if (!section) return;
+  var emptyEl = document.getElementById('twinkle-wishlist-empty');
+  var gridEl = document.getElementById('twinkle-wishlist-grid');
+  var cartAddUrl = section.getAttribute('data-cart-add-url') || '/cart/add';
+  var moneyFormat = (section.getAttribute('data-money-format') || '{{amount}} TL').replace(/\{\{amount\}\}/g, '%s').replace(/\{\{amount_no_decimals\}\}/g, '%d');
+
+  function formatMoney(cents) {
+    if (cents == null) return '';
+    var amount = (cents / 100).toFixed(2);
+    return moneyFormat.replace('%s', amount).replace('%d', Math.round(cents / 100));
+  }
+
+  function render() {
+    var items = window.TwinkleWishlist ? window.TwinkleWishlist.getAll() : [];
+    if (items.length === 0) {
+      emptyEl.removeAttribute('hidden');
+      gridEl.innerHTML = '';
+      return;
+    }
+    emptyEl.setAttribute('hidden', '');
+    gridEl.innerHTML = items.map(function(item) {
+      var priceHtml = formatMoney(Number(item.price));
+      var compareHtml = item.compare_at_price && Number(item.compare_at_price) > Number(item.price) ? '<s>' + formatMoney(Number(item.compare_at_price)) + '</s>' : '';
+      var img = item.image ? '<img src="' + item.image.replace(/"/g, '&quot;') + '" alt="" loading="lazy">' : '';
+      return '<div class="twinkle-wl-card" data-product-id="' + item.id + '">' +
+        '<div class="twinkle-wl-card-image-wrap">' +
+          '<a href="' + (item.url || '/products/' + item.handle) + '">' + img + '</a>' +
+          '<button type="button" class="twinkle-wl-remove" aria-label="Favorilerden çıkar" data-product-id="' + item.id + '">' +
+            '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="twinkle-wl-card-body">' +
+          '<h3 class="twinkle-wl-card-title"><a href="' + (item.url || '/products/' + item.handle) + '">' + (item.title || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</a></h3>' +
+          '<div class="twinkle-wl-card-price">' + priceHtml + ' ' + compareHtml + '</div>' +
+          '<button type="button" class="twinkle-wl-add-cart" data-variant-id="' + (item.variant_id || '') + '">Sepete Ekle</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    gridEl.querySelectorAll('.twinkle-wl-remove').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = this.getAttribute('data-product-id');
+        if (window.TwinkleWishlist) window.TwinkleWishlist.remove(id);
+        render();
+      });
+    });
+    gridEl.querySelectorAll('.twinkle-wl-add-cart').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var variantId = this.getAttribute('data-variant-id');
+        if (!variantId) return;
+        this.disabled = true;
+        this.textContent = 'Ekleniyor...';
+        fetch(cartAddUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ items: [{ id: Number(variantId), quantity: 1 }] })
+        }).then(function(r) { return r.json(); }).then(function(data) {
+          if (data.status && data.status !== 200) {
+            btn.disabled = false;
+            btn.textContent = 'Sepete Ekle';
+            return;
+          }
+          window.location.href = '/cart';
+        }).catch(function() {
+          btn.disabled = false;
+          btn.textContent = 'Sepete Ekle';
+          var form = document.createElement('form');
+          form.method = 'POST';
+          form.action = cartAddUrl.replace('.js', '');
+          var id = document.createElement('input');
+          id.name = 'id';
+          id.value = variantId;
+          form.appendChild(id);
+          var q = document.createElement('input');
+          q.name = 'quantity';
+          q.value = '1';
+          form.appendChild(q);
+          document.body.appendChild(form);
+          form.submit();
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      render();
+      window.addEventListener('twinkle-wishlist-change', render);
+    });
+  } else {
+    render();
+    window.addEventListener('twinkle-wishlist-change', render);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wishlist (Favori Listesi)",
+  "tag": "section",
+  "class": "section-wishlist",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Başlık",
+      "default": "Favori Listem"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Alt başlık",
+      "default": "Beğendiğiniz ürünleri burada görebilirsiniz."
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Boş liste metni",
+      "default": "Henüz favori ürününüz yok. Alışverişe başlayın!"
+    },
+    {
+      "type": "text",
+      "id": "empty_button_text",
+      "label": "Boş liste buton metni",
+      "default": "Alışverişe Başla"
+    },
+    {
+      "type": "url",
+      "id": "empty_button_link",
+      "label": "Boş liste buton linki",
+      "default": "/collections/all"
+    }
+  ]
+}
+{% endschema %}

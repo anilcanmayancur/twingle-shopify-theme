@@ -1,0 +1,34 @@
+<div class="sec" {{ block.shopify_attributes }}>
+  <div class="sub-grid">
+    <div class="sub-opt act" id="petibiSubOne" onclick="petibiSelectPurchase('one')" role="radio" aria-checked="true" tabindex="0">
+      <div class="sub-opt-label">{{ block.settings.onetime_icon }} {{ block.settings.onetime_label }}</div>
+      <div class="sub-opt-price" id="petibiOnetimePrice">
+        {{ product.selected_or_first_available_variant.price | money }}
+      </div>
+    </div>
+    <div class="sub-opt" id="petibiSubSub" onclick="petibiSelectPurchase('sub')" role="radio" aria-checked="false" tabindex="0">
+      <span class="sub-tag">{{ block.settings.sub_badge }}</span>
+      <div class="sub-opt-label">{{ block.settings.sub_icon }} {{ block.settings.sub_label }}</div>
+      <div class="sub-opt-price" id="petibiSubPrice">
+        {%- assign sub_price = product.selected_or_first_available_variant.price | times: 0.85 -%}
+        {{ sub_price | money }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function petibiSelectPurchase(type) {
+    var one = document.getElementById('petibiSubOne');
+    var sub = document.getElementById('petibiSubSub');
+    one.classList.toggle('act', type === 'one');
+    one.setAttribute('aria-checked', type === 'one' ? 'true' : 'false');
+    sub.classList.toggle('act', type === 'sub');
+    sub.setAttribute('aria-checked', type === 'sub' ? 'true' : 'false');
+    var planInput = document.getElementById('petibiSellingPlan');
+    if (planInput) {
+      planInput.value = (type === 'sub') ? (planInput.getAttribute('data-plan-id') || '') : '';
+      planInput.disabled = type !== 'sub';
+    }
+  }
+</script>

@@ -1,0 +1,499 @@
+{%- assign promo_cols = section.blocks.size -%}
+{%- if promo_cols > 2 -%}{%- assign promo_cols = 2 -%}{%- endif -%}
+{%- if promo_cols < 1 -%}{%- assign promo_cols = 1 -%}{%- endif -%}
+
+<style>
+.pet-promo-{{ section.id }} {
+  --pet-primary: {{ section.settings.primary_color }};
+  --pet-primary-light: {{ section.settings.primary_light_color }};
+  --pet-primary-deep: {{ section.settings.primary_deep_color }};
+  --pet-bg: {{ section.settings.bg_color }};
+  --pet-ink: #1F1342;
+  --pet-body: #5A4F75;
+  --pet-mute: #8B8299;
+
+  background-color: var(--pet-bg);
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  font-family: inherit, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.pet-promo-{{ section.id }} *,
+.pet-promo-{{ section.id }} *::before,
+.pet-promo-{{ section.id }} *::after {
+  box-sizing: border-box;
+}
+
+.pet-promo-container-{{ section.id }} {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.pet-promo-grid-{{ section.id }} {
+  display: grid;
+  grid-template-columns: repeat({{ promo_cols }}, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.pet-promo-card-{{ section.id }} {
+  position: relative;
+  border-radius: 20px;
+  padding: 32px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 180px;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.pet-promo-card-{{ section.id }}:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 36px -16px rgba(123, 63, 242, 0.22);
+}
+
+.pet-promo-card-{{ section.id }}::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  z-index: 0;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pet-promo-card-{{ section.id }}:hover::before {
+  transform: translate(-12px, 12px) scale(1.05);
+}
+
+.pet-promo-content-{{ section.id }} {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-width: 0;
+}
+
+.pet-promo-eyebrow-{{ section.id }} {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pet-promo-eyebrow-line-{{ section.id }} {
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.pet-promo-title-{{ section.id }} {
+  font-family: inherit;
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 18px 0;
+  color: var(--pet-ink);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.pet-promo-btn-{{ section.id }} {
+  padding: 10px 18px 10px 22px;
+  border-radius: 100px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+  box-shadow: 0 8px 18px -8px rgba(31, 19, 66, 0.3);
+  white-space: nowrap;
+}
+
+.pet-promo-btn-{{ section.id }} svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.pet-promo-card-{{ section.id }}:hover .pet-promo-btn-{{ section.id }} svg {
+  transform: translateX(3px);
+}
+
+/* ===== VISUAL AREA ===== */
+.pet-promo-visual-{{ section.id }} {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 16px;
+}
+
+/* SVG icon (default) */
+.pet-promo-icon-{{ section.id }} {
+  width: 130px;
+  height: 130px;
+  display: block;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: drop-shadow(0 8px 16px rgba(31, 19, 66, 0.18));
+}
+
+.pet-promo-card-{{ section.id }}:hover .pet-promo-icon-{{ section.id }} {
+  transform: rotate(-4deg) scale(1.04);
+}
+
+/* Emoji fallback */
+.pet-promo-emoji-{{ section.id }} {
+  font-size: 72px;
+  line-height: 1;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: drop-shadow(0 6px 12px rgba(31, 19, 66, 0.15));
+}
+
+.pet-promo-card-{{ section.id }}:hover .pet-promo-emoji-{{ section.id }} {
+  transform: rotate(-6deg) scale(1.06);
+}
+
+/* Custom image override */
+.pet-promo-img-{{ section.id }} {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: drop-shadow(0 8px 16px rgba(31, 19, 66, 0.18));
+}
+
+.pet-promo-card-{{ section.id }}:hover .pet-promo-img-{{ section.id }} {
+  transform: rotate(-4deg) scale(1.04);
+}
+
+/* ===== TABLET (≤990px) ===== */
+@media screen and (max-width: 990px) {
+  .pet-promo-card-{{ section.id }} {
+    padding: 26px 28px;
+    min-height: 160px;
+  }
+  .pet-promo-icon-{{ section.id }},
+  .pet-promo-img-{{ section.id }} { width: 105px; height: 105px; }
+  .pet-promo-emoji-{{ section.id }} { font-size: 60px; }
+}
+
+/* ===== MOBİL (≤768px) ===== */
+@media screen and (max-width: 768px) {
+  .pet-promo-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.7 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.7 | round }}px;
+  }
+
+  .pet-promo-grid-{{ section.id }} {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .pet-promo-card-{{ section.id }} {
+    padding: 22px 22px;
+    min-height: 140px;
+    border-radius: 18px;
+  }
+
+  .pet-promo-card-{{ section.id }}::before {
+    width: 200px;
+    height: 200px;
+  }
+
+  .pet-promo-eyebrow-{{ section.id }} { font-size: 10.5px; }
+
+  .pet-promo-title-{{ section.id }} {
+    font-size: clamp(17px, 4.2vw, 22px);
+    margin-bottom: 14px;
+  }
+
+  .pet-promo-btn-{{ section.id }} {
+    padding: 9px 14px 9px 18px;
+    font-size: 12.5px;
+  }
+
+  .pet-promo-icon-{{ section.id }},
+  .pet-promo-img-{{ section.id }} { width: 92px; height: 92px; }
+  .pet-promo-emoji-{{ section.id }} { font-size: 56px; }
+}
+
+/* ===== KÜÇÜK MOBİL (≤420px) ===== */
+@media screen and (max-width: 420px) {
+  .pet-promo-{{ section.id }} {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .pet-promo-container-{{ section.id }} { padding: 0 12px; }
+
+  .pet-promo-card-{{ section.id }} {
+    padding: 18px 18px;
+    min-height: 124px;
+  }
+
+  .pet-promo-title-{{ section.id }} {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .pet-promo-icon-{{ section.id }},
+  .pet-promo-img-{{ section.id }} { width: 78px; height: 78px; }
+  .pet-promo-emoji-{{ section.id }} { font-size: 48px; }
+
+  .pet-promo-btn-{{ section.id }} {
+    padding: 8px 14px 8px 16px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-promo-card-{{ section.id }},
+  .pet-promo-card-{{ section.id }}::before,
+  .pet-promo-emoji-{{ section.id }},
+  .pet-promo-img-{{ section.id }},
+  .pet-promo-icon-{{ section.id }},
+  .pet-promo-btn-{{ section.id }} svg {
+    transition: none !important;
+  }
+}
+</style>
+
+<section class="pet-promo-{{ section.id }}">
+  <div class="pet-promo-container-{{ section.id }}">
+    <div class="pet-promo-grid-{{ section.id }}">
+
+      {% for block in section.blocks %}
+        {%- assign card_link = block.settings.link | default: '#' -%}
+        {%- assign accent = block.settings.accent_color -%}
+
+        <a href="{{ card_link }}"
+           class="pet-promo-card-{{ section.id }}"
+           style="background: linear-gradient(135deg, {{ block.settings.bg_start }} 0%, {{ block.settings.bg_end }} 100%);"
+           {{ block.shopify_attributes }}>
+
+          <div class="pet-promo-content-{{ section.id }}">
+            {% if block.settings.eyebrow != blank %}
+              <span class="pet-promo-eyebrow-{{ section.id }}" style="color: {{ accent }};">
+                <span class="pet-promo-eyebrow-line-{{ section.id }}"></span>
+                {{ block.settings.eyebrow }}
+              </span>
+            {% endif %}
+
+            {% if block.settings.title != blank %}
+              <h3 class="pet-promo-title-{{ section.id }}">{{ block.settings.title }}</h3>
+            {% endif %}
+
+            {% if block.settings.btn_text != blank %}
+              <span class="pet-promo-btn-{{ section.id }}" style="background-color: {{ accent }};">
+                {{ block.settings.btn_text }}
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
+            {% endif %}
+          </div>
+
+          <div class="pet-promo-visual-{{ section.id }}">
+            {% if block.settings.image != blank %}
+              {%- comment -%} 1. Manuel görsel yüklenmişse — en yüksek öncelik {%- endcomment -%}
+              <img class="pet-promo-img-{{ section.id }}"
+                   src="{{ block.settings.image | image_url: width: 300 }}"
+                   alt="{{ block.settings.title | escape }}"
+                   loading="lazy"
+                   width="130"
+                   height="130">
+
+            {% elsif block.settings.icon != 'auto' %}
+              {%- comment -%} 2. SVG ikon seçilmişse {%- endcomment -%}
+              <svg class="pet-promo-icon-{{ section.id }}" style="color: {{ accent }};"
+                   viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                {% case block.settings.icon %}
+
+                  {% when 'cat' %}
+                    <path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z"/>
+                    <path d="M8 14v.5"/>
+                    <path d="M16 14v.5"/>
+                    <path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/>
+
+                  {% when 'dog' %}
+                    <path d="M11.25 16.25h1.5L12 17z"/>
+                    <path d="M16 14v.5"/>
+                    <path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444a11.702 11.702 0 0 0-.493-3.309"/>
+                    <path d="M8 14v.5"/>
+                    <path d="M8.5 8.5c-.384 1.05-1.083 2.028-2.344 2.5-1.931.722-3.576-.297-3.656-1-.113-.994 1.177-6.53 4-7 1.923-.321 3.651.845 3.651 2.235A7.497 7.497 0 0 1 14 5.277c0-1.39 1.844-2.598 3.767-2.277 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"/>
+
+                  {% when 'bird' %}
+                    <path d="M16 7h.01"/>
+                    <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/>
+                    <path d="m20 7 2 .5-2 .5"/>
+                    <path d="M10 18v3"/>
+                    <path d="M14 17.75V21"/>
+                    <path d="M7 18a6 6 0 0 0 3.84-10.61"/>
+
+                  {% when 'fish' %}
+                    <path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z"/>
+                    <path d="M18 12v.5"/>
+                    <path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"/>
+                    <path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33"/>
+                    <path d="M10.46 7.26C10.2 5.88 9.17 4.24 8 3h5.8a2 2 0 0 1 1.98 1.67l.23 1.4"/>
+                    <path d="m16.01 17.93-.23 1.4A2 2 0 0 1 13.8 21H9.5a5.96 5.96 0 0 0 1.49-3.98"/>
+
+                  {% when 'rabbit' %}
+                    <path d="M13 16a3 3 0 0 1 2.24 5"/>
+                    <path d="M18 12h.01"/>
+                    <path d="M18 21h-8a4 4 0 0 1-4-4 7 7 0 0 1 7-7h.2L9.6 6.4a1 1 0 1 1 2.8-2.8L15.8 7h.2c3.3 0 6 2.7 6 6v1a2 2 0 0 1-2 2h-1a3 3 0 0 0-3 3"/>
+                    <path d="M20 8.54V4a2 2 0 1 0-4 0v3"/>
+                    <path d="M7.612 12.524a3 3 0 1 0-1.6 4.3"/>
+
+                  {% when 'paw' %}
+                    <circle cx="11" cy="4" r="2" fill="currentColor"/>
+                    <circle cx="18" cy="8" r="2" fill="currentColor"/>
+                    <circle cx="20" cy="16" r="2" fill="currentColor"/>
+                    <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z" fill="currentColor"/>
+
+                  {% when 'bone' %}
+                    <path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 .5.5 0 0 1-.5-.5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-7 7c-.7.7-1.69 0-2.5 0a2.5 2.5 0 0 0 0 5c.28 0 .5.22.5.5a2.5 2.5 0 1 0 5 0c0-.81-.7-1.8 0-2.5Z"/>
+
+                {% endcase %}
+              </svg>
+
+            {% else %}
+              {%- comment -%} 3. Fallback emoji {%- endcomment -%}
+              <span class="pet-promo-emoji-{{ section.id }}">{{ block.settings.emoji }}</span>
+            {% endif %}
+          </div>
+
+        </a>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Promo Banners",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "header", "content": "Section" },
+    { "type": "color", "id": "bg_color",            "label": "Section Background", "default": "#FFFFFF" },
+    { "type": "color", "id": "primary_color",       "label": "Primary Color (Mor)", "default": "#7B3FF2" },
+    { "type": "color", "id": "primary_light_color", "label": "Açık Mor",            "default": "#B794F4" },
+    { "type": "color", "id": "primary_deep_color",  "label": "Koyu Mor",            "default": "#5B2FB2" },
+    { "type": "range", "id": "max_width",      "min": 1000, "max": 1800, "step": 50, "unit": "px", "label": "Max Width",      "default": 1300 },
+    { "type": "range", "id": "padding_top",    "min": 0,    "max": 120,  "step": 5,  "unit": "px", "label": "Padding Top",    "default": 30 },
+    { "type": "range", "id": "padding_bottom", "min": 0,    "max": 120,  "step": 5,  "unit": "px", "label": "Padding Bottom", "default": 30 }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner Card",
+      "settings": [
+        { "type": "header", "content": "Renkler" },
+        { "type": "color", "id": "bg_start",     "label": "Background Gradient (Sol-Üst)",   "default": "#F4F0FF" },
+        { "type": "color", "id": "bg_end",       "label": "Background Gradient (Sağ-Alt)",   "default": "#DDD0FF" },
+        { "type": "color", "id": "accent_color", "label": "Accent Color (Eyebrow + Button)", "default": "#7B3FF2" },
+
+        { "type": "header", "content": "İçerik" },
+        { "type": "text",     "id": "eyebrow",  "label": "Eyebrow / Üst Yazı",  "default": "KEDİLER" },
+        { "type": "textarea", "id": "title",    "label": "Title",               "default": "Kedi Ürünleri" },
+        { "type": "text",     "id": "btn_text", "label": "Button Text",         "default": "Şimdi Al" },
+        { "type": "url",      "id": "link",     "label": "Card Link" },
+
+        { "type": "header", "content": "Görsel / İkon" },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "İkon",
+          "info": "Hızlı yüklenir, fotoğraf gerektirmez. 'Otomatik' seçilirse emoji kullanılır.",
+          "options": [
+            { "value": "auto",   "label": "Otomatik (Emoji)" },
+            { "value": "cat",    "label": "Kedi" },
+            { "value": "dog",    "label": "Köpek" },
+            { "value": "bird",   "label": "Kuş" },
+            { "value": "fish",   "label": "Balık" },
+            { "value": "rabbit", "label": "Tavşan" },
+            { "value": "paw",    "label": "Pati" },
+            { "value": "bone",   "label": "Kemik" }
+          ],
+          "default": "cat"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Görsel (Opsiyonel)",
+          "info": "Yüklenirse ikonun yerine bu görsel kullanılır."
+        },
+        {
+          "type": "text",
+          "id": "emoji",
+          "label": "Emoji (Otomatik modda)",
+          "default": "🐱"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Banners",
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "bg_start": "#F4F0FF",
+            "bg_end": "#DDD0FF",
+            "accent_color": "#7B3FF2",
+            "eyebrow": "KEDİLER",
+            "title": "Kedi Ürünleri",
+            "btn_text": "Şimdi Al",
+            "icon": "cat",
+            "emoji": "🐱"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "bg_start": "#EDE3FF",
+            "bg_end": "#C9B6F2",
+            "accent_color": "#5B2FB2",
+            "eyebrow": "KÖPEKLER",
+            "title": "Köpek Ürünleri",
+            "btn_text": "Şimdi Al",
+            "icon": "dog",
+            "emoji": "🐶"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,629 @@
+<style>
+.pet-diff-{{ section.id }} {
+  --pet-primary: {{ section.settings.primary_color }};
+  --pet-primary-light: {{ section.settings.primary_light_color }};
+  --pet-primary-deep: {{ section.settings.primary_deep_color }};
+  --pet-bg: {{ section.settings.bg_color }};
+  --pet-ink: #1F1342;
+  --pet-body: #5A4F75;
+  --pet-line: rgba(123, 63, 242, 0.14);
+  --pet-card: #FFFFFF;
+  --pet-red: #E8E3EE;
+  --pet-green: #F0EBFF;
+
+  position: relative;
+  background:
+    radial-gradient(700px 400px at 80% 15%, rgba(123, 63, 242, 0.06), transparent 60%),
+    radial-gradient(500px 350px at 10% 85%, rgba(123, 63, 242, 0.04), transparent 55%),
+    var(--pet-bg);
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  font-family: inherit;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pet-diff-{{ section.id }} *,
+.pet-diff-{{ section.id }} *::before,
+.pet-diff-{{ section.id }} *::after { box-sizing: border-box; }
+
+.pet-diff-{{ section.id }}::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(123, 63, 242, 0.1) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.2;
+  mask-image: radial-gradient(ellipse at center, black 15%, transparent 65%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 15%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pet-diff-wrap-{{ section.id }} {
+  position: relative;
+  z-index: 1;
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== HEADER ===== */
+.pet-diff-header-{{ section.id }} {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.pet-diff-badge-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--pet-card);
+  color: var(--pet-ink);
+  padding: 7px 16px 7px 7px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  border: 1px solid var(--pet-line);
+  box-shadow: 0 4px 12px -6px rgba(123, 63, 242, 0.18);
+}
+
+.pet-diff-badge-dot-{{ section.id }} {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--pet-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pet-diff-badge-dot-{{ section.id }} svg { width: 10px; height: 10px; fill: #fff; }
+
+.pet-diff-title-{{ section.id }} {
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 800;
+  color: var(--pet-ink);
+  line-height: 1.12;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.pet-diff-title-{{ section.id }} .highlight {
+  color: var(--pet-primary);
+  position: relative;
+  display: inline-block;
+}
+.pet-diff-title-{{ section.id }} .highlight::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0.06em;
+  height: 0.2em;
+  background: var(--pet-primary-light);
+  opacity: 0.4;
+  border-radius: 4px;
+  z-index: -1;
+}
+
+.pet-diff-subtitle-{{ section.id }} {
+  font-size: 15px;
+  color: var(--pet-body);
+  margin: 0;
+}
+
+/* ===== STATS ROW ===== */
+.pet-diff-stats-{{ section.id }} {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.pet-diff-stat-{{ section.id }} {
+  background: var(--pet-card);
+  border: 1px solid rgba(123, 63, 242, 0.08);
+  border-radius: 20px;
+  padding: 28px 20px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(31, 19, 66, 0.03), 0 4px 12px -6px rgba(123, 63, 242, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.pet-diff-stat-{{ section.id }}::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(123, 63, 242, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .pet-diff-stat-{{ section.id }}:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 1px 2px rgba(31, 19, 66, 0.04), 0 16px 36px -10px rgba(123, 63, 242, 0.16);
+  }
+}
+
+.pet-diff-stat-icon-{{ section.id }} {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pet-diff-stat-icon-{{ section.id }} svg { width: 20px; height: 20px; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.pet-diff-stat-number-{{ section.id }} {
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 800;
+  color: var(--pet-ink);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.pet-diff-stat-label-{{ section.id }} {
+  font-size: 13px;
+  color: var(--pet-body);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ===== COMPARISON ===== */
+.pet-diff-compare-{{ section.id }} {
+  background: var(--pet-card);
+  border: 1px solid rgba(123, 63, 242, 0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(31, 19, 66, 0.03), 0 8px 24px -8px rgba(123, 63, 242, 0.08);
+}
+
+/* Table Header */
+.pet-diff-compare-head-{{ section.id }} {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: 1px solid rgba(123, 63, 242, 0.08);
+}
+
+.pet-diff-compare-head-cell-{{ section.id }} {
+  padding: 20px 24px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pet-ink);
+}
+
+.pet-diff-compare-head-cell-{{ section.id }}:first-child {
+  text-align: left;
+  color: var(--pet-body);
+  font-weight: 600;
+}
+
+.pet-diff-compare-head-other-{{ section.id }} {
+  background: #F8F6FA;
+  color: #8B8299 !important;
+  font-weight: 600 !important;
+  border-radius: 0;
+}
+
+.pet-diff-compare-head-us-{{ section.id }} {
+  background: linear-gradient(135deg, var(--pet-primary) 0%, var(--pet-primary-deep) 100%);
+  color: #fff !important;
+  border-radius: 0;
+  position: relative;
+}
+
+.pet-diff-compare-head-us-badge-{{ section.id }} {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #F59E0B;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 0 0 8px 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Table Rows */
+.pet-diff-compare-row-{{ section.id }} {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: 1px solid rgba(123, 63, 242, 0.05);
+}
+
+.pet-diff-compare-row-{{ section.id }}:last-child { border-bottom: none; }
+
+.pet-diff-compare-cell-{{ section.id }} {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--pet-body);
+}
+
+.pet-diff-compare-cell-{{ section.id }}:first-child {
+  justify-content: flex-start;
+  font-weight: 600;
+  color: var(--pet-ink);
+  gap: 8px;
+}
+
+.pet-diff-compare-cell-{{ section.id }}:first-child svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
+
+/* Other column */
+.pet-diff-compare-cell-other-{{ section.id }} {
+  background: #FCFBFD;
+}
+
+.pet-diff-x-{{ section.id }} {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #F3EFF6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pet-diff-x-{{ section.id }} svg { width: 10px; height: 10px; stroke: #A89BBF; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+.pet-diff-maybe-{{ section.id }} {
+  font-size: 12px;
+  color: #A89BBF;
+  font-weight: 500;
+}
+
+/* Us column */
+.pet-diff-compare-cell-us-{{ section.id }} {
+  background: rgba(123, 63, 242, 0.03);
+}
+
+.pet-diff-check-{{ section.id }} {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--pet-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pet-diff-check-{{ section.id }} svg { width: 11px; height: 11px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.pet-diff-check-text-{{ section.id }} {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pet-primary);
+  margin-left: 6px;
+}
+
+/* ===== TABLET ===== */
+@media screen and (max-width: 990px) {
+  .pet-diff-stats-{{ section.id }} { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ===== MOBİL ===== */
+@media screen and (max-width: 768px) {
+  .pet-diff-{{ section.id }} {
+    padding: {{ section.settings.padding_top | times: 0.6 | round }}px 0 {{ section.settings.padding_bottom | times: 0.6 | round }}px;
+  }
+  .pet-diff-{{ section.id }}::before { opacity: 0.12; }
+  .pet-diff-wrap-{{ section.id }} { padding: 0 16px; }
+  .pet-diff-header-{{ section.id }} { margin-bottom: 28px; }
+
+  .pet-diff-badge-{{ section.id }} { font-size: 11px; padding: 6px 14px 6px 6px; margin-bottom: 10px; }
+  .pet-diff-title-{{ section.id }} { font-size: clamp(20px, 5.5vw, 28px); }
+  .pet-diff-subtitle-{{ section.id }} { font-size: 13px; }
+
+  /* Stats — 2x2 grid mobilde */
+  .pet-diff-stats-{{ section.id }} {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .pet-diff-stat-{{ section.id }} {
+    border-radius: 16px;
+    padding: 20px 14px 18px;
+    gap: 6px;
+  }
+  .pet-diff-stat-icon-{{ section.id }} { width: 38px; height: 38px; }
+  .pet-diff-stat-icon-{{ section.id }} svg { width: 17px; height: 17px; }
+  .pet-diff-stat-number-{{ section.id }} { font-size: clamp(24px, 6vw, 32px); }
+  .pet-diff-stat-label-{{ section.id }} { font-size: 11.5px; }
+
+  /* Comparison table */
+  .pet-diff-compare-{{ section.id }} { border-radius: 18px; }
+
+  .pet-diff-compare-head-{{ section.id }} { grid-template-columns: 2fr 1fr 1fr; }
+  .pet-diff-compare-head-cell-{{ section.id }} { padding: 14px 12px; font-size: 12px; }
+  .pet-diff-compare-head-us-badge-{{ section.id }} { font-size: 8px; padding: 2px 8px; }
+
+  .pet-diff-compare-row-{{ section.id }} { grid-template-columns: 2fr 1fr 1fr; }
+  .pet-diff-compare-cell-{{ section.id }} { padding: 12px 10px; font-size: 12px; }
+  .pet-diff-compare-cell-{{ section.id }}:first-child { font-size: 11.5px; gap: 5px; }
+  .pet-diff-compare-cell-{{ section.id }}:first-child svg { width: 14px; height: 14px; }
+
+  .pet-diff-x-{{ section.id }},
+  .pet-diff-check-{{ section.id }} { width: 20px; height: 20px; }
+  .pet-diff-x-{{ section.id }} svg { width: 9px; height: 9px; }
+  .pet-diff-check-{{ section.id }} svg { width: 10px; height: 10px; }
+  .pet-diff-check-text-{{ section.id }} { display: none; }
+  .pet-diff-maybe-{{ section.id }} { font-size: 11px; }
+}
+
+/* ===== KÜÇÜK MOBİL ===== */
+@media screen and (max-width: 420px) {
+  .pet-diff-{{ section.id }} { padding: 24px 0; }
+  .pet-diff-wrap-{{ section.id }} { padding: 0 12px; }
+
+  .pet-diff-stat-{{ section.id }} { padding: 16px 10px 14px; }
+  .pet-diff-stat-number-{{ section.id }} { font-size: 22px; }
+  .pet-diff-stat-label-{{ section.id }} { font-size: 10.5px; }
+
+  .pet-diff-compare-cell-{{ section.id }} { padding: 10px 8px; font-size: 11px; }
+  .pet-diff-compare-cell-{{ section.id }}:first-child { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-diff-stat-{{ section.id }} { transition: none !important; }
+}
+</style>
+
+<section class="pet-diff-{{ section.id }}" aria-label="Neden Bizi Tercih Etmelisiniz">
+  <div class="pet-diff-wrap-{{ section.id }}">
+
+    <!-- HEADER -->
+    <div class="pet-diff-header-{{ section.id }}">
+      {% if section.settings.badge_text != blank %}
+        <div class="pet-diff-badge-{{ section.id }}">
+          <span class="pet-diff-badge-dot-{{ section.id }}">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z"/></svg>
+          </span>
+          {{ section.settings.badge_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.title != blank %}
+        <h2 class="pet-diff-title-{{ section.id }}">
+          {{ section.settings.title | replace: '[', '<span class="highlight">' | replace: ']', '</span>' }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subtitle != blank %}
+        <p class="pet-diff-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+
+    <!-- STATS -->
+    <div class="pet-diff-stats-{{ section.id }}">
+      {% for block in section.blocks %}
+        {% if block.type == 'stat' %}
+          <div class="pet-diff-stat-{{ section.id }}" {{ block.shopify_attributes }}>
+            <div class="pet-diff-stat-icon-{{ section.id }}" style="background: {{ block.settings.icon_bg }};">
+              <svg viewBox="0 0 24 24" fill="none" stroke="{{ block.settings.icon_color }}" xmlns="http://www.w3.org/2000/svg">
+                {% case block.settings.icon %}
+                  {% when 'users' %}
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  {% when 'package' %}
+                    <path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>
+                  {% when 'star' %}
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  {% when 'truck' %}
+                    <path d="M16 16h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h1"/><circle cx="9" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M11 17H15"/>
+                  {% when 'shield' %}
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
+                  {% when 'heart' %}
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  {% when 'award' %}
+                    <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+                  {% when 'zap' %}
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                {% endcase %}
+              </svg>
+            </div>
+            <span class="pet-diff-stat-number-{{ section.id }}">{{ block.settings.number }}</span>
+            <span class="pet-diff-stat-label-{{ section.id }}">{{ block.settings.label }}</span>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="pet-diff-compare-{{ section.id }}">
+
+      <!-- Head -->
+      <div class="pet-diff-compare-head-{{ section.id }}">
+        <div class="pet-diff-compare-head-cell-{{ section.id }}">{{ section.settings.compare_feature_label }}</div>
+        <div class="pet-diff-compare-head-cell-{{ section.id }} pet-diff-compare-head-other-{{ section.id }}">{{ section.settings.compare_other_label }}</div>
+        <div class="pet-diff-compare-head-cell-{{ section.id }} pet-diff-compare-head-us-{{ section.id }}">
+          <span class="pet-diff-compare-head-us-badge-{{ section.id }}">{{ section.settings.compare_us_badge }}</span>
+          {{ section.settings.compare_us_label }}
+        </div>
+      </div>
+
+      <!-- Rows -->
+      {% for block in section.blocks %}
+        {% if block.type == 'compare_row' %}
+          <div class="pet-diff-compare-row-{{ section.id }}" {{ block.shopify_attributes }}>
+
+            <!-- Feature -->
+            <div class="pet-diff-compare-cell-{{ section.id }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                {% case block.settings.row_icon %}
+                  {% when 'paw' %}
+                    <circle cx="11" cy="4" r="2" fill="currentColor" stroke="none"/><circle cx="18" cy="8" r="2" fill="currentColor" stroke="none"/><circle cx="4" cy="8" r="2" fill="currentColor" stroke="none"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z" fill="currentColor" stroke="none"/>
+                  {% when 'shield' %}
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  {% when 'truck' %}
+                    <path d="M16 16h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h1"/><circle cx="9" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>
+                  {% when 'refresh' %}
+                    <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+                  {% when 'star' %}
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  {% when 'box' %}
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  {% when 'heart' %}
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                {% endcase %}
+              </svg>
+              {{ block.settings.feature }}
+            </div>
+
+            <!-- Other -->
+            <div class="pet-diff-compare-cell-{{ section.id }} pet-diff-compare-cell-other-{{ section.id }}">
+              {% if block.settings.other_value == 'no' %}
+                <span class="pet-diff-x-{{ section.id }}"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></span>
+              {% elsif block.settings.other_value == 'maybe' %}
+                <span class="pet-diff-maybe-{{ section.id }}">{{ block.settings.other_text }}</span>
+              {% else %}
+                <span class="pet-diff-maybe-{{ section.id }}">{{ block.settings.other_text }}</span>
+              {% endif %}
+            </div>
+
+            <!-- Us -->
+            <div class="pet-diff-compare-cell-{{ section.id }} pet-diff-compare-cell-us-{{ section.id }}">
+              <span class="pet-diff-check-{{ section.id }}"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              {% if block.settings.us_text != blank %}
+                <span class="pet-diff-check-text-{{ section.id }}">{{ block.settings.us_text }}</span>
+              {% endif %}
+            </div>
+
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Farkımız",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "Section" },
+    { "type": "color", "id": "bg_color",            "label": "Background",    "default": "#FDFBFF" },
+    { "type": "color", "id": "primary_color",       "label": "Primary Color", "default": "#7B3FF2" },
+    { "type": "color", "id": "primary_light_color", "label": "Light Accent",  "default": "#B794F4" },
+    { "type": "color", "id": "primary_deep_color",  "label": "Deep Accent",   "default": "#5B2FB2" },
+    { "type": "range", "id": "max_width", "min": 1000, "max": 1800, "step": 50, "unit": "px", "label": "Max Width", "default": 1400 },
+
+    { "type": "header", "content": "Heading" },
+    { "type": "text",     "id": "badge_text", "label": "Badge",    "default": "Farkımız" },
+    { "type": "textarea", "id": "title",      "label": "Title",    "info": "Mor vurgu: [kelime]", "default": "Neden [Binlerce] Pet Sahibi Bizi Tercih Ediyor?" },
+    { "type": "text",     "id": "subtitle",   "label": "Subtitle", "default": "Sıradan değil, premium. Her detayda farkı hissedin." },
+
+    { "type": "header", "content": "Karşılaştırma Tablosu" },
+    { "type": "text", "id": "compare_feature_label", "label": "Özellik sütun başlığı", "default": "Özellik" },
+    { "type": "text", "id": "compare_other_label",   "label": "Diğerleri başlığı",     "default": "Diğer Mağazalar" },
+    { "type": "text", "id": "compare_us_label",      "label": "Biz başlığı",           "default": "Biz" },
+    { "type": "text", "id": "compare_us_badge",      "label": "Biz badge metni",       "default": "Önerilen" },
+
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top",    "min": 0, "max": 120, "step": 5, "unit": "px", "label": "Padding Top",    "default": 60 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 5, "unit": "px", "label": "Padding Bottom", "default": 60 }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "İstatistik Kartı",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "İkon",
+          "options": [
+            { "value": "users",   "label": "Kullanıcılar" },
+            { "value": "package", "label": "Paket" },
+            { "value": "star",    "label": "Yıldız" },
+            { "value": "truck",   "label": "Kargo" },
+            { "value": "shield",  "label": "Kalkan" },
+            { "value": "heart",   "label": "Kalp" },
+            { "value": "award",   "label": "Ödül" },
+            { "value": "zap",     "label": "Şimşek" }
+          ],
+          "default": "users"
+        },
+        { "type": "color", "id": "icon_bg",    "label": "İkon Arka Plan", "default": "#F0EBFF" },
+        { "type": "color", "id": "icon_color", "label": "İkon Rengi",     "default": "#7B3FF2" },
+        { "type": "text",  "id": "number",     "label": "Rakam",          "default": "50K+" },
+        { "type": "text",  "id": "label",      "label": "Açıklama",       "default": "Mutlu Müşteri" }
+      ]
+    },
+    {
+      "type": "compare_row",
+      "name": "Karşılaştırma Satırı",
+      "settings": [
+        {
+          "type": "select",
+          "id": "row_icon",
+          "label": "Satır ikonu",
+          "options": [
+            { "value": "paw",     "label": "Pati" },
+            { "value": "shield",  "label": "Kalkan" },
+            { "value": "truck",   "label": "Kargo" },
+            { "value": "refresh", "label": "İade" },
+            { "value": "star",    "label": "Yıldız" },
+            { "value": "box",     "label": "Kutu" },
+            { "value": "heart",   "label": "Kalp" }
+          ],
+          "default": "paw"
+        },
+        { "type": "text", "id": "feature", "label": "Özellik", "default": "Veteriner Onaylı Ürünler" },
+        {
+          "type": "select",
+          "id": "other_value",
+          "label": "Diğerleri durumu",
+          "options": [
+            { "value": "no",    "label": "Yok (✗)" },
+            { "value": "maybe", "label": "Kısmen / Metin" }
+          ],
+          "default": "no"
+        },
+        { "type": "text", "id": "other_text", "label": "Diğerleri metni", "info": "'Kısmen' seçildiyse gösterilir", "default": "Bazen" },
+        { "type": "text", "id": "us_text",    "label": "Biz ek metni",   "info": "Tik işaretinin yanında gösterilir (opsiyonel)", "default": "Her zaman" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Farkımız",
+      "settings": {
+        "badge_text": "Farkımız",
+        "title": "Neden [Binlerce] Pet Sahibi Bizi Tercih Ediyor?",
+        "subtitle": "Sıradan değil, premium. Her detayda farkı hissedin."
+      },
+      "blocks": [
+        { "type": "stat", "settings": { "icon": "users",   "icon_bg": "#F0EBFF", "icon_color": "#7B3FF2", "number": "50K+",  "label": "Mutlu Müşteri" } },
+        { "type": "stat", "settings": { "icon": "package", "icon_bg": "#E8F8EE", "icon_color": "#22C55E", "number": "500+",  "label": "Premium Ürün" } },
+        { "type": "stat", "settings": { "icon": "star",    "icon_bg": "#FEF3E2", "icon_color": "#F59E0B", "number": "4.9",   "label": "Ortalama Puan" } },
+        { "type": "stat", "settings": { "icon": "truck",   "icon_bg": "#EBF3FE", "icon_color": "#3B82F6", "number": "24sa",  "label": "Hızlı Kargo" } },
+        { "type": "compare_row", "settings": { "row_icon": "paw",     "feature": "Veteriner Onaylı Ürünler",  "other_value": "no",    "other_text": "",       "us_text": "Tamamı" } },
+        { "type": "compare_row", "settings": { "row_icon": "shield",  "feature": "100% Orijinal Garanti",     "other_value": "maybe", "other_text": "Belirsiz", "us_text": "Garantili" } },
+        { "type": "compare_row", "settings": { "row_icon": "truck",   "feature": "Ücretsiz & Hızlı Kargo",    "other_value": "maybe", "other_text": "Koşullu",  "us_text": "Her zaman" } },
+        { "type": "compare_row", "settings": { "row_icon": "refresh", "feature": "Koşulsuz İade",             "other_value": "no",    "other_text": "",       "us_text": "14 gün" } },
+        { "type": "compare_row", "settings": { "row_icon": "star",    "feature": "Premium Marka Seçkisi",     "other_value": "maybe", "other_text": "Karışık",  "us_text": "Sadece lüks" } },
+        { "type": "compare_row", "settings": { "row_icon": "heart",   "feature": "Uzman Destek & Danışmanlık","other_value": "no",    "other_text": "",       "us_text": "7/24" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

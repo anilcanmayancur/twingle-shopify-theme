@@ -1,0 +1,110 @@
+<div class="sec" {{ block.shopify_attributes }}>
+
+  {%- if block.settings.show_urgency -%}
+    <div class="urgency" aria-live="polite">
+      <span aria-hidden="true">🔥</span>
+      <div class="urg-t">
+        {{ block.settings.urgency_prefix }}
+        <b id="petibiViewers">{{ block.settings.viewers_start }}</b>
+        {{ block.settings.urgency_suffix }}
+      </div>
+      <div class="cd" aria-label="Geri sayım">
+        <div class="cd-i"><span class="cd-n" id="petibiCdH">{{ block.settings.countdown_hours | prepend: '00' | slice: -2, 2 }}</span><span class="cd-l">{{ block.settings.hours_label }}</span></div>
+        <div class="cd-i"><span class="cd-n" id="petibiCdM">{{ block.settings.countdown_minutes | prepend: '00' | slice: -2, 2 }}</span><span class="cd-l">{{ block.settings.minutes_label }}</span></div>
+        <div class="cd-i"><span class="cd-n" id="petibiCdS">{{ block.settings.countdown_seconds | prepend: '00' | slice: -2, 2 }}</span><span class="cd-l">{{ block.settings.seconds_label }}</span></div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- form 'product', product, id: 'petibiProductForm', novalidate: 'novalidate' -%}
+    <input type="hidden" name="id" id="petibiVariantId" value="{{ product.selected_or_first_available_variant.id }}">
+    <input type="hidden" name="selling_plan" id="petibiSellingPlan" data-plan-id="" disabled>
+
+    <div class="add-row">
+      <div class="qty-wrap" role="group" aria-label="Miktar">
+        <button type="button" class="qty-btn" onclick="petibiChangeQty(-1)" aria-label="Azalt">−</button>
+        <input class="qty-n" id="petibiQty" name="quantity" value="1" type="number" min="1" max="99" readonly aria-label="Miktar">
+        <button type="button" class="qty-btn" onclick="petibiChangeQty(1)" aria-label="Artır">+</button>
+      </div>
+      <button type="submit" class="btn-cart" id="petibiCartBtn">
+        🛒 {{ block.settings.add_to_cart_text }}
+      </button>
+      <button type="button" class="btn-wl" id="petibiWlBtn" onclick="petibiToggleWishlist()" aria-label="Favorilere ekle" aria-pressed="false">🤍</button>
+    </div>
+  {%- endform -%}
+
+</div>
+
+<script>
+  (function() {
+    var h = {{ block.settings.countdown_hours }};
+    var m = {{ block.settings.countdown_minutes }};
+    var s = {{ block.settings.countdown_seconds }};
+    setInterval(function() {
+      s--;
+      if (s < 0) { s = 59; m--; }
+      if (m < 0) { m = 59; h--; }
+      if (h < 0) h = 23;
+      document.getElementById('petibiCdH').textContent = String(h).padStart(2, '0');
+      document.getElementById('petibiCdM').textContent = String(m).padStart(2, '0');
+      document.getElementById('petibiCdS').textContent = String(s).padStart(2, '0');
+    }, 1000);
+
+    var vMin = {{ block.settings.viewers_min }};
+    var vMax = {{ block.settings.viewers_max }};
+    setInterval(function() {
+      var el = document.getElementById('petibiViewers');
+      if (!el) return;
+      var cur = parseInt(el.textContent) || {{ block.settings.viewers_start }};
+      el.textContent = Math.max(vMin, Math.min(vMax, cur + (Math.random() > 0.5 ? 1 : -1)));
+    }, 4000);
+  })();
+
+  function petibiChangeQty(delta) {
+    var input = document.getElementById('petibiQty');
+    input.value = Math.max(1, Math.min(99, parseInt(input.value) + delta));
+  }
+
+  var petibiWlActive = false;
+  function petibiToggleWishlist() {
+    petibiWlActive = !petibiWlActive;
+    var btn = document.getElementById('petibiWlBtn');
+    btn.textContent = petibiWlActive ? '❤️' : '🤍';
+    btn.classList.toggle('act', petibiWlActive);
+    btn.setAttribute('aria-pressed', petibiWlActive ? 'true' : 'false');
+    petibiShowToast(
+      petibiWlActive ? '❤️' : '🤍',
+      petibiWlActive ? '{{ block.settings.wishlist_added }}' : '{{ block.settings.wishlist_removed }}'
+    );
+  }
+
+  document.getElementById('petibiProductForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('petibiCartBtn');
+    var original = btn.innerHTML;
+    btn.innerHTML = '✓ {{ block.settings.added_text }}';
+    btn.classList.add('added');
+    btn.disabled = true;
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: parseInt(document.getElementById('petibiVariantId').value),
+        quantity: parseInt(document.getElementById('petibiQty').value)
+      })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(item) {
+      petibiShowToast('🛒', (item.product_title || '{{ product.title | escape }}') + ' {{ section.settings.added_text | default: 'eklendi!' }}');
+    })
+    .catch(function() {})
+    .finally(function() {
+      setTimeout(function() {
+        btn.innerHTML = original;
+        btn.classList.remove('added');
+        btn.disabled = false;
+      }, 2000);
+    });
+  });
+</script>

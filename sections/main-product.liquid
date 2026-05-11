@@ -1,0 +1,648 @@
+{{ 'petibi-product.css' | asset_url | stylesheet_tag }}
+
+<div class="petibi-toast" id="petibiToast">
+  <span id="petibiToastIcon">🛒</span>
+  <span id="petibiToastMsg"></span>
+</div>
+
+<div class="petibi-wrap">
+
+  {%- render 'product-breadcrumb', product: product -%}
+
+  <div class="petibi-top">
+
+    <div class="petibi-gallery-col">
+      {%- render 'product-gallery',
+        product: product,
+        badge_text: section.settings.gallery_badge_text,
+        show_zoom_hint: section.settings.gallery_show_zoom_hint,
+        zoom_label: section.settings.gallery_zoom_label
+      -%}
+    </div>
+
+    <div class="petibi-info-col">
+      {%- for block in section.blocks -%}
+
+        {%- case block.type -%}
+
+        {%- when 'product_header' -%}
+          {%- render 'product-header',
+            product: product,
+            block: block
+          -%}
+
+        {%- when 'product_price' -%}
+          {%- render 'product-price',
+            product: product,
+            block: block
+          -%}
+
+        {%- when 'vet_note' -%}
+          {%- render 'product-vet-note', block: block -%}
+
+        {%- when 'features' -%}
+          {%- render 'product-features', block: block -%}
+
+        {%- when 'variant_picker' -%}
+          {%- render 'product-variant-picker',
+            product: product,
+            block: block
+          -%}
+
+        {%- when 'purchase_type' -%}
+          {%- render 'product-purchase-type',
+            product: product,
+            block: block
+          -%}
+
+        {%- when 'buy_buttons' -%}
+          {%- render 'product-buy-buttons',
+            product: product,
+            section: section,
+            block: block
+          -%}
+
+        {%- when 'delivery_info' -%}
+          {%- render 'product-delivery', block: block -%}
+
+        {%- when 'trust_badges' -%}
+          {%- render 'product-trust', block: block -%}
+
+        {%- endcase -%}
+
+      {%- endfor -%}
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  var petibiToastTimer;
+  function petibiShowToast(icon, msg) {
+    clearTimeout(petibiToastTimer);
+    document.getElementById('petibiToastIcon').textContent = icon;
+    document.getElementById('petibiToastMsg').textContent = msg;
+    document.getElementById('petibiToast').classList.add('show');
+    petibiToastTimer = setTimeout(function() {
+      document.getElementById('petibiToast').classList.remove('show');
+    }, 2800);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "class": "section-main-product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "text",
+      "id": "gallery_badge_text",
+      "label": "Image Badge",
+      "default": "4 in 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_show_zoom_hint",
+      "label": "Show Zoom Hint",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "gallery_zoom_label",
+      "label": "Zoom Hint Label",
+      "default": "Büyüt"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_header",
+      "name": "Product Header",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand Name",
+          "default": "Twinkle"
+        },
+        {
+          "type": "text",
+          "id": "sold_count_text",
+          "label": "Sold Count Text",
+          "default": "Bu ay 847 satıldı"
+        },
+        {
+          "type": "number",
+          "id": "rating_value",
+          "label": "Rating (fallback)",
+          "default": 49
+        },
+        {
+          "type": "number",
+          "id": "rating_count",
+          "label": "Review Count (fallback)",
+          "default": 128
+        },
+        {
+          "type": "text",
+          "id": "reviews_label",
+          "label": "Reviews Label",
+          "default": "yorum"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_vet_badge",
+          "label": "Show Vet Badge",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "vet_badge_text",
+          "label": "Vet Badge Text",
+          "default": "Veteriner Onaylı"
+        }
+      ]
+    },
+    {
+      "type": "product_price",
+      "name": "Price",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "discount_label",
+          "label": "Discount Label",
+          "default": "İndirim"
+        },
+        {
+          "type": "text",
+          "id": "price_note",
+          "label": "Price Note",
+          "default": "Kargo dahil değil"
+        }
+      ]
+    },
+    {
+      "type": "vet_note",
+      "name": "Vet Note",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "default": "🩺"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Veteriner Onaylı Formula"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "\"%85 hayvansal kaynak oranı, büyüme döneminde kas gelişimi için gerekli amino asitleri eksiksiz sağlıyor.\" — Dr. Ahmet Yıldız, Veteriner Hekim"
+        }
+      ]
+    },
+    {
+      "type": "features",
+      "name": "Feature Grid",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "feat_1_icon",
+          "label": "Feature 1 Icon",
+          "default": "🌿"
+        },
+        {
+          "type": "text",
+          "id": "feat_1_title",
+          "label": "Feature 1 Title",
+          "default": "%85 Hayvansal Protein"
+        },
+        {
+          "type": "text",
+          "id": "feat_1_desc",
+          "label": "Feature 1 Description",
+          "default": "Doğal kaynaklı formül"
+        },
+        {
+          "type": "text",
+          "id": "feat_2_icon",
+          "label": "Feature 2 Icon",
+          "default": "🦷"
+        },
+        {
+          "type": "text",
+          "id": "feat_2_title",
+          "label": "Feature 2 Title",
+          "default": "Kemik & Diş Sağlığı"
+        },
+        {
+          "type": "text",
+          "id": "feat_2_desc",
+          "label": "Feature 2 Description",
+          "default": "Kalsiyum & Fosfor dengeli"
+        },
+        {
+          "type": "text",
+          "id": "feat_3_icon",
+          "label": "Feature 3 Icon",
+          "default": "🧬"
+        },
+        {
+          "type": "text",
+          "id": "feat_3_title",
+          "label": "Feature 3 Title",
+          "default": "Prebiyotik Formula"
+        },
+        {
+          "type": "text",
+          "id": "feat_3_desc",
+          "label": "Feature 3 Description",
+          "default": "Hassas sindirim için"
+        },
+        {
+          "type": "text",
+          "id": "feat_4_icon",
+          "label": "Feature 4 Icon",
+          "default": "✨"
+        },
+        {
+          "type": "text",
+          "id": "feat_4_title",
+          "label": "Feature 4 Title",
+          "default": "Parlak Tüy"
+        },
+        {
+          "type": "text",
+          "id": "feat_4_desc",
+          "label": "Feature 4 Description",
+          "default": "Omega-3 & Omega-6 dengeli"
+        }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant Picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Gramaj"
+        },
+        {
+          "type": "text",
+          "id": "selected_suffix",
+          "label": "Selected Suffix",
+          "default": "seçildi"
+        }
+      ]
+    },
+    {
+      "type": "purchase_type",
+      "name": "Purchase Type",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "onetime_icon",
+          "label": "One-time Icon",
+          "default": "🛒"
+        },
+        {
+          "type": "text",
+          "id": "onetime_label",
+          "label": "One-time Label",
+          "default": "Tek Seferlik"
+        },
+        {
+          "type": "text",
+          "id": "sub_icon",
+          "label": "Subscription Icon",
+          "default": "🔄"
+        },
+        {
+          "type": "text",
+          "id": "sub_label",
+          "label": "Subscription Label",
+          "default": "Abonelik"
+        },
+        {
+          "type": "text",
+          "id": "sub_badge",
+          "label": "Subscription Badge",
+          "default": "%15 Tasarruf"
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_urgency",
+          "label": "Show Urgency Bar",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "urgency_prefix",
+          "label": "Urgency Prefix",
+          "default": "İndirim bitiyor!"
+        },
+        {
+          "type": "text",
+          "id": "urgency_suffix",
+          "label": "Urgency Suffix",
+          "default": "kişi şu an inceliyor"
+        },
+        {
+          "type": "number",
+          "id": "viewers_start",
+          "label": "Viewer Count Start",
+          "default": 21
+        },
+        {
+          "type": "number",
+          "id": "viewers_min",
+          "label": "Viewer Count Min",
+          "default": 15
+        },
+        {
+          "type": "number",
+          "id": "viewers_max",
+          "label": "Viewer Count Max",
+          "default": 35
+        },
+        {
+          "type": "number",
+          "id": "countdown_hours",
+          "label": "Countdown Hours",
+          "default": 6
+        },
+        {
+          "type": "number",
+          "id": "countdown_minutes",
+          "label": "Countdown Minutes",
+          "default": 40
+        },
+        {
+          "type": "number",
+          "id": "countdown_seconds",
+          "label": "Countdown Seconds",
+          "default": 23
+        },
+        {
+          "type": "text",
+          "id": "hours_label",
+          "label": "Hours Label",
+          "default": "saat"
+        },
+        {
+          "type": "text",
+          "id": "minutes_label",
+          "label": "Minutes Label",
+          "default": "dak"
+        },
+        {
+          "type": "text",
+          "id": "seconds_label",
+          "label": "Seconds Label",
+          "default": "sn"
+        },
+        {
+          "type": "text",
+          "id": "add_to_cart_text",
+          "label": "Add to Cart Text",
+          "default": "Sepete Ekle"
+        },
+        {
+          "type": "text",
+          "id": "added_text",
+          "label": "Added Confirmation Text",
+          "default": "Eklendi!"
+        },
+        {
+          "type": "text",
+          "id": "wishlist_added",
+          "label": "Wishlist Added Toast",
+          "default": "Favorilere eklendi!"
+        },
+        {
+          "type": "text",
+          "id": "wishlist_removed",
+          "label": "Wishlist Removed Toast",
+          "default": "Favorilerden çıkarıldı"
+        }
+      ]
+    },
+    {
+      "type": "delivery_info",
+      "name": "Delivery Info",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "row1_icon",
+          "label": "Row 1 Icon",
+          "default": "🚀"
+        },
+        {
+          "type": "text",
+          "id": "row1_title",
+          "label": "Row 1 Title",
+          "default": "Aynı Gün Kargo"
+        },
+        {
+          "type": "text",
+          "id": "row1_desc",
+          "label": "Row 1 Description",
+          "default": "16:00'a kadar siparişlerde"
+        },
+        {
+          "type": "text",
+          "id": "row2_icon",
+          "label": "Row 2 Icon",
+          "default": "📅"
+        },
+        {
+          "type": "text",
+          "id": "row2_title",
+          "label": "Row 2 Title",
+          "default": "Tahmini Teslimat"
+        },
+        {
+          "type": "text",
+          "id": "row2_desc",
+          "label": "Row 2 Description",
+          "default": "1-2 iş günü"
+        },
+        {
+          "type": "text",
+          "id": "row3_icon",
+          "label": "Row 3 Icon",
+          "default": "↩️"
+        },
+        {
+          "type": "text",
+          "id": "row3_title",
+          "label": "Row 3 Title",
+          "default": "Ücretsiz Kargo & İade"
+        },
+        {
+          "type": "text",
+          "id": "row3_desc",
+          "label": "Row 3 Description",
+          "default": "200₺ üzeri"
+        },
+        {
+          "type": "text",
+          "id": "row4_icon",
+          "label": "Row 4 Icon",
+          "default": "✓"
+        },
+        {
+          "type": "text",
+          "id": "row4_title",
+          "label": "Row 4 Title",
+          "default": "Stokta Var"
+        },
+        {
+          "type": "text",
+          "id": "row4_highlight",
+          "label": "Row 4 Highlight (red)",
+          "default": "12 adet kaldı!"
+        }
+      ]
+    },
+    {
+      "type": "trust_badges",
+      "name": "Trust & Payment",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "badge1_icon",
+          "label": "Badge 1 Icon",
+          "default": "🎖️"
+        },
+        {
+          "type": "text",
+          "id": "badge1_label",
+          "label": "Badge 1 Label",
+          "default": "%100 Orijinal"
+        },
+        {
+          "type": "text",
+          "id": "badge2_icon",
+          "label": "Badge 2 Icon",
+          "default": "🔒"
+        },
+        {
+          "type": "text",
+          "id": "badge2_label",
+          "label": "Badge 2 Label",
+          "default": "Güvenli Ödeme"
+        },
+        {
+          "type": "text",
+          "id": "badge3_icon",
+          "label": "Badge 3 Icon",
+          "default": "🩺"
+        },
+        {
+          "type": "text",
+          "id": "badge3_label",
+          "label": "Badge 3 Label",
+          "default": "Vet Onaylı"
+        },
+        {
+          "type": "text",
+          "id": "badge4_icon",
+          "label": "Badge 4 Icon",
+          "default": "↩️"
+        },
+        {
+          "type": "text",
+          "id": "badge4_label",
+          "label": "Badge 4 Label",
+          "default": "14 Gün İade"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_visa",
+          "label": "Show VISA",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_mc",
+          "label": "Show Mastercard",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_iyzico",
+          "label": "Show iyzico",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_troy",
+          "label": "Show TROY",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_kapida",
+          "label": "Show Kapıda Ödeme",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "kapida_label",
+          "label": "Kapıda Ödeme Label",
+          "default": "Kapıda Ödeme"
+        },
+        {
+          "type": "text",
+          "id": "installment_text",
+          "label": "Installment Text",
+          "default": "3 Taksit"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product",
+      "blocks": [
+        { "type": "product_header" },
+        { "type": "product_price" },
+        { "type": "vet_note" },
+        { "type": "features" },
+        { "type": "variant_picker" },
+        { "type": "purchase_type" },
+        { "type": "buy_buttons" },
+        { "type": "delivery_info" },
+        { "type": "trust_badges" }
+      ]
+    }
+  ]
+}
+{% endschema %}

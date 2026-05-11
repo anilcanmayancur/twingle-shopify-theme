@@ -1,0 +1,201 @@
+{% if section.settings.product_1 != blank or section.settings.product_2 != blank or section.settings.product_3 != blank %}
+  {% assign p1 = all_products[section.settings.product_1] %}
+  {% assign p2 = all_products[section.settings.product_2] %}
+  {% assign p3 = all_products[section.settings.product_3] %}
+
+  {% assign total_price = 0 %}
+  {% assign original_total = 0 %}
+  {% if p1 %} {% assign total_price = total_price | plus: p1.price %} {% assign original_total = original_total | plus: p1.compare_at_price %} {% endif %}
+  {% if p2 %} {% assign total_price = total_price | plus: p2.price %} {% assign original_total = original_total | plus: p2.compare_at_price %} {% endif %}
+  {% if p3 %} {% assign total_price = total_price | plus: p3.price %} {% assign original_total = original_total | plus: p3.compare_at_price %} {% endif %}
+  {% assign bundle_price = total_price | times: section.settings.discount_multiplier | round %}
+  {% assign savings = total_price | minus: bundle_price %}
+
+  <div class="petibi-wrap">
+    <div class="bundle">
+      <div class="bh">
+        <h3>{{ section.settings.title }}</h3>
+        <span class="bsave">{{ section.settings.discount_badge }}</span>
+      </div>
+      <div class="bi">
+
+        {% if p1 %}
+          <div style="text-align:center">
+            <div class="b-img">
+              {% if p1.featured_image %}
+                <img src="{{ p1.featured_image | img_url: '100x100', crop: 'center' }}" alt="{{ p1.featured_image.alt | escape }}">
+              {% else %}
+                {{ section.settings.p1_fallback_icon }}
+              {% endif %}
+            </div>
+            <div class="b-nm">{{ p1.title | truncate: 30 }}</div>
+          </div>
+        {% endif %}
+
+        {% if p2 %}
+          <div class="b-plus">+</div>
+          <div style="text-align:center">
+            <div class="b-img" style="border-color:var(--p2)">
+              {% if p2.featured_image %}
+                <img src="{{ p2.featured_image | img_url: '100x100', crop: 'center' }}" alt="{{ p2.featured_image.alt | escape }}">
+              {% else %}
+                {{ section.settings.p2_fallback_icon }}
+              {% endif %}
+            </div>
+            <div class="b-nm">{{ p2.title | truncate: 30 }}</div>
+          </div>
+        {% endif %}
+
+        {% if p3 %}
+          <div class="b-plus">+</div>
+          <div style="text-align:center">
+            <div class="b-img" style="border-color:var(--p2)">
+              {% if p3.featured_image %}
+                <img src="{{ p3.featured_image | img_url: '100x100', crop: 'center' }}" alt="{{ p3.featured_image.alt | escape }}">
+              {% else %}
+                {{ section.settings.p3_fallback_icon }}
+              {% endif %}
+            </div>
+            <div class="b-nm">{{ p3.title | truncate: 30 }}</div>
+          </div>
+        {% endif %}
+
+        <div class="bf2">
+          <span class="bn">{{ bundle_price | money }}</span>
+          <span class="bo">{{ total_price | money }}</span>
+          <button class="btn-bnd" onclick="petibiBundleAdd()">{{ section.settings.button_text }}</button>
+          <span style="font-size:10px;color:var(--g400)">{{ savings | money }} {{ section.settings.savings_label }}</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function petibiBundleAdd() {
+      var items = [];
+      {% if p1 %} items.push({ id: {{ p1.selected_or_first_available_variant.id }}, quantity: 1 }); {% endif %}
+      {% if p2 %} items.push({ id: {{ p2.selected_or_first_available_variant.id }}, quantity: 1 }); {% endif %}
+      {% if p3 %} items.push({ id: {{ p3.selected_or_first_available_variant.id }}, quantity: 1 }); {% endif %}
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: items })
+      })
+      .then(function() {
+        petibiShowToast('📦', '{{ section.settings.added_toast }}');
+      })
+      .catch(function() {
+        petibiShowToast('⚠️', '{{ section.settings.error_toast }}');
+      });
+    }
+  </script>
+{% endif %}
+
+<style>
+  .bundle { background: var(--g50); border: 1.5px solid var(--g200); border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; }
+  .bh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px; }
+  .bh h3 { font-size: 14px; font-weight: 800; }
+  .bsave { background: var(--green1); color: var(--green); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 14px; }
+  .bi { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .b-img { width: 52px; height: 52px; background: white; border: 1.5px solid var(--g200); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; }
+  .b-img img { width: 100%; height: 100%; object-fit: cover; }
+  .b-nm { font-size: 9px; color: var(--g600); text-align: center; max-width: 56px; margin-top: 2px; }
+  .b-plus { font-size: 16px; color: var(--g400); font-weight: 700; }
+  .bf2 { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .bn { font-size: 17px; font-weight: 800; color: var(--p); }
+  .bo { font-size: 12px; color: var(--g400); text-decoration: line-through; }
+  .btn-bnd { background: var(--p); color: white; border: none; padding: 9px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .btn-bnd:hover { background: var(--p4); }
+</style>
+
+{% schema %}
+{
+  "name": "Product Bundle",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "📦 Birlikte Sıkça Alınanlar"
+    },
+    {
+      "type": "text",
+      "id": "discount_badge",
+      "label": "Discount Badge Label",
+      "default": "%12 Paket İndirimi"
+    },
+    {
+      "type": "range",
+      "id": "discount_multiplier",
+      "label": "Bundle Price Multiplier",
+      "min": 0.5,
+      "max": 1.0,
+      "step": 0.1,
+      "default": 0.9
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product 1"
+    },
+    {
+      "type": "text",
+      "id": "p1_fallback_icon",
+      "label": "Product 1 Fallback Icon",
+      "default": "🐱"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product 2"
+    },
+    {
+      "type": "text",
+      "id": "p2_fallback_icon",
+      "label": "Product 2 Fallback Icon",
+      "default": "🧴"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product 3"
+    },
+    {
+      "type": "text",
+      "id": "p3_fallback_icon",
+      "label": "Product 3 Fallback Icon",
+      "default": "🛡️"
+    },
+    {
+      "type": "text",
+      "id": "savings_label",
+      "label": "Savings Label",
+      "default": "tasarruf"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "3'lü Paketi Ekle"
+    },
+    {
+      "type": "text",
+      "id": "added_toast",
+      "label": "Added Toast",
+      "default": "Paket sepete eklendi!"
+    },
+    {
+      "type": "text",
+      "id": "error_toast",
+      "label": "Error Toast",
+      "default": "Bir hata oluştu."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Bundle"
+    }
+  ]
+}
+{% endschema %}

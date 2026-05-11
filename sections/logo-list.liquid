@@ -1,0 +1,158 @@
+{% style %}
+  .twinkle-logo-list-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+  .twinkle-logo-container-{{ section.id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .twinkle-logo-title-{{ section.id }} {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #222222;
+    margin-bottom: 40px;
+  }
+  .twinkle-logo-grid-{{ section.id }} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+  }
+  .twinkle-logo-item-{{ section.id }} {
+    flex: 0 1 calc(16.666% - 40px);
+    min-width: 120px;
+    display: flex;
+    justify-content: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+  }
+  .twinkle-logo-item-{{ section.id }}:hover {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+  .twinkle-logo-item-{{ section.id }} img {
+    max-width: 100%;
+    height: auto;
+    max-height: 80px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  @media screen and (max-width: 991px) {
+    .twinkle-logo-item-{{ section.id }} {
+      flex: 0 1 calc(33.333% - 40px);
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .twinkle-logo-grid-{{ section.id }} {
+      gap: 20px;
+    }
+    .twinkle-logo-item-{{ section.id }} {
+      flex: 0 1 calc(50% - 20px);
+      min-width: unset;
+    }
+    .twinkle-logo-item-{{ section.id }} img {
+      max-height: 60px;
+    }
+  }
+{% endstyle %}
+
+<div class="twinkle-logo-list-{{ section.id }}">
+  <div class="twinkle-logo-container-{{ section.id }}">
+    
+    {% if section.settings.title != blank %}
+      <h2 class="twinkle-logo-title-{{ section.id }}">{{ section.settings.title }}</h2>
+    {% endif %}
+    
+    <div class="twinkle-logo-grid-{{ section.id }}">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link | default: '#' }}" class="twinkle-logo-item-{{ section.id }}" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | img_url: 'master' }}" alt="{{ block.settings.image.alt | default: 'Brand Logo' }}" loading="lazy">
+          {% else %}
+            <div style="width: 120px; height: 60px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999; font-size: 12px; border-radius: 4px;">
+              Logo Seçin
+            </div>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Twinkle Logo List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Our Partners"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Logo Link (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Twinkle Logo List",
+      "blocks": [
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" }
+      ]
+    }
+  ]
+}
+{% endschema %}

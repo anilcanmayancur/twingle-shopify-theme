@@ -1,0 +1,996 @@
+{% style %}
+  :root {
+    --tw-primary: {{ section.settings.primary_color }};
+    --tw-text: {{ section.settings.text_color }};
+    --tw-bg: {{ section.settings.bg_color }};
+    --tw-box-bg: {{ section.settings.box_bg_color }};
+    --tw-border: {{ section.settings.border_color }};
+    --tw-light-bg: {{ section.settings.light_bg_color }};
+    --tw-danger: {{ section.settings.danger_color }};
+    --tw-warning: {{ section.settings.warning_color }};
+    --tw-info-bg: {{ section.settings.info_bg_color }};
+    --tw-info-icon: {{ section.settings.info_icon_color }};
+  }
+
+  .twinkle-cart-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: var(--tw-bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--tw-text);
+  }
+
+  .twinkle-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Page Header */
+  .twinkle-cart-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px 20px;
+    background-color: var(--tw-light-bg);
+    border-bottom: 1px solid var(--tw-border);
+  }
+  .twinkle-cart-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--tw-text);
+    margin: 0;
+  }
+
+  /* Cart Empty */
+  .twinkle-cart-empty {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .twinkle-cart-empty-img {
+    max-width: 150px;
+    height: auto;
+    margin: 0 auto 20px auto;
+    display: block;
+  }
+  .twinkle-cart-empty p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--tw-text);
+  }
+  .twinkle-btn-shopping {
+    display: inline-block;
+    background: var(--tw-primary);
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.3s;
+  }
+  .twinkle-btn-shopping:hover {
+    opacity: 0.9;
+  }
+
+  /* Layout */
+  .twinkle-cart-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+  }
+  .twinkle-cart-left {
+    flex: 1;
+    min-width: 0;
+  }
+  .twinkle-cart-right {
+    width: 380px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  /* Left: Cart Summary Block */
+  .twinkle-cart-summary {
+    background: var(--tw-box-bg);
+    border: 1px solid var(--tw-border);
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 30px;
+  }
+  .twinkle-cs-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--tw-text);
+    margin: 0 0 30px 0;
+  }
+
+  /* Table */
+  .twinkle-cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+  }
+  .twinkle-cart-table th {
+    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--tw-text);
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--tw-border);
+  }
+  .twinkle-cart-table td {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--tw-border);
+    vertical-align: middle;
+  }
+
+  /* Product Cell */
+  .twinkle-td-product {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .twinkle-cart-remove {
+    color: var(--tw-danger);
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: none;
+    line-height: 1;
+  }
+  .twinkle-cart-img {
+    width: 70px;
+    height: 70px;
+    background: var(--tw-light-bg);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .twinkle-cart-img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .twinkle-cart-name {
+    font-size: 15px;
+    color: var(--tw-text);
+    text-decoration: none;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .twinkle-cart-name:hover {
+    color: var(--tw-primary);
+  }
+
+  /* Price & Subtotal */
+  .twinkle-td-price, .twinkle-td-subtotal {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--tw-primary);
+  }
+
+  /* Qty Box */
+  .twinkle-qty-wrapper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--tw-border);
+    border-radius: 4px;
+    background: var(--tw-light-bg);
+    height: 40px;
+  }
+  .twinkle-qty-btn {
+    background: none;
+    border: none;
+    width: 30px;
+    font-size: 18px;
+    color: var(--tw-text);
+    cursor: pointer;
+  }
+  .twinkle-qty-input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--tw-text);
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  
+  /* Actions Row (Coupon + Update) */
+  .twinkle-cart-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .twinkle-coupon-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .twinkle-coupon-input {
+    border: 1px solid var(--tw-border);
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 14px;
+    outline: none;
+    width: 200px;
+    background: var(--tw-box-bg);
+    color: var(--tw-text);
+  }
+  .twinkle-coupon-btn {
+    background: var(--tw-primary);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  .twinkle-coupon-btn:hover {
+    opacity: 0.9;
+  }
+  .twinkle-update-btn {
+    background: transparent;
+    border: none;
+    color: var(--tw-text);
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* Info Blocks (3 Columns) */
+  .twinkle-info-blocks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: var(--tw-info-bg);
+    border: 1px solid var(--tw-border);
+    border-radius: 8px;
+  }
+  .twinkle-info-block {
+    padding: 30px 20px;
+    text-align: center;
+    border-right: 1px solid var(--tw-border);
+  }
+  .twinkle-info-block:last-child {
+    border-right: none;
+  }
+  .twinkle-ib-icon {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 15px auto;
+    color: var(--tw-info-icon);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .twinkle-ib-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .twinkle-ib-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+  .twinkle-ib-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--tw-text);
+    margin: 0 0 10px 0;
+  }
+  .twinkle-ib-text {
+    font-size: 13px;
+    color: var(--tw-text);
+    opacity: 0.8;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* RIGHT COLUMN: Free Shipping Bar */
+  .twinkle-shipping-box {
+    background: var(--tw-box-bg);
+    border: 1px solid var(--tw-border);
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+  }
+  .twinkle-sb-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 10px auto;
+    color: var(--tw-warning);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .twinkle-sb-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .twinkle-sb-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+  .twinkle-progress-bg {
+    background: var(--tw-light-bg);
+    border-radius: 10px;
+    height: 6px;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 15px;
+  }
+  .twinkle-progress-fill {
+    height: 100%;
+    background: var(--tw-warning);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+  .twinkle-sb-text {
+    font-size: 14px;
+    color: var(--tw-text);
+    opacity: 0.9;
+  }
+  .twinkle-sb-text strong {
+    color: var(--tw-text);
+    opacity: 1;
+  }
+
+  /* RIGHT COLUMN: Cart Totals */
+  .twinkle-totals-box {
+    background: var(--tw-light-bg);
+    border-radius: 8px;
+    padding: 30px;
+  }
+  .twinkle-tb-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--tw-text);
+    margin: 0 0 25px 0;
+  }
+  .twinkle-tb-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: var(--tw-text);
+    font-weight: 600;
+  }
+  .twinkle-tb-row span:last-child {
+    color: var(--tw-primary);
+  }
+  .twinkle-tb-divider {
+    border-top: 1px solid var(--tw-border);
+    margin: 20px 0;
+  }
+  .twinkle-tb-total {
+    font-size: 18px;
+    color: var(--tw-text);
+  }
+  .twinkle-tb-total span:last-child {
+    font-size: 22px;
+  }
+
+  .twinkle-checkout-btn {
+    width: 100%;
+    background: var(--tw-primary);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 25px;
+    transition: opacity 0.3s;
+  }
+  .twinkle-checkout-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Safe Checkout */
+  .twinkle-safe-checkout {
+    text-align: center;
+  }
+  .twinkle-safe-checkout p {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--tw-text);
+    margin: 0 0 10px 0;
+  }
+  .twinkle-payment-icons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .twinkle-payment-icons svg {
+    height: 24px;
+    width: auto;
+  }
+  .twinkle-payment-icons img {
+    height: auto;
+    max-height: 24px;
+    object-fit: contain;
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 991px) {
+    .twinkle-cart-layout {
+      flex-direction: column;
+    }
+    .twinkle-cart-right {
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .twinkle-cart-table thead {
+      display: none;
+    }
+    .twinkle-cart-table tbody, .twinkle-cart-table tr, .twinkle-cart-table td {
+      display: block;
+      width: 100%;
+    }
+    .twinkle-cart-table tr {
+      border: 1px solid var(--tw-border);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .twinkle-cart-table td {
+      border-bottom: none;
+      padding: 5px 0;
+    }
+    .twinkle-td-product {
+      margin-bottom: 15px;
+    }
+    .twinkle-cart-remove {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+    .twinkle-td-price::before { content: "{{ section.settings.th_price }}: "; font-weight: normal; color: var(--tw-text); opacity: 0.7; }
+    .twinkle-td-subtotal::before { content: "{{ section.settings.th_subtotal }}: "; font-weight: normal; color: var(--tw-text); opacity: 0.7; }
+    .twinkle-td-subtotal { margin-top: 10px; }
+
+    .twinkle-info-blocks {
+      grid-template-columns: 1fr;
+    }
+    .twinkle-info-block {
+      border-right: none;
+      border-bottom: 1px solid var(--tw-border);
+    }
+    .twinkle-info-block:last-child { border-bottom: none; }
+    
+    .twinkle-cart-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .twinkle-coupon-box {
+      flex-direction: column;
+    }
+    .twinkle-coupon-input {
+      width: 100%;
+    }
+    .twinkle-update-btn {
+      margin-top: 15px;
+      text-align: center;
+    }
+  }
+{% endstyle %}
+
+<div class="twinkle-cart-header">
+  <h1 class="twinkle-cart-title">{{ section.settings.page_title }}</h1>
+</div>
+
+<div class="twinkle-cart-section-{{ section.id }}">
+  <div class="twinkle-container">
+    
+    {% if cart.item_count > 0 %}
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form" novalidate>
+        <div class="twinkle-cart-layout">
+          
+          <div class="twinkle-cart-left">
+            <div class="twinkle-cart-summary">
+              <h2 class="twinkle-cs-title">{{ section.settings.summary_title }}</h2>
+              
+              <table class="twinkle-cart-table">
+                <thead>
+                  <tr>
+                    <th>{{ section.settings.th_product }}</th>
+                    <th>{{ section.settings.th_price }}</th>
+                    <th>{{ section.settings.th_quantity }}</th>
+                    <th>{{ section.settings.th_subtotal }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in cart.items %}
+                    <tr>
+                      <td class="twinkle-td-product">
+                        <a href="{{ item.url_to_remove }}" class="twinkle-cart-remove" aria-label="Kaldır">×</a>
+                        <a href="{{ item.url }}" class="twinkle-cart-img">
+                          {% if item.image %}
+                            <img src="{{ item.image | img_url: '100x' }}" alt="{{ item.title | escape }}">
+                          {% endif %}
+                        </a>
+                        <a href="{{ item.url }}" class="twinkle-cart-name">{{ item.product.title }}</a>
+                      </td>
+                      <td class="twinkle-td-price">
+                        {{ item.price | money }}
+                      </td>
+                      <td class="twinkle-td-quantity">
+                        <div class="twinkle-qty-wrapper">
+                          <button type="button" class="twinkle-qty-btn" onclick="const input = this.nextElementSibling; input.value = Math.max(0, parseInt(input.value) - 1);">&minus;</button>
+                          <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" class="twinkle-qty-input" id="updates_{{ item.key }}">
+                          <button type="button" class="twinkle-qty-btn" onclick="const input = this.previousElementSibling; input.value = parseInt(input.value) + 1;">&plus;</button>
+                        </div>
+                      </td>
+                      <td class="twinkle-td-subtotal">
+                        {{ item.final_line_price | money }}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+
+              <div class="twinkle-cart-actions">
+                <div class="twinkle-coupon-box">
+                  <input type="text" name="discount" class="twinkle-coupon-input" placeholder="{{ section.settings.coupon_placeholder }}">
+                  <button type="button" class="twinkle-coupon-btn" onclick="alert('{{ section.settings.coupon_alert_text | escape }}');">{{ section.settings.btn_apply }}</button>
+                </div>
+                
+                <button type="submit" name="update" class="twinkle-update-btn">{{ section.settings.btn_update }}</button>
+              </div>
+            </div>
+
+            <div class="twinkle-info-blocks">
+              <div class="twinkle-info-block">
+                <div class="twinkle-ib-icon">
+                  {% if section.settings.info_1_icon != blank %}
+                    <img src="{{ section.settings.info_1_icon | img_url: 'master' }}" alt="{{ section.settings.info_1_title }}">
+                  {% else %}
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                  {% endif %}
+                </div>
+                <h4 class="twinkle-ib-title">{{ section.settings.info_1_title }}</h4>
+                <p class="twinkle-ib-text">{{ section.settings.info_1_text }}</p>
+              </div>
+              <div class="twinkle-info-block">
+                <div class="twinkle-ib-icon">
+                  {% if section.settings.info_2_icon != blank %}
+                    <img src="{{ section.settings.info_2_icon | img_url: 'master' }}" alt="{{ section.settings.info_2_title }}">
+                  {% else %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>
+                  {% endif %}
+                </div>
+                <h4 class="twinkle-ib-title">{{ section.settings.info_2_title }}</h4>
+                <p class="twinkle-ib-text">{{ section.settings.info_2_text }}</p>
+              </div>
+              <div class="twinkle-info-block">
+                <div class="twinkle-ib-icon">
+                  {% if section.settings.info_3_icon != blank %}
+                    <img src="{{ section.settings.info_3_icon | img_url: 'master' }}" alt="{{ section.settings.info_3_title }}">
+                  {% else %}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="14" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="22"/><path d="M12 8c0-2-1-4-3-4s-3 2-3 4s3 4 3 4s3-2 3-4"/><path d="M12 8c0-2 1-4 3-4s3 2 3 4s-3 4-3 4s-3-2-3-4"/></svg>
+                  {% endif %}
+                </div>
+                <h4 class="twinkle-ib-title">{{ section.settings.info_3_title }}</h4>
+                <p class="twinkle-ib-text">{{ section.settings.info_3_text }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="twinkle-cart-right">
+            
+            {% if section.settings.show_shipping_bar %}
+              <div class="twinkle-shipping-box">
+                <div class="twinkle-sb-icon">
+                  {% if section.settings.shipping_icon != blank %}
+                    <img src="{{ section.settings.shipping_icon | img_url: 'master' }}" alt="Shipping">
+                  {% else %}
+                    <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                  {% endif %}
+                </div>
+                
+                {% assign threshold = section.settings.shipping_threshold | times: 100 %}
+                {% assign progress = cart.total_price | times: 100 | divided_by: threshold %}
+                {% if progress > 100 %}{% assign progress = 100 %}{% endif %}
+                
+                <div class="twinkle-progress-bg">
+                  <div class="twinkle-progress-fill" style="width: {{ progress }}%;"></div>
+                </div>
+
+                <div class="twinkle-sb-text">
+                  {% if cart.total_price >= threshold %}
+                    {{ section.settings.shipping_success_text }}
+                  {% else %}
+                    {% assign amount_left = threshold | minus: cart.total_price | money %}
+                    {{ section.settings.shipping_text | replace: '[amount]', amount_left }}
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            <div class="twinkle-totals-box">
+              <h3 class="twinkle-tb-title">{{ section.settings.totals_title }}</h3>
+              
+              <div class="twinkle-tb-row">
+                <span>{{ section.settings.lbl_subtotal }}</span>
+                <span>{{ cart.items_subtotal_price | money }}</span>
+              </div>
+              
+              <div class="twinkle-tb-divider"></div>
+              
+              <div class="twinkle-tb-row twinkle-tb-total">
+                <span>{{ section.settings.lbl_total }}</span>
+                <span>{{ cart.total_price | money }}</span>
+              </div>
+
+              <button type="submit" name="checkout" class="twinkle-checkout-btn">
+                {{ section.settings.btn_checkout }}
+              </button>
+
+              <div class="twinkle-safe-checkout">
+                <p>{{ section.settings.safe_checkout_title }}</p>
+                <div class="twinkle-payment-icons">
+                  {% if section.settings.payment_image != blank %}
+                     <img src="{{ section.settings.payment_image | img_url: 'master' }}" alt="{{ section.settings.safe_checkout_title | escape }}">
+                  {% else %}
+                    {% for type in shop.enabled_payment_types %}
+                      {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+                    {% else %}
+                      <img src="https://cdn.shopify.com/s/assets/payment_icons/visa-319d545c6fd255c9aad5eeaad21fd6f7f7b4fdbdb1a35ce83b89cca12a187f00.svg" alt="Visa">
+                      <img src="https://cdn.shopify.com/s/assets/payment_icons/master-173035bc8124581983d4efa50cf8626e8553c2b311353fbf67485f9c1a2b88d1.svg" alt="Mastercard">
+                      <img src="https://cdn.shopify.com/s/assets/payment_icons/amex-c023d6edde9ce7eec115da7383a5477d94f71a086ea78e6308ba6ab73c524024.svg" alt="Amex">
+                    {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </form>
+
+    {% else %}
+      <div class="twinkle-cart-empty">
+        {% if section.settings.empty_cart_image != blank %}
+          <img class="twinkle-cart-empty-img" src="{{ section.settings.empty_cart_image | img_url: 'master' }}" alt="Empty Cart">
+        {% else %}
+          <svg viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:20px; opacity:0.3;">
+            <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        {% endif %}
+        
+        <p>{{ section.settings.empty_cart_text }}</p>
+        <a href="/collections/all" class="twinkle-btn-shopping">{{ section.settings.empty_cart_btn }}</a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Twinkle Cart Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tasarım Renkleri"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Genel Arka Plan Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "box_bg_color",
+      "label": "Kutu/İç Arka Plan Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "light_bg_color",
+      "label": "Açık Gri Alanlar (Header vs.)",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Çizgi/Çerçeve Rengi",
+      "default": "#eeeeee"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Vurgu Rengi (Mor Butonlar)",
+      "default": "#8a3b8e"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Metin Rengi",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "danger_color",
+      "label": "Silme (X) İkonu Rengi",
+      "default": "#e53e3e"
+    },
+    {
+      "type": "color",
+      "id": "warning_color",
+      "label": "Kargo Barı / Uyarı Rengi",
+      "default": "#f6ad55"
+    },
+    {
+      "type": "color",
+      "id": "info_bg_color",
+      "label": "Bilgi Kutucukları Arka Planı",
+      "default": "#fcfbfe"
+    },
+    {
+      "type": "color",
+      "id": "info_icon_color",
+      "label": "Bilgi Kutucukları İkon Rengi",
+      "default": "#5c6c9a"
+    },
+    {
+      "type": "header",
+      "content": "Temel Metinler"
+    },
+    {
+      "type": "text",
+      "id": "page_title",
+      "label": "Sayfa Başlığı",
+      "default": "Sepetim"
+    },
+    {
+      "type": "text",
+      "id": "summary_title",
+      "label": "Sepet Özeti Başlığı",
+      "default": "Sepet Özeti"
+    },
+    {
+      "type": "text",
+      "id": "th_product",
+      "label": "Tablo: Ürün",
+      "default": "Ürün"
+    },
+    {
+      "type": "text",
+      "id": "th_price",
+      "label": "Tablo: Fiyat",
+      "default": "Fiyat"
+    },
+    {
+      "type": "text",
+      "id": "th_quantity",
+      "label": "Tablo: Adet",
+      "default": "Adet"
+    },
+    {
+      "type": "text",
+      "id": "th_subtotal",
+      "label": "Tablo: Ara Toplam",
+      "default": "Ara Toplam"
+    },
+    {
+      "type": "text",
+      "id": "coupon_placeholder",
+      "label": "Kupon Kodu Placeholder",
+      "default": "Kupon Kodu"
+    },
+    {
+      "type": "text",
+      "id": "btn_apply",
+      "label": "Kupon Uygula Butonu",
+      "default": "Kuponu Uygula"
+    },
+    {
+      "type": "text",
+      "id": "coupon_alert_text",
+      "label": "Kupon Uygula Uyarı Metni (Popup)",
+      "default": "Kupon kodu ödeme adımında (Checkout) uygulanacaktır. Lütfen ödemeye geçiniz."
+    },
+    {
+      "type": "text",
+      "id": "btn_update",
+      "label": "Sepeti Güncelle Butonu",
+      "default": "Sepeti Güncelle"
+    },
+    {
+      "type": "header",
+      "content": "Kargo Barı (Sağ Üst)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping_bar",
+      "label": "Kargo Barını Göster",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_icon",
+      "label": "Kargo Kamyon İkonu (Opsiyonel)"
+    },
+    {
+      "type": "number",
+      "id": "shipping_threshold",
+      "label": "Bedava Kargo Limiti (Tutar)",
+      "default": 1000
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Kalan Tutar Metni ([amount] kullanın)",
+      "default": "Bedava kargo için sepete <strong>[amount]</strong> değerinde ürün ekleyin!"
+    },
+    {
+      "type": "text",
+      "id": "shipping_success_text",
+      "label": "Limit Aşıldı Metni",
+      "default": "<strong>Tebrikler!</strong> Bedava kargo kazandınız."
+    },
+    {
+      "type": "header",
+      "content": "Sipariş Özeti (Sağ Alt)"
+    },
+    {
+      "type": "text",
+      "id": "totals_title",
+      "label": "Başlık",
+      "default": "Sipariş Özeti"
+    },
+    {
+      "type": "text",
+      "id": "lbl_subtotal",
+      "label": "Ara Toplam Metni",
+      "default": "Ara Toplam"
+    },
+    {
+      "type": "text",
+      "id": "lbl_total",
+      "label": "Genel Toplam Metni",
+      "default": "Toplam"
+    },
+    {
+      "type": "text",
+      "id": "btn_checkout",
+      "label": "Ödeme Butonu",
+      "default": "Ödemeye Geç"
+    },
+    {
+      "type": "text",
+      "id": "safe_checkout_title",
+      "label": "Güvenli Ödeme Başlığı",
+      "default": "Güvenli Alışveriş & Hızlı Ödeme"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_image",
+      "label": "Ödeme Yöntemleri Görseli (Opsiyonel)"
+    },
+    {
+      "type": "header",
+      "content": "Bilgi Kutucukları (Sol Alt)"
+    },
+    {
+      "type": "image_picker",
+      "id": "info_1_icon",
+      "label": "1. Kutu İkonu"
+    },
+    {
+      "type": "text",
+      "id": "info_1_title",
+      "label": "1. Kutu Başlığı",
+      "default": "Binlerce Mutlu Müşteri"
+    },
+    {
+      "type": "text",
+      "id": "info_1_text",
+      "label": "1. Kutu Metni",
+      "default": "Bizi tercih eden mutlu ve memnun müşterilerimize katılın!"
+    },
+    {
+      "type": "image_picker",
+      "id": "info_2_icon",
+      "label": "2. Kutu İkonu"
+    },
+    {
+      "type": "text",
+      "id": "info_2_title",
+      "label": "2. Kutu Başlığı",
+      "default": "Kolay İade"
+    },
+    {
+      "type": "text",
+      "id": "info_2_text",
+      "label": "2. Kutu Metni",
+      "default": "Zahmetsiz iade ve değişim sürecinin tadını çıkarın."
+    },
+    {
+      "type": "image_picker",
+      "id": "info_3_icon",
+      "label": "3. Kutu İkonu"
+    },
+    {
+      "type": "text",
+      "id": "info_3_title",
+      "label": "3. Kutu Başlığı",
+      "default": "Hemen Sipariş Ver & Hediye Kazan"
+    },
+    {
+      "type": "text",
+      "id": "info_3_text",
+      "label": "3. Kutu Metni",
+      "default": "Siparişinize özel sürpriz hediyeler paketinizde!"
+    },
+    {
+      "type": "header",
+      "content": "Boş Sepet Durumu"
+    },
+    {
+      "type": "image_picker",
+      "id": "empty_cart_image",
+      "label": "Boş Sepet Görseli (Opsiyonel)"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_text",
+      "label": "Boş Sepet Metni",
+      "default": "Sepetiniz şu an boş görünüyor."
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_btn",
+      "label": "Alışverişe Başla Butonu",
+      "default": "Alışverişe Başla"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Twinkle Cart Page"
+    }
+  ]
+}
+{% endschema %}

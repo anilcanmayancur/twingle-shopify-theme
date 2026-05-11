@@ -1,0 +1,29 @@
+<div class="sec" {{ block.shopify_attributes }}>
+  <div class="brand-row">
+    <span class="brand">{{ block.settings.brand_name }}</span>
+    {%- if block.settings.sold_count_text != blank -%}
+      <span class="sold">🔥 {{ block.settings.sold_count_text }}</span>
+    {%- endif -%}
+  </div>
+
+  <h1 class="title">{{ product.title }}</h1>
+
+  <div class="rating">
+    {%- assign rating_raw = product.metafields.reviews.rating.value | default: block.settings.rating_value -%}
+    {%- assign rating_num = rating_raw | times: 1.0 | divided_by: 10.0 -%}
+    {%- assign rating_count = product.metafields.reviews.rating_count.value | default: block.settings.rating_count -%}
+    {%- assign full_stars = rating_num | round -%}
+    <span class="stars" aria-label="{{ rating_num }} yıldız">
+      {%- for i in (1..5) -%}
+        {%- if i <= full_stars -%}★{%- else -%}☆{%- endif -%}
+      {%- endfor -%}
+    </span>
+    <span class="rnum">{{ rating_num }}</span>
+    <button class="rcnt" type="button" onclick="petibiSwitchTab('rvw')">
+      {{ rating_count }} {{ block.settings.reviews_label }}
+    </button>
+    {%- if block.settings.show_vet_badge -%}
+      <span class="vet">✓ {{ block.settings.vet_badge_text }}</span>
+    {%- endif -%}
+  </div>
+</div>

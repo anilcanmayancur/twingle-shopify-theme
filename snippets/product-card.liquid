@@ -1,0 +1,273 @@
+<style>
+.forspaceon-pc-card {
+  background: #FFFFFF;
+  border: 1px solid #F0F0F0;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  position: relative;
+}
+
+.forspaceon-pc-card:hover {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  border-color: #EAEAEA;
+}
+
+.forspaceon-pc-image-wrap {
+  position: relative;
+  background-color: #FAFAFA;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+}
+
+.forspaceon-pc-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+/* Etiketler (Badges) */
+.forspaceon-pc-badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+}
+
+.forspaceon-pc-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+.forspaceon-pc-badge-new {
+  background-color: #42BA78; /* Tasarımdaki yeşil */
+}
+
+.forspaceon-pc-badge-sale {
+  background-color: #E05757; /* Tasarımdaki kırmızı */
+}
+
+/* Kalp İkonu (Wishlist) */
+.forspaceon-pc-wishlist {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  background: #FFFFFF;
+  border: 1px solid #EAEAEA;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #CCC;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.forspaceon-pc-wishlist:hover {
+  color: #E05757;
+  border-color: #E05757;
+}
+
+.forspaceon-pc-wishlist svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* İçerik Alanı */
+.forspaceon-pc-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.forspaceon-pc-vendor {
+  font-size: 10px;
+  font-weight: 800;
+  color: #7B3FF2; /* Tasarımdaki mor */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.forspaceon-pc-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+  text-decoration: none;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.forspaceon-pc-title:hover {
+  color: #7B3FF2;
+}
+
+.forspaceon-pc-reviews {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.forspaceon-pc-stars {
+  color: #FBBF24;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.forspaceon-pc-review-count {
+  font-size: 12px;
+  color: #888888;
+  font-weight: 500;
+}
+
+.forspaceon-pc-prices {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 16px;
+  margin-top: auto; /* Butonu en alta itmek için fiyatı aşağı iter */
+}
+
+.forspaceon-pc-price-current {
+  font-size: 20px;
+  font-weight: 800;
+  color: #7B3FF2;
+}
+
+.forspaceon-pc-price-compare {
+  font-size: 14px;
+  color: #999999;
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+.forspaceon-pc-add-form {
+  margin: 0;
+}
+
+.forspaceon-pc-add-btn {
+  width: 100%;
+  background-color: #7B3FF2;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.forspaceon-pc-add-btn:hover {
+  opacity: 0.9;
+}
+</style>
+
+{%- liquid
+
+  assign is_new = false
+  if product.published_at != blank
+    assign published_date = product.published_at | date: "%s"
+    assign now_date = 'now' | date: "%s"
+    assign diff_seconds = now_date | minus: published_date
+    assign diff_days = diff_seconds | divided_by: 86400
+    if diff_days <= 7
+      assign is_new = true
+    endif
+  endif
+
+
+  assign has_discount = false
+  if product.compare_at_price > product.price
+    assign has_discount = true
+    assign discount_amount = product.compare_at_price | minus: product.price
+    assign discount_percent = discount_amount | times: 100.0 | divided_by: product.compare_at_price | round
+  endif
+-%}
+
+<div class="forspaceon-pc-card">
+  
+  <div class="forspaceon-pc-image-wrap">
+    
+    <div class="forspaceon-pc-badges">
+      {% if is_new %}
+        <span class="forspaceon-pc-badge forspaceon-pc-badge-new">Yeni</span>
+      {% elsif has_discount %}
+        <span class="forspaceon-pc-badge forspaceon-pc-badge-sale">-{{ discount_percent }}%</span>
+      {% endif %}
+    </div>
+
+    <button type="button" class="forspaceon-pc-wishlist" aria-label="Favorilere Ekle">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    </button>
+
+    <a href="{{ product.url }}">
+      {% if product.featured_image != blank %}
+        {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+      {% endif %}
+    </a>
+  </div>
+
+  <div class="forspaceon-pc-info">
+    
+    {% if product.vendor != blank %}
+      <div class="forspaceon-pc-vendor">{{ product.vendor }}</div>
+    {% endif %}
+    
+    <a href="{{ product.url }}" class="forspaceon-pc-title">{{ product.title }}</a>
+    
+    <div class="forspaceon-pc-reviews">
+      <div class="forspaceon-pc-stars">
+        ★★★★★
+      </div>
+      <span class="forspaceon-pc-review-count">
+        {% if product.metafields.reviews.rating_count %}
+          ({{ product.metafields.reviews.rating_count }})
+        {% else %}
+          (24)
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="forspaceon-pc-prices">
+      <span class="forspaceon-pc-price-current">{{ product.price | money }}</span>
+      {% if has_discount %}
+        <span class="forspaceon-pc-price-compare">{{ product.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+
+    <form method="post" action="/cart/add" class="forspaceon-pc-add-form">
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit" class="forspaceon-pc-add-btn">
+        Sepete Ekle
+      </button>
+    </form>
+
+  </div>
+</div>

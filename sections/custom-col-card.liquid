@@ -1,0 +1,569 @@
+<style>
+.pet-cat-{{ section.id }} {
+  --pet-primary: {{ section.settings.primary_color }};
+  --pet-primary-light: {{ section.settings.primary_light_color }};
+  --pet-primary-deep: {{ section.settings.primary_deep_color }};
+  --pet-bg: {{ section.settings.bg_color }};
+  --pet-card: #FFFFFF;
+  --pet-icon-bg: {{ section.settings.icon_bg }};
+  --pet-ink: #1F1342;
+  --pet-body: #5A4F75;
+  --pet-mute: #8B8299;
+  --pet-line: rgba(123, 63, 242, 0.12);
+
+  background-color: var(--pet-bg);
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  font-family: inherit, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+}
+
+.pet-cat-{{ section.id }} *,
+.pet-cat-{{ section.id }} *::before,
+.pet-cat-{{ section.id }} *::after {
+  box-sizing: border-box;
+}
+
+.pet-cat-container-{{ section.id }} {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ===== HEADER ===== */
+.pet-cat-header-{{ section.id }} {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  gap: 16px;
+}
+
+.pet-cat-title-{{ section.id }} {
+  font-family: inherit;
+  font-size: clamp(20px, 2.6vw, {{ section.settings.title_size }}px);
+  font-weight: 800;
+  color: var(--pet-ink);
+  margin: 0;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.pet-cat-actions-{{ section.id }} {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.pet-cat-nav-{{ section.id }} {
+  display: flex;
+  gap: 6px;
+}
+
+.pet-cat-nav-btn-{{ section.id }} {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--pet-card);
+  border: 1px solid var(--pet-line);
+  color: var(--pet-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.pet-cat-nav-btn-{{ section.id }} svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pet-cat-nav-btn-{{ section.id }}:hover:not(:disabled) {
+  background: var(--pet-primary);
+  border-color: var(--pet-primary);
+  color: #FFFFFF;
+}
+
+.pet-cat-nav-btn-{{ section.id }}:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pet-cat-view-all-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--pet-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: gap 0.2s ease;
+  white-space: nowrap;
+}
+
+.pet-cat-view-all-{{ section.id }}:hover {
+  gap: 8px;
+  color: var(--pet-primary-deep);
+}
+
+.pet-cat-view-all-{{ section.id }} svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ===== SLIDER TRACK ===== */
+.pet-cat-track-wrapper-{{ section.id }} {
+  position: relative;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+.pet-cat-track-{{ section.id }} {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 4px 0 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pet-cat-track-{{ section.id }}::-webkit-scrollbar {
+  display: none;
+}
+
+.pet-cat-card-{{ section.id }} {
+  flex: 0 0 calc((100% - 60px) / 6);
+  scroll-snap-align: start;
+  min-width: 0;
+  background: var(--pet-card);
+  border: 1px solid var(--pet-line);
+  border-radius: 16px;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pet-cat-card-{{ section.id }}:hover {
+  transform: translateY(-3px);
+  border-color: var(--pet-primary-light);
+  box-shadow: 0 14px 26px -14px rgba(123, 63, 242, 0.22);
+}
+
+/* Icon box */
+.pet-cat-icon-{{ section.id }} {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: var(--pet-icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.pet-cat-card-{{ section.id }}:hover .pet-cat-icon-{{ section.id }} {
+  transform: scale(1.04);
+}
+
+/* Shopify collection image — kutuyu doldurur */
+.pet-cat-img-{{ section.id }} {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Emoji fallback */
+.pet-cat-emoji-{{ section.id }} {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.pet-cat-name-{{ section.id }} {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pet-ink);
+  margin: 0 0 3px 0;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pet-cat-count-{{ section.id }} {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pet-mute);
+  margin: 0;
+}
+
+/* ===== TABLET (≤1024px) — 4 sütun ===== */
+@media screen and (max-width: 1024px) {
+  .pet-cat-card-{{ section.id }} {
+    flex: 0 0 calc((100% - 36px) / 4);
+  }
+}
+
+/* ===== MOBİL TABLET ARASI (≤768px) — slider ===== */
+@media screen and (max-width: 768px) {
+  .pet-cat-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.65 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.65 | round }}px;
+  }
+
+  .pet-cat-header-{{ section.id }} { margin-bottom: 14px; }
+  .pet-cat-nav-{{ section.id }} { display: none; }
+
+  /* 3.3 kart görünür */
+  .pet-cat-card-{{ section.id }} {
+    flex: 0 0 calc((100% - 24px) / 3.3);
+    padding: 14px 10px;
+    border-radius: 14px;
+  }
+
+  .pet-cat-track-{{ section.id }} {
+    gap: 10px;
+    padding-right: 16px;
+  }
+
+  .pet-cat-icon-{{ section.id }} {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+  .pet-cat-emoji-{{ section.id }} { font-size: 26px; }
+
+  .pet-cat-name-{{ section.id }} { font-size: 13px; }
+  .pet-cat-count-{{ section.id }} { font-size: 11.5px; }
+}
+
+/* ===== KÜÇÜK MOBİL (≤420px) — 2.6 kart ===== */
+@media screen and (max-width: 420px) {
+  .pet-cat-{{ section.id }} {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+
+  .pet-cat-container-{{ section.id }} { padding: 0 12px; }
+  .pet-cat-track-wrapper-{{ section.id }} { margin: 0 -12px; padding: 0 12px; }
+
+  .pet-cat-card-{{ section.id }} {
+    flex: 0 0 calc((100% - 18px) / 2.6);
+    padding: 12px 8px;
+  }
+
+  .pet-cat-track-{{ section.id }} { gap: 9px; padding-right: 12px; }
+
+  .pet-cat-icon-{{ section.id }} {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 8px;
+  }
+  .pet-cat-emoji-{{ section.id }} { font-size: 22px; }
+
+  .pet-cat-name-{{ section.id }} { font-size: 12.5px; }
+  .pet-cat-count-{{ section.id }} { font-size: 11px; }
+  .pet-cat-view-all-{{ section.id }} { font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-cat-track-{{ section.id }} { scroll-behavior: auto; }
+  .pet-cat-card-{{ section.id }},
+  .pet-cat-icon-{{ section.id }} { transition: none !important; }
+}
+</style>
+
+<section class="pet-cat-{{ section.id }}">
+  <div class="pet-cat-container-{{ section.id }}">
+
+    <div class="pet-cat-header-{{ section.id }}">
+      <h2 class="pet-cat-title-{{ section.id }}">{{ section.settings.title }}</h2>
+
+      <div class="pet-cat-actions-{{ section.id }}">
+        {% if section.settings.show_nav_buttons %}
+          <div class="pet-cat-nav-{{ section.id }}">
+            <button type="button" class="pet-cat-nav-btn-{{ section.id }}" data-direction="prev" aria-label="Önceki">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button type="button" class="pet-cat-nav-btn-{{ section.id }}" data-direction="next" aria-label="Sonraki">
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        {% endif %}
+
+        {% if section.settings.btn_label != blank %}
+          <a href="{{ section.settings.btn_link | default: '/collections' }}" class="pet-cat-view-all-{{ section.id }}">
+            {{ section.settings.btn_label }}
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="pet-cat-track-wrapper-{{ section.id }}">
+      <div class="pet-cat-track-{{ section.id }}" id="CatSlider-{{ section.id }}">
+
+        {% if section.settings.collections != blank and section.settings.collections.size > 0 %}
+
+          {%- comment -%} OTOMATIK: Shopify koleksiyonlarından çekilir {%- endcomment -%}
+          {% for collection in section.settings.collections %}
+            <a href="{{ collection.url }}" class="pet-cat-card-{{ section.id }}">
+              <div class="pet-cat-icon-{{ section.id }}">
+                {% if collection.image != blank %}
+                  {{ collection.image | image_url: width: 200 | image_tag:
+                      class: 'pet-cat-img-' | append: section.id,
+                      alt: collection.title,
+                      loading: 'lazy',
+                      widths: '120,200,300'
+                  }}
+                {% elsif collection.products.first.featured_image != blank %}
+                  {{ collection.products.first.featured_image | image_url: width: 200 | image_tag:
+                      class: 'pet-cat-img-' | append: section.id,
+                      alt: collection.title,
+                      loading: 'lazy'
+                  }}
+                {% else %}
+                  <span class="pet-cat-emoji-{{ section.id }}">{{ section.settings.fallback_emoji }}</span>
+                {% endif %}
+              </div>
+
+              <h3 class="pet-cat-name-{{ section.id }}">{{ collection.title }}</h3>
+
+              {% if section.settings.show_count %}
+                <p class="pet-cat-count-{{ section.id }}">{{ collection.all_products_count }} ürün</p>
+              {% endif %}
+            </a>
+          {% endfor %}
+
+        {% else %}
+
+          {%- comment -%} DEMO FALLBACK: Hiç koleksiyon seçilmemişse {%- endcomment -%}
+          {% assign demo = "Yavru Kedi|🍼|32,Yavru Köpek|🐶|28,Yetişkin Kedi|🐱|64,Yetişkin Köpek|🦮|58,Mobilya & Yatak|🛏️|41,Bakım & Grooming|🛁|37,Oyuncak|🎾|52,Ödül & Snack|🦴|29" | split: "," %}
+          {% for d in demo %}
+            {% assign p = d | split: "|" %}
+            <a href="#" class="pet-cat-card-{{ section.id }}">
+              <div class="pet-cat-icon-{{ section.id }}">
+                <span class="pet-cat-emoji-{{ section.id }}">{{ p[1] }}</span>
+              </div>
+              <h3 class="pet-cat-name-{{ section.id }}">{{ p[0] }}</h3>
+              {% if section.settings.show_count %}
+                <p class="pet-cat-count-{{ section.id }}">{{ p[2] }} ürün</p>
+              {% endif %}
+            </a>
+          {% endfor %}
+
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  var track = document.getElementById('CatSlider-{{ section.id }}');
+  if (!track) return;
+
+  var navBtns = document.querySelectorAll('.pet-cat-nav-btn-{{ section.id }}');
+
+  function getScrollAmount() {
+    var card = track.querySelector('.pet-cat-card-{{ section.id }}');
+    if (!card) return track.clientWidth * 0.8;
+    var styles = window.getComputedStyle(track);
+    var gap = parseFloat(styles.gap || styles.columnGap || '12');
+    return (card.offsetWidth + gap) * 2;
+  }
+
+  function maxScroll() { return track.scrollWidth - track.clientWidth; }
+
+  function updateButtons() {
+    var max = maxScroll();
+    navBtns.forEach(function(btn) {
+      var dir = btn.getAttribute('data-direction');
+      if (max <= 0) { btn.disabled = true; return; }
+      if (dir === 'prev') btn.disabled = track.scrollLeft <= 1;
+      else btn.disabled = track.scrollLeft >= max - 1;
+    });
+  }
+
+  navBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var dir = btn.getAttribute('data-direction');
+      var amount = getScrollAmount();
+      track.scrollBy({ left: dir === 'prev' ? -amount : amount, behavior: 'smooth' });
+    });
+  });
+
+  var ticking = false;
+  track.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        updateButtons();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  window.addEventListener('resize', updateButtons);
+  updateButtons();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Pet Categories",
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg",
+      "label": "Card Icon Background",
+      "info": "İkonun arkasındaki soft mor zemin (görsel olmayan kategoriler için)",
+      "default": "#F4F0FF"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Color (Mor)",
+      "default": "#7B3FF2"
+    },
+    {
+      "type": "color",
+      "id": "primary_light_color",
+      "label": "Açık Mor",
+      "default": "#B794F4"
+    },
+    {
+      "type": "color",
+      "id": "primary_deep_color",
+      "label": "Koyu Mor",
+      "default": "#5B2FB2"
+    },
+
+    { "type": "header", "content": "Header" },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Kategoriler"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Max Size (Desktop)",
+      "default": 28
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "View All Button Label",
+      "default": "Tümünü Gör"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "View All Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav_buttons",
+      "label": "Prev/Next Butonları (Desktop)",
+      "default": true
+    },
+
+    { "type": "header", "content": "Categories" },
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "Kategoriler (Koleksiyonlar)",
+      "info": "Shopify koleksiyonlarınızdan istediklerinizi seçin. Görsel, başlık ve ürün sayısı otomatik gelir. Kategori görsellerini Shopify admin → Koleksiyonlar → [Koleksiyon] → Image alanından düzenleyebilirsiniz."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Ürün Sayısını Göster",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "fallback_emoji",
+      "label": "Görseli Olmayan Kategoriler İçin Emoji",
+      "info": "Bir koleksiyonda image yoksa bu emoji gösterilir.",
+      "default": "🐾"
+    },
+
+    { "type": "header", "content": "Spacing" },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "label": "Max Width",
+      "default": 1300
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Categories"
+    }
+  ]
+}
+{% endschema %}

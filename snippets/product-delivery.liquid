@@ -1,0 +1,24 @@
+<div class="sec" {{ block.shopify_attributes }}>
+  <div class="del-rows">
+    {%- assign rows = 'row1,row2,row3,row4' | split: ',' -%}
+    {%- for row in rows -%}
+      {%- assign icon_key     = row | append: '_icon' -%}
+      {%- assign title_key    = row | append: '_title' -%}
+      {%- assign desc_key     = row | append: '_desc' -%}
+      {%- assign highlight_key = row | append: '_highlight' -%}
+      {%- assign row_title = block.settings[title_key] -%}
+      {%- if row_title != blank -%}
+        <div class="del-row">
+          <div class="del-ico" aria-hidden="true">{{ block.settings[icon_key] }}</div>
+          <span>
+            <strong>{{ row_title }}</strong>
+            {%- if block.settings[desc_key] != blank -%} — {{ block.settings[desc_key] }}{%- endif -%}
+            {%- if block.settings[highlight_key] != blank -%}
+              <span style="color:var(--red);font-weight:700"> {{ block.settings[highlight_key] }}</span>
+            {%- endif -%}
+          </span>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>

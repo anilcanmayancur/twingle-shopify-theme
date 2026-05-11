@@ -1,0 +1,1233 @@
+<style>
+.pet-h-{{ section.id }} {
+  --pp: {{ section.settings.primary_color }};
+  --pp-dark: #5B21B6;
+  --pp-tint: #F5F3FF;
+  --ink: #0F0A26;
+  --body: #4B4163;
+  --muted: #8B82A0;
+  --line: #ECE9F5;
+  --bg: #FFFFFF;
+  --soft: #F8F7FB;
+  position: sticky;
+  top: 0;
+  z-index: 990;
+  background: var(--bg);
+  font-family: inherit;
+  color: var(--ink);
+}
+
+.pet-h-{{ section.id }}.is-scrolled {
+  box-shadow: 0 1px 0 var(--line), 0 8px 24px rgba(15, 10, 38, 0.04);
+}
+
+/* Topbar */
+.pet-tb-{{ section.id }} {
+  background: var(--ink);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.pet-tb-inner-{{ section.id }} {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 9px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+.pet-tb-item-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s ease;
+}
+
+.pet-tb-item-{{ section.id }}:hover { color: #fff; }
+
+.pet-tb-dot-{{ section.id }} {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Main */
+.pet-main-{{ section.id }} {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Logo */
+.pet-logo-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.pet-logo-{{ section.id }} img { max-height: 38px; width: auto; }
+
+.pet-logo-mark-{{ section.id }} {
+  width: 38px; height: 38px;
+  background: var(--pp);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  color: #fff;
+}
+
+.pet-logo-text-{{ section.id }} {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+/* Search wrapper */
+.pet-search-{{ section.id }} {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  justify-self: center;
+}
+
+.pet-search-bar-{{ section.id }} {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.pet-search-bar-{{ section.id }}.is-focus {
+  border-color: var(--pp);
+  box-shadow: 0 0 0 4px rgba(123, 63, 242, 0.08);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.pet-search-cat-{{ section.id }} {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 36px 0 18px;
+  border: none;
+  border-right: 1px solid var(--line);
+  background: transparent;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230F0A26' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  outline: none;
+}
+
+.pet-search-input-{{ section.id }} {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 0 18px;
+  font-size: 14px;
+  color: var(--ink);
+  background: transparent;
+  font-family: inherit;
+  min-width: 0;
+}
+
+.pet-search-input-{{ section.id }}::placeholder { color: var(--muted); }
+
+.pet-search-btn-{{ section.id }} {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 22px;
+  background: var(--pp);
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-family: inherit;
+}
+
+.pet-search-btn-{{ section.id }}:hover { background: var(--pp-dark); }
+
+/* Search dropdown */
+.pet-sd-{{ section.id }} {
+  position: absolute;
+  top: calc(100% - 1.5px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1.5px solid var(--pp);
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 16px 40px rgba(15, 10, 38, 0.08);
+  padding: 16px 18px 18px;
+  display: none;
+  z-index: 100;
+}
+
+.pet-search-{{ section.id }}.is-open .pet-sd-{{ section.id }} { display: block; }
+
+.pet-sd-section-{{ section.id }} { margin-bottom: 14px; }
+.pet-sd-section-{{ section.id }}:last-child { margin-bottom: 0; }
+
+.pet-sd-h-{{ section.id }} {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pet-sd-chips-{{ section.id }} {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pet-sd-chip-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: all 0.18s ease;
+}
+
+.pet-sd-chip-{{ section.id }}:hover {
+  background: var(--pp-tint);
+  border-color: var(--pp);
+  color: var(--pp);
+}
+
+.pet-sd-cats-{{ section.id }} {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+.pet-sd-cat-{{ section.id }} {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background 0.18s ease;
+}
+
+.pet-sd-cat-{{ section.id }}:hover {
+  background: var(--soft);
+  color: var(--pp);
+}
+
+.pet-sd-cat-icon-{{ section.id }} {
+  width: 32px; height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pp-tint);
+  color: var(--pp);
+  border-radius: 6px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Actions */
+.pet-actions-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pet-act-{{ section.id }} {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.pet-act-{{ section.id }}:hover {
+  background: var(--pp-tint);
+  color: var(--pp);
+}
+
+/* Account dropdown trigger */
+.pet-acc-{{ section.id }} {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--line);
+  height: 44px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pet-acc-{{ section.id }}:hover {
+  border-color: var(--pp);
+  background: var(--pp-tint);
+}
+
+.pet-acc-icon-{{ section.id }} {
+  width: 28px; height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--soft);
+  border-radius: 6px;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.pet-acc-text-{{ section.id }} {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.pet-acc-title-{{ section.id }} {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pet-acc-sub-{{ section.id }} {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.pet-acc-chev-{{ section.id }} {
+  color: var(--muted);
+  margin-left: 2px;
+}
+
+/* Cart */
+.pet-cart-{{ section.id }} {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--pp);
+  color: #fff;
+  padding: 0 18px;
+  height: 44px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s ease;
+  margin-left: 4px;
+}
+
+.pet-cart-{{ section.id }}:hover { background: var(--pp-dark); }
+
+.pet-cart-count-{{ section.id }} {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+/* Nav */
+.pet-nav-w-{{ section.id }} {
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+
+.pet-nav-{{ section.id }} {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 2px;
+}
+
+.pet-nav-item-{{ section.id }} { position: relative; }
+
+.pet-nav-link-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 16px 14px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.pet-nav-link-{{ section.id }}::after {
+  content: '';
+  position: absolute;
+  left: 14px; right: 14px; bottom: -1px;
+  height: 2px;
+  background: var(--pp);
+  transform: scaleX(0);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pet-nav-item-{{ section.id }}:hover .pet-nav-link-{{ section.id }} { color: var(--pp); }
+.pet-nav-item-{{ section.id }}:hover .pet-nav-link-{{ section.id }}::after { transform: scaleX(1); }
+
+.pet-nav-item-{{ section.id }}.is-hl .pet-nav-link-{{ section.id }} { color: #DC2626; }
+.pet-nav-item-{{ section.id }}.is-hl .pet-nav-link-{{ section.id }}::after { background: #DC2626; }
+
+.pet-nav-chev-{{ section.id }} { transition: transform 0.25s ease; }
+.pet-nav-item-{{ section.id }}:hover .pet-nav-chev-{{ section.id }} { transform: rotate(180deg); }
+
+/* Mega Menu */
+.pet-mega-{{ section.id }} {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100vw;
+  background: #fff;
+  border-top: 1px solid var(--line);
+  box-shadow: 0 24px 48px rgba(15, 10, 38, 0.08);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 99;
+}
+
+.pet-nav-item-{{ section.id }}:hover .pet-mega-{{ section.id }} {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.pet-mega-inner-{{ section.id }} {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 32px;
+}
+
+.pet-mega-col-{{ section.id }} { min-width: 0; }
+
+.pet-mega-h-{{ section.id }} {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--pp);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pet-mega-icon-{{ section.id }} { font-size: 14px; }
+
+.pet-mega-list-{{ section.id }} {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 9px;
+}
+
+.pet-mega-row-{{ section.id }} {
+  display: flex; align-items: center; gap: 8px;
+}
+
+.pet-mega-link-{{ section.id }} {
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.pet-mega-link-{{ section.id }}:hover { color: var(--pp); }
+
+.pet-mega-badge-{{ section.id }} {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.pet-mega-badge-y-{{ section.id }} { background: #FEF3C7; color: #92400E; }
+.pet-mega-badge-r-{{ section.id }} { background: #FEE2E2; color: #B91C1C; }
+
+/* Featured card */
+.pet-mega-card-{{ section.id }} {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, var(--pp-tint) 0%, #EEEAFB 100%);
+  border-radius: 10px;
+  padding: 20px;
+  text-decoration: none;
+  color: var(--ink);
+  height: 100%;
+  min-height: 200px;
+  justify-content: space-between;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pet-mega-card-{{ section.id }}:hover { transform: translateY(-2px); }
+
+.pet-mega-card-tag-{{ section.id }} {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px 10px;
+  background: var(--pp);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.pet-mega-card-title-{{ section.id }} {
+  font-size: 16px; font-weight: 700; line-height: 1.3;
+  margin-bottom: 6px; color: var(--ink);
+}
+
+.pet-mega-card-sub-{{ section.id }} {
+  font-size: 12.5px; color: var(--body); line-height: 1.4;
+}
+
+.pet-mega-card-cta-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pp);
+}
+
+/* Mobile */
+.pet-mobile-btn-{{ section.id }} {
+  display: none;
+  width: 42px; height: 42px;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.pet-mobile-btn-{{ section.id }}:hover { background: var(--pp-tint); }
+
+.pet-mobile-search-{{ section.id }} { display: none; }
+
+@media screen and (max-width: 1024px) {
+  .pet-tb-inner-{{ section.id }} {
+    gap: 14px;
+    padding: 8px 16px;
+    font-size: 11.5px;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .pet-tb-inner-{{ section.id }}::-webkit-scrollbar { display: none; }
+  .pet-tb-item-{{ section.id }} { flex-shrink: 0; white-space: nowrap; }
+
+  .pet-search-{{ section.id }},
+  .pet-nav-w-{{ section.id }} { display: none; }
+
+  .pet-main-{{ section.id }} {
+    grid-template-columns: auto 1fr auto;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .pet-mobile-btn-{{ section.id }} { display: inline-flex; }
+
+  .pet-logo-text-{{ section.id }} { font-size: 19px; }
+  .pet-logo-mark-{{ section.id }} { width: 34px; height: 34px; font-size: 17px; }
+
+  .pet-actions-{{ section.id }} { gap: 2px; }
+  .pet-act-{{ section.id }} { width: 40px; height: 40px; }
+
+  .pet-acc-{{ section.id }} {
+    padding: 6px 8px;
+    height: 40px;
+  }
+
+  .pet-acc-text-{{ section.id }} { display: none; }
+  .pet-acc-chev-{{ section.id }} { display: none; }
+
+  .pet-cart-{{ section.id }} {
+    padding: 0 12px;
+    height: 40px;
+    margin-left: 4px;
+  }
+
+  .pet-cart-text-{{ section.id }} { display: none; }
+
+  .pet-mobile-search-{{ section.id }} {
+    display: block;
+    padding: 0 16px 14px;
+  }
+
+  .pet-mobile-search-bar-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    height: 46px;
+    background: var(--soft);
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .pet-mobile-search-bar-{{ section.id }} input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--ink);
+    font-family: inherit;
+  }
+
+  .pet-mobile-search-bar-{{ section.id }} input::placeholder { color: var(--muted); }
+}
+
+@media screen and (max-width: 480px) {
+  .pet-acc-{{ section.id }} { display: none; }
+}
+
+/* Drawer */
+.pet-drawer-{{ section.id }} {
+  position: fixed; top: 0; left: -360px;
+  width: 320px; max-width: 85vw; height: 100dvh;
+  background: #fff; z-index: 9999;
+  transition: left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 8px 0 40px rgba(15, 10, 38, 0.2);
+  display: flex; flex-direction: column;
+}
+
+.pet-drawer-{{ section.id }}.is-open { left: 0; }
+
+.pet-overlay-{{ section.id }} {
+  position: fixed; inset: 0;
+  background: rgba(15, 10, 38, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9998; opacity: 0; visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.pet-overlay-{{ section.id }}.is-open { opacity: 1; visibility: visible; }
+
+.pet-dh-{{ section.id }} {
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.pet-dh-logo-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.pet-dh-close-{{ section.id }} {
+  width: 36px; height: 36px;
+  border: none;
+  background: var(--soft);
+  color: var(--ink);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.pet-dh-close-{{ section.id }}:hover { background: var(--pp); color: #fff; }
+
+.pet-db-{{ section.id }} {
+  padding: 8px 20px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.pet-db-link-{{ section.id }} {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  transition: color 0.2s ease;
+}
+
+.pet-db-link-{{ section.id }}:hover { color: var(--pp); }
+.pet-db-link-{{ section.id }}.is-hl { color: #DC2626; }
+</style>
+
+<header class="pet-h-{{ section.id }}" id="PetH-{{ section.id }}">
+
+  <div class="pet-tb-{{ section.id }}">
+    <div class="pet-tb-inner-{{ section.id }}">
+      {% if section.settings.top_text_1 != blank %}
+        <a href="{{ section.settings.top_link_1 | default: '#' }}" class="pet-tb-item-{{ section.id }}">{{ section.settings.top_text_1 }}</a>
+      {% endif %}
+      {% if section.settings.top_text_2 != blank %}
+        <span class="pet-tb-dot-{{ section.id }}"></span>
+        <a href="{{ section.settings.top_link_2 | default: '#' }}" class="pet-tb-item-{{ section.id }}">{{ section.settings.top_text_2 }}</a>
+      {% endif %}
+      {% if section.settings.top_text_3 != blank %}
+        <span class="pet-tb-dot-{{ section.id }}"></span>
+        <a href="{{ section.settings.top_link_3 | default: '#' }}" class="pet-tb-item-{{ section.id }}">{{ section.settings.top_text_3 }}</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="pet-main-{{ section.id }}">
+
+    <div style="display:inline-flex;align-items:center;gap:10px;">
+      <button class="pet-mobile-btn-{{ section.id }}" id="MBtn-{{ section.id }}" aria-label="Menüyü aç">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <a href="/" class="pet-logo-{{ section.id }}">
+        {% if section.settings.logo != blank %}
+          {{ section.settings.logo | image_url: width: 300 | image_tag: loading: 'eager', alt: section.settings.logo_text }}
+        {% else %}
+          <span class="pet-logo-mark-{{ section.id }}">{{ section.settings.logo_emoji }}</span>
+          <span class="pet-logo-text-{{ section.id }}">{{ section.settings.logo_text }}</span>
+        {% endif %}
+      </a>
+    </div>
+
+    <div class="pet-search-{{ section.id }}" id="PSearch-{{ section.id }}">
+      <form action="/search" method="get" role="search" class="pet-search-bar-{{ section.id }}" id="PSearchBar-{{ section.id }}">
+        <select name="type" class="pet-search-cat-{{ section.id }}" aria-label="Kategori">
+          <option value="">Tüm Kategoriler</option>
+          <option value="product">Ürünler</option>
+          <option value="article">Blog</option>
+        </select>
+        <input type="search" name="q" class="pet-search-input-{{ section.id }}" id="PSearchInput-{{ section.id }}" placeholder="{{ section.settings.search_placeholder }}" aria-label="Ara" autocomplete="off">
+        <button type="submit" class="pet-search-btn-{{ section.id }}" aria-label="Ara">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Ara</span>
+        </button>
+      </form>
+
+      <div class="pet-sd-{{ section.id }}">
+        {% if section.settings.trends != blank %}
+          <div class="pet-sd-section-{{ section.id }}">
+            <h6 class="pet-sd-h-{{ section.id }}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Popüler Aramalar
+            </h6>
+            <div class="pet-sd-chips-{{ section.id }}">
+              {% assign trends = section.settings.trends | split: ',' %}
+              {% for trend in trends limit: 8 %}
+                <a href="/search?q={{ trend | strip | url_encode }}" class="pet-sd-chip-{{ section.id }}">{{ trend | strip }}</a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          {% assign cats = section.blocks | where: "type", "search_cat" %}
+          {% if cats.size > 0 %}
+            <div class="pet-sd-section-{{ section.id }}">
+              <h6 class="pet-sd-h-{{ section.id }}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Hızlı Erişim
+              </h6>
+              <div class="pet-sd-cats-{{ section.id }}">
+                {% for cat in cats %}
+                  <a href="{{ cat.settings.link | default: '#' }}" class="pet-sd-cat-{{ section.id }}">
+                    <span class="pet-sd-cat-icon-{{ section.id }}">{{ cat.settings.icon }}</span>
+                    <span>{{ cat.settings.label }}</span>
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="pet-actions-{{ section.id }}">
+      <a href="/pages/wishlist" class="pet-act-{{ section.id }}" aria-label="Favoriler">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+
+      {% if customer %}
+        <a href="/account" class="pet-acc-{{ section.id }}">
+          <span class="pet-acc-icon-{{ section.id }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <span class="pet-acc-text-{{ section.id }}">
+            <span class="pet-acc-title-{{ section.id }}">Merhaba</span>
+            <span class="pet-acc-sub-{{ section.id }}">{{ customer.first_name | default: 'hesabım' }}</span>
+          </span>
+          <svg class="pet-acc-chev-{{ section.id }}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"><polyline points="6 9 12 15 18 9"/></svg>
+        </a>
+      {% else %}
+        <a href="/account/login" class="pet-acc-{{ section.id }}">
+          <span class="pet-acc-icon-{{ section.id }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <span class="pet-acc-text-{{ section.id }}">
+            <span class="pet-acc-title-{{ section.id }}">Giriş Yap</span>
+            <span class="pet-acc-sub-{{ section.id }}">veya üye ol</span>
+          </span>
+          <svg class="pet-acc-chev-{{ section.id }}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"><polyline points="6 9 12 15 18 9"/></svg>
+        </a>
+      {% endif %}
+
+      <a href="/cart" class="pet-cart-{{ section.id }}" aria-label="Sepet">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3h2l2.4 12.5a2 2 0 0 0 2 1.5h9.2a2 2 0 0 0 2-1.5L23 7H6"/><circle cx="9" cy="20" r="1"/><circle cx="19" cy="20" r="1"/></svg>
+        <span class="pet-cart-text-{{ section.id }}">Sepet</span>
+        <span class="pet-cart-count-{{ section.id }}">{{ cart.item_count }}</span>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="pet-mobile-search-{{ section.id }}">
+    <form action="/search" method="get" role="search" class="pet-mobile-search-bar-{{ section.id }}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" style="color:var(--muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" aria-label="Ara">
+    </form>
+  </div>
+
+  <div class="pet-nav-w-{{ section.id }}">
+    <ul class="pet-nav-{{ section.id }}">
+      {% for link in linklists[section.settings.menu].links %}
+
+        {% assign is_hl = false %}
+        {% if section.settings.highlight_keyword != blank and link.title contains section.settings.highlight_keyword %}
+          {% assign is_hl = true %}
+        {% endif %}
+
+        {% assign has_mega = false %}
+        {% assign mega_block = null %}
+        {% for block in section.blocks %}
+          {% if block.type == 'mega_menu' %}
+            {% assign t1 = block.settings.trigger | downcase | strip %}
+            {% assign t2 = link.title | downcase | strip %}
+            {% if t1 == t2 %}
+              {% assign has_mega = true %}
+              {% assign mega_block = block %}
+              {% break %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+
+        <li class="pet-nav-item-{{ section.id }}{% if is_hl %} is-hl{% endif %}">
+          <a href="{{ link.url }}" class="pet-nav-link-{{ section.id }}">
+            {{ link.title }}
+            {% if has_mega %}
+              <svg class="pet-nav-chev-{{ section.id }}" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><polyline points="6 9 12 15 18 9"/></svg>
+            {% endif %}
+          </a>
+
+          {% if has_mega %}
+            <div class="pet-mega-{{ section.id }}">
+              <div class="pet-mega-inner-{{ section.id }}">
+
+                {% if mega_block.settings.menu_1 != blank %}
+                  <div class="pet-mega-col-{{ section.id }}">
+                    <h4 class="pet-mega-h-{{ section.id }}">
+                      <span class="pet-mega-icon-{{ section.id }}">{{ mega_block.settings.icon_1 }}</span>
+                      <span>{{ mega_block.settings.title_1 }}</span>
+                    </h4>
+                    <ul class="pet-mega-list-{{ section.id }}">
+                      {% for childlink in linklists[mega_block.settings.menu_1].links %}
+                        {%- liquid
+                          assign lt = childlink.title
+                          assign bh = ''
+                          if lt contains '[Sarı:'
+                            assign rb = lt | split: '[Sarı:' | last | split: ']' | first
+                            assign bh = '<span class="pet-mega-badge-' | append: section.id | append: ' pet-mega-badge-y-' | append: section.id | append: '">' | append: rb | append: '</span>'
+                            assign sr = '[Sarı:' | append: rb | append: ']'
+                            assign lt = lt | remove: sr
+                          elsif lt contains '[Kırmızı:'
+                            assign rb = lt | split: '[Kırmızı:' | last | split: ']' | first
+                            assign bh = '<span class="pet-mega-badge-' | append: section.id | append: ' pet-mega-badge-r-' | append: section.id | append: '">' | append: rb | append: '</span>'
+                            assign sr = '[Kırmızı:' | append: rb | append: ']'
+                            assign lt = lt | remove: sr
+                          endif
+                        -%}
+                        <li class="pet-mega-row-{{ section.id }}">
+                          <a href="{{ childlink.url }}" class="pet-mega-link-{{ section.id }}">{{ lt | strip }}</a>
+                          {{ bh }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+
+                {% if mega_block.settings.menu_2 != blank %}
+                  <div class="pet-mega-col-{{ section.id }}">
+                    <h4 class="pet-mega-h-{{ section.id }}">
+                      <span class="pet-mega-icon-{{ section.id }}">{{ mega_block.settings.icon_2 }}</span>
+                      <span>{{ mega_block.settings.title_2 }}</span>
+                    </h4>
+                    <ul class="pet-mega-list-{{ section.id }}">
+                      {% for childlink in linklists[mega_block.settings.menu_2].links %}
+                        {%- liquid
+                          assign lt = childlink.title
+                          assign bh = ''
+                          if lt contains '[Sarı:'
+                            assign rb = lt | split: '[Sarı:' | last | split: ']' | first
+                            assign bh = '<span class="pet-mega-badge-' | append: section.id | append: ' pet-mega-badge-y-' | append: section.id | append: '">' | append: rb | append: '</span>'
+                            assign sr = '[Sarı:' | append: rb | append: ']'
+                            assign lt = lt | remove: sr
+                          elsif lt contains '[Kırmızı:'
+                            assign rb = lt | split: '[Kırmızı:' | last | split: ']' | first
+                            assign bh = '<span class="pet-mega-badge-' | append: section.id | append: ' pet-mega-badge-r-' | append: section.id | append: '">' | append: rb | append: '</span>'
+                            assign sr = '[Kırmızı:' | append: rb | append: ']'
+                            assign lt = lt | remove: sr
+                          endif
+                        -%}
+                        <li class="pet-mega-row-{{ section.id }}">
+                          <a href="{{ childlink.url }}" class="pet-mega-link-{{ section.id }}">{{ lt | strip }}</a>
+                          {{ bh }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+
+                {% if mega_block.settings.menu_3 != blank %}
+                  <div class="pet-mega-col-{{ section.id }}">
+                    <h4 class="pet-mega-h-{{ section.id }}">
+                      <span class="pet-mega-icon-{{ section.id }}">{{ mega_block.settings.icon_3 }}</span>
+                      <span>{{ mega_block.settings.title_3 }}</span>
+                    </h4>
+                    <ul class="pet-mega-list-{{ section.id }}">
+                      {% for childlink in linklists[mega_block.settings.menu_3].links %}
+                        {%- liquid
+                          assign lt = childlink.title
+                          assign bh = ''
+                          if lt contains '[Sarı:'
+                            assign rb = lt | split: '[Sarı:' | last | split: ']' | first
+                            assign bh = '<span class="pet-mega-badge-' | append: section.id | append: ' pet-mega-badge-y-' | append: section.id | append: '">' | append: rb | append: '</span>'
+                            assign sr = '[Sarı:' | append: rb | append: ']'
+                            assign lt = lt | remove: sr
+                          elsif lt contains '[Kırmızı:'
+                            assign rb = lt | split: '[Kırmızı:' | last | split: ']' | first
+                            assign bh = '<span class="pet-mega-badge-' | append: section.id | append: ' pet-mega-badge-r-' | append: section.id | append: '">' | append: rb | append: '</span>'
+                            assign sr = '[Kırmızı:' | append: rb | append: ']'
+                            assign lt = lt | remove: sr
+                          endif
+                        -%}
+                        <li class="pet-mega-row-{{ section.id }}">
+                          <a href="{{ childlink.url }}" class="pet-mega-link-{{ section.id }}">{{ lt | strip }}</a>
+                          {{ bh }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+
+                {% if mega_block.settings.card_title != blank %}
+                  <a href="{{ mega_block.settings.card_link | default: '#' }}" class="pet-mega-card-{{ section.id }}">
+                    {% if mega_block.settings.card_tag != blank %}
+                      <span class="pet-mega-card-tag-{{ section.id }}">{{ mega_block.settings.card_tag }}</span>
+                    {% endif %}
+                    <div>
+                      <h5 class="pet-mega-card-title-{{ section.id }}">{{ mega_block.settings.card_title }}</h5>
+                      {% if mega_block.settings.card_subtitle != blank %}
+                        <p class="pet-mega-card-sub-{{ section.id }}">{{ mega_block.settings.card_subtitle }}</p>
+                      {% endif %}
+                    </div>
+                    <span class="pet-mega-card-cta-{{ section.id }}">
+                      Keşfet
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                    </span>
+                  </a>
+                {% elsif mega_block.settings.menu_4 != blank %}
+                  <div class="pet-mega-col-{{ section.id }}">
+                    <h4 class="pet-mega-h-{{ section.id }}">
+                      <span class="pet-mega-icon-{{ section.id }}">{{ mega_block.settings.icon_4 }}</span>
+                      <span>{{ mega_block.settings.title_4 }}</span>
+                    </h4>
+                    <ul class="pet-mega-list-{{ section.id }}">
+                      {% for childlink in linklists[mega_block.settings.menu_4].links %}
+                        {%- liquid
+                          assign lt = childlink.title
+                          assign bh = ''
+                          if lt contains '[Sarı:'
+                            assign rb = lt | split: '[Sarı:' | last | split: ']' | first
+                            assign bh = '<span class="pet-mega-badge-' | append: section.id | append: ' pet-mega-badge-y-' | append: section.id | append: '">' | append: rb | append: '</span>'
+                            assign sr = '[Sarı:' | append: rb | append: ']'
+                            assign lt = lt | remove: sr
+                          elsif lt contains '[Kırmızı:'
+                            assign rb = lt | split: '[Kırmızı:' | last | split: ']' | first
+                            assign bh = '<span class="pet-mega-badge-' | append: section.id | append: ' pet-mega-badge-r-' | append: section.id | append: '">' | append: rb | append: '</span>'
+                            assign sr = '[Kırmızı:' | append: rb | append: ']'
+                            assign lt = lt | remove: sr
+                          endif
+                        -%}
+                        <li class="pet-mega-row-{{ section.id }}">
+                          <a href="{{ childlink.url }}" class="pet-mega-link-{{ section.id }}">{{ lt | strip }}</a>
+                          {{ bh }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+
+              </div>
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</header>
+
+<div class="pet-overlay-{{ section.id }}" id="MOver-{{ section.id }}"></div>
+<aside class="pet-drawer-{{ section.id }}" id="MDr-{{ section.id }}">
+  <div class="pet-dh-{{ section.id }}">
+    <span class="pet-dh-logo-{{ section.id }}">
+      <span class="pet-logo-mark-{{ section.id }}" style="width:32px;height:32px;font-size:16px;">{{ section.settings.logo_emoji }}</span>
+      {{ section.settings.logo_text }}
+    </span>
+    <button class="pet-dh-close-{{ section.id }}" id="MCl-{{ section.id }}" aria-label="Menüyü kapat">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pet-db-{{ section.id }}">
+    {% for link in linklists[section.settings.menu].links %}
+      {% assign is_hl = false %}
+      {% if section.settings.highlight_keyword != blank and link.title contains section.settings.highlight_keyword %}
+        {% assign is_hl = true %}
+      {% endif %}
+      <a href="{{ link.url }}" class="pet-db-link-{{ section.id }}{% if is_hl %} is-hl{% endif %}">
+        {{ link.title }}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    {% endfor %}
+  </div>
+</aside>
+
+<script>
+(function() {
+  var bO = document.getElementById('MBtn-{{ section.id }}');
+  var bC = document.getElementById('MCl-{{ section.id }}');
+  var dr = document.getElementById('MDr-{{ section.id }}');
+  var ov = document.getElementById('MOver-{{ section.id }}');
+  var hd = document.getElementById('PetH-{{ section.id }}');
+
+  function open() { dr.classList.add('is-open'); ov.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
+  function close() { dr.classList.remove('is-open'); ov.classList.remove('is-open'); document.body.style.overflow = ''; }
+
+  if (bO) bO.addEventListener('click', open);
+  if (bC) bC.addEventListener('click', close);
+  if (ov) ov.addEventListener('click', close);
+
+  if (hd) {
+    var sh = function() {
+      if (window.scrollY > 4) hd.classList.add('is-scrolled');
+      else hd.classList.remove('is-scrolled');
+    };
+    window.addEventListener('scroll', sh, { passive: true });
+    sh();
+  }
+
+  // Search dropdown
+  var sw = document.getElementById('PSearch-{{ section.id }}');
+  var sb = document.getElementById('PSearchBar-{{ section.id }}');
+  var si = document.getElementById('PSearchInput-{{ section.id }}');
+
+  if (sw && si && sb) {
+    function openSearch() {
+      sw.classList.add('is-open');
+      sb.classList.add('is-focus');
+    }
+    function closeSearch() {
+      sw.classList.remove('is-open');
+      sb.classList.remove('is-focus');
+    }
+
+    si.addEventListener('focus', openSearch);
+    si.addEventListener('click', openSearch);
+
+    document.addEventListener('click', function(e) {
+      if (!sw.contains(e.target)) closeSearch();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeSearch();
+        si.blur();
+      }
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Premium Header",
+  "settings": [
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Ana Renk",
+      "default": "#7B3FF2"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "label": "Maks. Genişlik",
+      "default": 1300
+    },
+    { "type": "header", "content": "Üst Bar" },
+    { "type": "text", "id": "top_text_1", "label": "Metin 1", "default": "Tüm siparişlerde ücretsiz kargo" },
+    { "type": "url", "id": "top_link_1", "label": "Link 1" },
+    { "type": "text", "id": "top_text_2", "label": "Metin 2", "default": "İlk siparişe %15 indirim: HOSGELDIN" },
+    { "type": "url", "id": "top_link_2", "label": "Link 2" },
+    { "type": "text", "id": "top_text_3", "label": "Metin 3", "default": "7/24 Müşteri Desteği" },
+    { "type": "url", "id": "top_link_3", "label": "Link 3" },
+    { "type": "header", "content": "Logo" },
+    { "type": "image_picker", "id": "logo", "label": "Logo Görseli" },
+    { "type": "text", "id": "logo_emoji", "label": "Logo İkonu", "default": "🐾" },
+    { "type": "text", "id": "logo_text", "label": "Logo Metni", "default": "Petibi" },
+    { "type": "header", "content": "Arama" },
+    { "type": "text", "id": "search_placeholder", "label": "Placeholder", "default": "Mama, kedi yatağı, şampuan ara..." },
+    { "type": "text", "id": "trends", "label": "Popüler Aramalar (virgülle)", "default": "kedi maması, otomatik kum kabı, köpek tasması, kedi yatağı, vitamin, şampuan, kuş yemi" },
+    { "type": "header", "content": "Navigasyon" },
+    { "type": "link_list", "id": "menu", "label": "Ana Menü" },
+    { "type": "text", "id": "highlight_keyword", "label": "Vurgu Kelimesi", "default": "Avantajlı Paketler" }
+  ],
+  "blocks": [
+    {
+      "type": "search_cat",
+      "name": "Arama Hızlı Erişim",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "İkon", "default": "🐱" },
+        { "type": "text", "id": "label", "label": "Etiket", "default": "Kedi Ürünleri" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    },
+    {
+      "type": "mega_menu",
+      "name": "Mega Menü",
+      "settings": [
+        { "type": "text", "id": "trigger", "label": "Hangi menüde açılsın?", "default": "Kedi" },
+        { "type": "header", "content": "Kolon 1" },
+        { "type": "text", "id": "icon_1", "label": "İkon", "default": "🐱" },
+        { "type": "text", "id": "title_1", "label": "Başlık", "default": "Yaşa Göre" },
+        { "type": "link_list", "id": "menu_1", "label": "Menü" },
+        { "type": "header", "content": "Kolon 2" },
+        { "type": "text", "id": "icon_2", "label": "İkon", "default": "🥣" },
+        { "type": "text", "id": "title_2", "label": "Başlık", "default": "Mama" },
+        { "type": "link_list", "id": "menu_2", "label": "Menü" },
+        { "type": "header", "content": "Kolon 3" },
+        { "type": "text", "id": "icon_3", "label": "İkon", "default": "🏠" },
+        { "type": "text", "id": "title_3", "label": "Başlık", "default": "Yaşam" },
+        { "type": "link_list", "id": "menu_3", "label": "Menü" },
+        { "type": "header", "content": "Kolon 4 (Menü VEYA Vurgu Kartı)" },
+        { "type": "text", "id": "icon_4", "label": "İkon", "default": "🧴" },
+        { "type": "text", "id": "title_4", "label": "Başlık", "default": "Bakım" },
+        { "type": "link_list", "id": "menu_4", "label": "Menü" },
+        { "type": "header", "content": "Vurgu Kartı (opsiyonel)" },
+        { "type": "text", "id": "card_tag", "label": "Etiket", "default": "Yeni" },
+        { "type": "text", "id": "card_title", "label": "Başlık" },
+        { "type": "textarea", "id": "card_subtitle", "label": "Alt Metin" },
+        { "type": "url", "id": "card_link", "label": "Link" }
+      ]
+    }
+  ]
+}
+{% endschema %}

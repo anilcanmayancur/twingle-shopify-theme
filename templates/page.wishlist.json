@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-wishlist",
+      "settings": {
+        "title": "Favori Listem",
+        "subtitle": "Beğendiğiniz ürünleri burada görebilirsiniz.",
+        "empty_text": "Henüz favori ürününüz yok. Alışverişe başlayın!",
+        "empty_button_text": "Alışverişe Başla",
+        "empty_button_link": "/collections/all"
+      }
+    }
+  },
+  "order": ["main"]
+}

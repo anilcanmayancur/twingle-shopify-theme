@@ -1,0 +1,764 @@
+{% style %}
+  :root {
+    --tw-primary: {{ section.settings.primary_color }};
+    --tw-text: {{ section.settings.text_color }};
+    --tw-bg: {{ section.settings.bg_color }};
+    --tw-border: #eeeeee;
+    --tw-light-bg: #f8f9fa;
+  }
+
+  /* Sayfa Geneli */
+  .twinkle-collection-wrapper-{{ section.id }} {
+    background-color: var(--tw-bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--tw-text);
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  .twinkle-collection-wrapper-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .twinkle-containerr {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* --- 1. EN ÜST BAŞLIK ALANI (PAGE HEADER) --- */
+  .twinkle-page-header {
+    background-color: var(--tw-light-bg);
+    padding: 50px 20px;
+    text-align: center;
+    margin-bottom: 50px;
+    border-bottom: 1px solid var(--tw-border);
+  }
+  .twinkle-breadcrumb {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .twinkle-breadcrumb a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .twinkle-breadcrumb a:hover {
+    color: var(--tw-primary);
+  }
+  .twinkle-breadcrumb span {
+    color: #222;
+    font-weight: 600;
+  }
+  .twinkle-collection-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #222;
+    margin: 0;
+  }
+
+  /* --- 2. LAYOUT --- */
+  .twinkle-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+
+  /* --- 3. SIDEBAR (MASAÜSTÜ) --- */
+  .twinkle-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    display: block;
+  }
+  .twinkle-sidebar-header, .twinkle-sidebar-footer {
+    display: none; /* Sadece mobilde görünür */
+  }
+  .twinkle-filter-widget {
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid var(--tw-border);
+    overflow: hidden;
+  }
+  .twinkle-filter-title {
+    background: #fafafa;
+    padding: 16px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    border-bottom: 1px solid var(--tw-border);
+  }
+  .twinkle-filter-title svg {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.3s ease;
+  }
+  .twinkle-filter-title.collapsed svg {
+    transform: rotate(-180deg);
+  }
+  .twinkle-filter-content {
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+  .twinkle-filter-content.collapsed {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    border-top: none;
+  }
+
+  /* Sidebar Kategoriler Linki */
+  .twinkle-cat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .twinkle-cat-item { margin-bottom: 12px; }
+  .twinkle-cat-item:last-child { margin-bottom: 0; }
+  .twinkle-cat-link {
+    font-size: 14px;
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+  }
+  .twinkle-cat-link:hover { color: var(--tw-primary); }
+  .twinkle-cat-link.active { color: var(--tw-primary); font-weight: 700; }
+
+  /* Sidebar Checkboxlar */
+  .twinkle-filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .twinkle-filter-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+  }
+  .twinkle-filter-item:last-child { margin-bottom: 0; }
+  .twinkle-filter-item input[type="checkbox"] { display: none; }
+  .twinkle-checkbox-box {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .twinkle-checkbox-box svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: white;
+    stroke-width: 2;
+    opacity: 0;
+  }
+  .twinkle-filter-item input[type="checkbox"]:checked + .twinkle-checkbox-box {
+    background: var(--tw-primary);
+    border-color: var(--tw-primary);
+  }
+  .twinkle-filter-item input[type="checkbox"]:checked + .twinkle-checkbox-box svg {
+    opacity: 1;
+  }
+  .twinkle-filter-count {
+    color: #999;
+    font-size: 13px;
+    margin-left: auto;
+  }
+
+  /* --- 4. MAIN CONTENT --- */
+  .twinkle-main {
+    flex-grow: 1;
+    min-width: 0;
+  }
+  
+  /* Toolbar */
+  .twinkle-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--tw-border);
+  }
+  .twinkle-results-count {
+    font-size: 14px;
+    color: #666;
+  }
+  .twinkle-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .twinkle-sort-select {
+    padding: 8px 35px 8px 15px;
+    border: 1px solid var(--tw-border);
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23333%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  .twinkle-view-toggles {
+    display: flex;
+    gap: 5px;
+  }
+  .twinkle-view-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--tw-border);
+    background: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s;
+  }
+  .twinkle-view-btn.active {
+    background: var(--tw-primary);
+    color: #fff;
+    border-color: var(--tw-primary);
+  }
+  .twinkle-view-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* Product Grid */
+  .twinkle-product-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: 30px;
+  }
+  .twinkle-product-grid.list-view {
+    grid-template-columns: 1fr;
+  }
+  .twinkle-product-grid.list-view > div > div {
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+  }
+
+  /* Pagination */
+  .twinkle-pagination {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .twinkle-pagination span, .twinkle-pagination a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--tw-border);
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .twinkle-pagination a:hover { border-color: var(--tw-primary); color: var(--tw-primary); }
+  .twinkle-pagination .current { background: var(--tw-primary); color: #fff; border-color: var(--tw-primary); }
+
+  /* --- 5. MOBİL FİLTRE ÇEKMECESİ VE DÜZENLEMELERİ --- */
+  .twinkle-mobile-filter-btn {
+    display: none;
+    width: 100%;
+    padding: 14px;
+    background: var(--tw-primary);
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    cursor: pointer;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .twinkle-filter-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 9998;
+    backdrop-filter: blur(3px);
+  }
+
+  /* Mobil Ekran Responsive */
+  @media screen and (max-width: 991px) {
+    .twinkle-layout {
+      flex-direction: column;
+    }
+    .twinkle-product-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .twinkle-mobile-filter-btn {
+      display: flex;
+    }
+    
+    /* Mobil Drawer Mantığı (Güncellendi) */
+    .twinkle-sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      bottom: 0;
+      width: 320px;
+      max-width: 85%;
+      background: #fff;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+    }
+    .twinkle-sidebar.active {
+      left: 0;
+    }
+    .twinkle-filter-overlay.active {
+      display: block;
+    }
+    
+    /* Mobil Sidebar Header & Footer */
+    .twinkle-sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--tw-border);
+      background: #fafafa;
+    }
+    .twinkle-sidebar-header h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #222;
+      font-weight: 700;
+    }
+    .twinkle-sidebar-close {
+      background: none;
+      border: none;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .twinkle-filter-form {
+      flex-grow: 1;
+      overflow-y: auto; /* Form içinde scroll */
+      padding: 20px;
+    }
+    .twinkle-filter-widget {
+      border: none;
+      border-bottom: 1px solid var(--tw-border);
+      border-radius: 0;
+      box-shadow: none;
+      margin-bottom: 10px;
+    }
+    .twinkle-sidebar-footer {
+      display: block;
+      padding: 15px 20px;
+      border-top: 1px solid var(--tw-border);
+      background: #fff;
+    }
+    .twinkle-apply-btn {
+      width: 100%;
+      background: var(--tw-primary);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .twinkle-page-header {
+      padding: 30px 20px;
+      margin-bottom: 30px;
+    }
+    .twinkle-collection-title {
+      font-size: 26px;
+    }
+    .twinkle-containerr{
+      display:flex;
+      flex-direction:column;
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    .twinkle-product-grid {
+      grid-template-columns: 1fr;
+    }
+    .twinkle-toolbar {
+      flex-direction: column;
+      align-items: stretch; /* Tam genişlik yayılımı */
+    }
+    .twinkle-toolbar-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .twinkle-sort-select {
+      flex-grow: 1; /* Select barının tam doldurması için */
+      max-width: calc(100% - 90px); /* Grid butonlarına yer açar */
+    }
+  }
+{% endstyle %}
+
+<div class="twinkle-page-header">
+  <div class="twinkle-containerr">
+    <div class="twinkle-breadcrumb">
+      <a href="/">{{ section.settings.bc_home }}</a>
+      <span>/</span>
+      <a href="/collections/all">{{ section.settings.bc_shop }}</a>
+      <span>/</span>
+      <span>{{ collection.title }}</span>
+    </div>
+    <h1 class="twinkle-collection-title">{{ collection.title }}</h1>
+  </div>
+</div>
+
+<div class="twinkle-collection-wrapper-{{ section.id }}">
+  <div class="twinkle-containerr">
+
+    <button class="twinkle-mobile-filter-btn" id="twinkle-filter-toggle">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+      {{ section.settings.filter_btn_text }}
+    </button>
+
+    <div class="twinkle-filter-overlay" id="twinkle-filter-overlay"></div>
+
+    <div class="twinkle-layout">
+      
+      <aside class="twinkle-sidebar" id="twinkle-sidebar">
+        
+        <div class="twinkle-sidebar-header">
+          <h3>Filtreler</h3>
+          <button type="button" class="twinkle-sidebar-close" id="twinkle-filter-close" aria-label="Kapat">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#333" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <form id="CollectionFiltersForm" class="twinkle-filter-form">
+          <input type="hidden" name="sort_by" value="{{ collection.sort_by | default: collection.default_sort_by }}">
+
+          {% for block in section.blocks %}
+            {% case block.type %}
+              
+              {% comment %} MENU BLOCK (Kategoriler) {% endcomment %}
+              {% when 'menu' %}
+                <div class="twinkle-filter-widget" {{ block.shopify_attributes }}>
+                  <div class="twinkle-filter-title" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                    {{ block.settings.title }}
+                    <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                  <div class="twinkle-filter-content">
+                    <ul class="twinkle-cat-list">
+                      {% for link in linklists[block.settings.menu].links %}
+                        <li class="twinkle-cat-item">
+                          <a href="{{ link.url }}" class="twinkle-cat-link {% if link.active or link.child_active %}active{% endif %}">
+                            {{ link.title }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+
+              {% comment %} NATIVE FILTERS BLOCK {% endcomment %}
+              {% when 'filters' %}
+                {% for filter in collection.filters %}
+                  <div class="twinkle-filter-widget" {{ block.shopify_attributes }}>
+                    <div class="twinkle-filter-title" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                      {{ filter.label }}
+                      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="twinkle-filter-content">
+                      {% case filter.type %}
+                        {% when 'list' %}
+                          <ul class="twinkle-filter-list">
+                            {% for filter_value in filter.values %}
+                              <label class="twinkle-filter-item">
+                                <input type="checkbox"
+                                  name="{{ filter_value.param_name }}"
+                                  value="{{ filter_value.value }}"
+                                  id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                                  {% if filter_value.active -%}checked{%- endif %}
+                                  {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
+                                  onchange="document.getElementById('CollectionFiltersForm').submit();"
+                                >
+                                <div class="twinkle-checkbox-box">
+                                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <span>{{ filter_value.label }}</span>
+                                <span class="twinkle-filter-count">({{ filter_value.count }})</span>
+                              </label>
+                            {% endfor %}
+                          </ul>
+
+                        {% when 'price_range' %}
+                          <div style="display:flex; gap:10px; align-items:center;">
+                            <input type="number" name="{{ filter.min_value.param_name }}" placeholder="Min" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;"
+                                   {% if filter.min_value.value %}value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"{% endif %}
+                                   onchange="document.getElementById('CollectionFiltersForm').submit();">
+                            <span>-</span>
+                            <input type="number" name="{{ filter.max_value.param_name }}" placeholder="Max" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;"
+                                   {% if filter.max_value.value %}value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"{% endif %}
+                                   onchange="document.getElementById('CollectionFiltersForm').submit();">
+                          </div>
+                      {% endcase %}
+                    </div>
+                  </div>
+                {% endfor %}
+            {% endcase %}
+          {% endfor %}
+        </form>
+
+        <div class="twinkle-sidebar-footer">
+          <button type="button" class="twinkle-apply-btn" id="twinkle-filter-apply">Kapat & Sonuçları Göster</button>
+        </div>
+
+      </aside>
+
+      <main class="twinkle-main">
+        {% paginate collection.products by section.settings.products_per_page %}
+          
+          <div class="twinkle-toolbar">
+            <div class="twinkle-results-count">
+              Toplam <strong>{{ collection.products_count }}</strong> ürün listeleniyor
+            </div>
+            
+            <div class="twinkle-toolbar-actions">
+              <select class="twinkle-sort-select" aria-label="Sırala" onchange="document.querySelector('input[name=\'sort_by\']').value = this.value; document.getElementById('CollectionFiltersForm').submit();">
+                {% for option in collection.sort_options %}
+                  <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected="selected"{% endif %}>
+                    {{ option.name }}
+                  </option>
+                {% endfor %}
+              </select>
+
+              <div class="twinkle-view-toggles">
+                <button class="twinkle-view-btn active" id="twinkle-grid-btn" aria-label="Grid Görünümü">
+                  <svg viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+                </button>
+                <button class="twinkle-view-btn" id="twinkle-list-btn" aria-label="Liste Görünümü">
+                  <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="twinkle-product-grid" id="twinkle-product-grid">
+            {% for product in collection.products %}
+              <div class="twinkle-grid-item">
+                {% render 'product-card', product: product %}
+              </div>
+            {% else %}
+              <div style="grid-column: 1 / -1; text-align:center; padding: 50px; background:#fff; border-radius:8px; color:#666; border: 1px solid var(--tw-border);">
+                Bu koleksiyonda ürün bulunamadı. Lütfen filtreleri temizlemeyi deneyin.
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if paginate.pages > 1 %}
+            <div class="twinkle-pagination">
+              {{ paginate | default_pagination }}
+            </div>
+          {% endif %}
+
+        {% endpaginate %}
+      </main>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    // 1. Grid / List View Toggles
+    const gridBtn = document.getElementById('twinkle-grid-btn');
+    const listBtn = document.getElementById('twinkle-list-btn');
+    const gridContainer = document.getElementById('twinkle-product-grid');
+
+    if(gridBtn && listBtn && gridContainer) {
+      gridBtn.addEventListener('click', () => {
+        gridContainer.classList.remove('list-view');
+        gridBtn.classList.add('active');
+        listBtn.classList.remove('active');
+      });
+      listBtn.addEventListener('click', () => {
+        gridContainer.classList.add('list-view');
+        listBtn.classList.add('active');
+        gridBtn.classList.remove('active');
+      });
+    }
+
+    // 2. Mobile Filter Drawer Logic
+    const filterToggleBtn = document.getElementById('twinkle-filter-toggle');
+    const filterCloseBtn = document.getElementById('twinkle-filter-close');
+    const filterApplyBtn = document.getElementById('twinkle-filter-apply');
+    const sidebar = document.getElementById('twinkle-sidebar');
+    const overlay = document.getElementById('twinkle-filter-overlay');
+    
+    const openDrawer = () => {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Arkaplanı kilitle
+    };
+
+    const closeDrawer = () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = ''; // Kilidi aç
+    };
+
+    if(filterToggleBtn && sidebar && overlay) {
+      filterToggleBtn.addEventListener('click', openDrawer);
+      filterCloseBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+      // Alt kısımdaki "Sonuçları Göster" butonu için
+      if(filterApplyBtn) {
+        filterApplyBtn.addEventListener('click', closeDrawer);
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Twinkle Collection Page",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Arkaplan Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Vurgu Rengi",
+      "default": "#8a3b8e"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Metin Rengi",
+      "default": "#333333"
+    },
+    {
+      "type": "text",
+      "id": "bc_home",
+      "label": "Breadcrumb: Anasayfa Metni",
+      "default": "Anasayfa"
+    },
+    {
+      "type": "text",
+      "id": "bc_shop",
+      "label": "Breadcrumb: Mağaza Metni",
+      "default": "Mağaza"
+    },
+    {
+      "type": "text",
+      "id": "filter_btn_text",
+      "label": "Mobil Filtre Butonu Metni",
+      "default": "Filtreleri Göster"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "label": "Sayfa Başına Ürün",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Masaüstü Sütun Sayısı",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Alt Boşluk (Padding Bottom)",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Kategoriler (Menü)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Başlık",
+          "default": "Shop By Categories"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menü Seçin"
+        }
+      ]
+    },
+    {
+      "type": "filters",
+      "name": "Detaylı Filtreler",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Marka, Fiyat ve Özellik filtreleri Shopify'ın varsayılan (Search & Discovery) uygulamasından otomatik çekilir."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
