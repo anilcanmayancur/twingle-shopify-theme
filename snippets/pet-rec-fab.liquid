@@ -83,8 +83,18 @@
   }
 
   /* Don't cover the mobile sticky add-to-cart bar */
-  body:has(.petibi-stickybar.is-visible) .tw-pet-fab {
-    bottom: 86px;
+  body:has(.petibi-stickybar.show) .tw-pet-fab,
+  body.tw-fab-lifted .tw-pet-fab {
+    bottom: 88px;
+  }
+  @media (max-width: 640px) {
+    body:has(.petibi-stickybar.show) .tw-pet-fab,
+    body.tw-fab-lifted .tw-pet-fab {
+      bottom: 82px;
+      right: 10px;
+      width: 46px;
+      height: 46px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -130,6 +140,22 @@
     tryAutoOpen();
   }
   window.addEventListener('hashchange', tryAutoOpen);
+
+  // Lift the FAB above the mobile sticky add-to-cart bar when it's visible.
+  function watchStickyBar() {
+    var bar = document.querySelector('.petibi-stickybar');
+    if (!bar) return;
+    function sync() {
+      document.body.classList.toggle('tw-fab-lifted', bar.classList.contains('show'));
+    }
+    sync();
+    new MutationObserver(sync).observe(bar, { attributes: true, attributeFilter: ['class'] });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', watchStickyBar);
+  } else {
+    watchStickyBar();
+  }
 
   // If user clicks the FAB on a page WITHOUT the recommender modal, fall back
   // to navigating to homepage with the hash.

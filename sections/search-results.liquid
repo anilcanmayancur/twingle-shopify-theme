@@ -1,230 +1,480 @@
-{% style %}
-  :root {
-    --tw-search-bg: {{ section.settings.bg_color }};
-    --tw-search-text: {{ section.settings.text_color }};
-    --tw-search-primary: {{ section.settings.primary_color }};
-    --tw-search-border: {{ section.settings.border_color }};
-  }
+{%- liquid
+  assign primary    = section.settings.primary_color | default: '#7C3AED'
+  assign desktop    = section.settings.desktop_columns | default: 4
+  assign tablet     = section.settings.tablet_columns | default: 3
+  assign mobile     = section.settings.mobile_columns | default: 2
+  assign per_page   = section.settings.results_per_page | default: 24
+  assign trends     = section.settings.trends | default: 'kedi maması,köpek maması,kum,kuru mama,yaş mama,oyuncak'
+  assign trend_list = trends | split: ','
+  assign terms      = search.terms | default: '' | strip
+  assign has_terms  = false
+  if terms != ''
+    assign has_terms = true
+  endif
+-%}
 
-  .tw-search-section-{{ section.id }} {
+{% style %}
+  .tw-srch-{{ section.id }} {
+    --c-pp: {{ primary }};
+    --c-pp-tint: rgba(124, 58, 237, 0.10);
+    --c-pp-soft: #FAF7FF;
+    --c-ink: #1F1342;
+    --c-body: #4B5563;
+    --c-muted: #6B7280;
+    --c-line: #ECE9F5;
+    --c-soft: #FAF7FF;
+    --c-r-card: 14px;
+    --c-r-btn: 10px;
+    --c-r-chip: 8px;
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
-    background-color: var(--tw-search-bg);
-    color: var(--tw-search-text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: {{ section.settings.bg_color | default: '#fff' }};
+    color: var(--c-ink);
+    font-family: inherit;
   }
+  .tw-srch-{{ section.id }} *,
+  .tw-srch-{{ section.id }} *::before,
+  .tw-srch-{{ section.id }} *::after { box-sizing: border-box; }
 
-  .tw-search-container {
+  .tw-srch-inner-{{ section.id }} {
     max-width: {{ section.settings.container_max_width }}px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
   }
 
-  .tw-search-header {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto 50px auto;
+  /* Hero */
+  .tw-srch-hero-{{ section.id }} {
+    background: linear-gradient(180deg, var(--c-soft) 0%, #fff 100%);
+    border-radius: var(--c-r-card);
+    padding: 36px 32px 32px;
+    margin-bottom: 24px;
   }
-
-  .tw-search-title {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--tw-search-text);
+  .tw-srch-crumbs-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12.5px;
+    color: var(--c-muted);
+    margin-bottom: 12px;
   }
+  .tw-srch-crumbs-{{ section.id }} a { color: var(--c-muted); text-decoration: none; padding: 2px 4px; transition: color .15s ease; }
+  .tw-srch-crumbs-{{ section.id }} a:hover { color: var(--c-pp); }
+  .tw-srch-crumbs-{{ section.id }} svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.4; }
+  .tw-srch-crumbs-{{ section.id }} .curr { color: var(--c-ink); font-weight: 700; padding: 2px 4px; }
 
-  .tw-search-subtitle {
-    font-size: 15px;
-    color: #666;
-    margin-bottom: 30px;
+  .tw-srch-title-{{ section.id }} {
+    margin: 0 0 6px;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    color: var(--c-ink);
   }
+  .tw-srch-title-{{ section.id }} em {
+    font-style: normal;
+    color: var(--c-pp);
+  }
+  .tw-srch-sub-{{ section.id }} {
+    margin: 0 0 22px;
+    font-size: 14.5px;
+    color: var(--c-body);
+    line-height: 1.5;
+  }
+  .tw-srch-sub-{{ section.id }} strong { color: var(--c-ink); font-weight: 700; }
 
-  .tw-search-form {
+  /* Search box */
+  .tw-srch-form-{{ section.id }} {
     position: relative;
     display: flex;
-    width: 100%;
+    background: #fff;
+    border: 1.5px solid var(--c-line);
+    border-radius: 999px;
+    padding: 4px 4px 4px 18px;
+    transition: border-color .18s ease, box-shadow .18s ease;
+    max-width: 720px;
   }
-
-  .tw-search-input {
-    width: 100%;
-    padding: 16px 20px 16px 50px;
-    font-size: 16px;
-    border: 1px solid var(--tw-search-border);
-    border-radius: 8px;
+  .tw-srch-form-{{ section.id }}:focus-within {
+    border-color: var(--c-pp);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.10);
+  }
+  .tw-srch-form-{{ section.id }} svg.icon {
+    width: 20px; height: 20px;
+    stroke: var(--c-muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .tw-srch-input-{{ section.id }} {
+    flex: 1;
+    border: none;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: transparent;
+    padding: 14px 12px;
+    font: inherit;
+    font-size: 15px;
+    color: var(--c-ink);
+    min-width: 0;
   }
-
-  .tw-search-input:focus {
-    border-color: var(--tw-search-primary);
-    box-shadow: 0 0 0 3px rgba(138, 59, 142, 0.1);
+  .tw-srch-input-{{ section.id }}::placeholder { color: var(--c-muted); }
+  .tw-srch-clear-{{ section.id }} {
+    width: 32px; height: 32px;
+    border: none;
+    background: var(--c-pp-soft);
+    color: var(--c-muted);
+    border-radius: 999px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+    transition: background .15s ease, color .15s ease;
+    align-self: center;
+    flex-shrink: 0;
   }
+  .tw-srch-clear-{{ section.id }}:hover { background: var(--c-pp-tint); color: var(--c-pp); }
+  .tw-srch-clear-{{ section.id }}.is-visible { display: inline-flex; }
+  .tw-srch-clear-{{ section.id }} svg { width: 12px; height: 12px; }
 
-  .tw-search-icon {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    fill: #999;
-  }
-
-  .tw-search-submit {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: var(--tw-search-primary);
+  .tw-srch-submit-{{ section.id }} {
+    background: linear-gradient(135deg, var(--c-pp) 0%, #5B2FB2 100%);
     color: #fff;
     border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    font: inherit;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: opacity 0.3s ease;
-  }
-
-  .tw-search-submit:hover {
-    opacity: 0.9;
-  }
-
-  .tw-search-results-info {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 30px;
-    text-align: left;
-    border-bottom: 1px solid var(--tw-search-border);
-    padding-bottom: 15px;
-  }
-
-  .tw-search-grid {
-    display: grid;
-    grid-template-columns: repeat({{ section.settings.desktop_columns }}, 1fr);
-    gap: {{ section.settings.grid_gap }}px;
-  }
-
-  .tw-search-empty {
-    text-align: center;
-    padding: 60px 20px;
-    background: #fdfdfd;
-    border: 1px dashed var(--tw-search-border);
-    border-radius: 8px;
-  }
-
-  .tw-search-empty svg {
-    width: 48px;
-    height: 48px;
-    fill: #ccc;
-    margin-bottom: 15px;
-  }
-
-  .tw-search-empty h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-
-  .tw-pagination {
-    display: flex;
-    justify-content: center;
+    transition: filter .18s ease, box-shadow .18s ease, transform .18s ease;
+    box-shadow: 0 6px 18px -8px rgba(124, 58, 237, 0.45);
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 50px;
+    gap: 6px;
+    flex-shrink: 0;
   }
+  .tw-srch-submit-{{ section.id }}:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 10px 22px -8px rgba(124, 58, 237, 0.55); }
+  .tw-srch-submit-{{ section.id }} svg { width: 14px; height: 14px; }
 
-  .tw-page-link, .tw-page-current {
+  /* Trends */
+  .tw-srch-trends-{{ section.id }} {
+    margin-top: 14px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0 10px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--c-muted);
   }
-
-  .tw-page-link {
+  .tw-srch-trends-label-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--c-ink);
+  }
+  .tw-srch-trends-label-{{ section.id }} svg { width: 14px; height: 14px; color: var(--c-pp); }
+  .tw-srch-chip-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     background: #fff;
-    color: var(--tw-search-text);
-    border: 1px solid var(--tw-search-border);
-    transition: all 0.2s ease;
+    border: 1px solid var(--c-line);
+    color: var(--c-ink);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .tw-srch-chip-{{ section.id }}:hover { background: var(--c-soft); border-color: var(--c-pp); color: var(--c-pp); }
+
+  /* Toolbar */
+  .tw-srch-toolbar-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .tw-srch-tb-count-{{ section.id }} {
+    font-size: 13.5px;
+    color: var(--c-body);
+    font-weight: 500;
+  }
+  .tw-srch-tb-count-{{ section.id }} strong { color: var(--c-ink); font-weight: 800; }
+
+  /* Grid */
+  .tw-srch-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ desktop }}, minmax(0, 1fr));
+    gap: {{ section.settings.grid_gap }}px;
+    margin-bottom: 28px;
   }
 
-  .tw-page-link:hover {
-    border-color: var(--tw-search-primary);
-    color: var(--tw-search-primary);
+  /* Empty / No-query state */
+  .tw-srch-empty-{{ section.id }} {
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--c-soft);
+    border: 1px dashed rgba(124, 58, 237, 0.18);
+    border-radius: var(--c-r-card);
+    margin-bottom: 24px;
+  }
+  .tw-srch-empty-ico-{{ section.id }} {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 14px;
+    background: #fff;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-pp);
+    box-shadow: 0 8px 22px -10px rgba(124, 58, 237, 0.35);
+  }
+  .tw-srch-empty-ico-{{ section.id }} svg { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .tw-srch-empty-{{ section.id }} h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--c-ink);
+    letter-spacing: -0.01em;
+  }
+  .tw-srch-empty-{{ section.id }} p {
+    margin: 0 0 18px;
+    font-size: 14px;
+    color: var(--c-body);
+    line-height: 1.55;
+  }
+  .tw-srch-empty-tips-{{ section.id }} {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+    margin: 0 auto 18px;
+    color: var(--c-body);
+    font-size: 13px;
+  }
+  .tw-srch-empty-tips-{{ section.id }} li {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    list-style: none;
+  }
+  .tw-srch-empty-tips-{{ section.id }} li::before {
+    content: "✓";
+    color: var(--c-pp);
+    font-weight: 800;
+    line-height: 1.4;
   }
 
-  .tw-page-current {
-    background: var(--tw-search-primary);
-    color: #fff;
-    border: 1px solid var(--tw-search-primary);
+  /* Quick suggestions */
+  .tw-srch-suggest-{{ section.id }} {
+    margin-bottom: 32px;
   }
+  .tw-srch-suggest-h-{{ section.id }} {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--c-ink);
+    margin: 0 0 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tw-srch-suggest-h-{{ section.id }} svg { width: 18px; height: 18px; color: var(--c-pp); }
+  .tw-srch-cats-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .tw-srch-cat-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--c-r-card);
+    overflow: hidden;
+    text-decoration: none;
+    transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+  }
+  .tw-srch-cat-{{ section.id }}:hover {
+    border-color: var(--c-pp);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px -16px rgba(124, 58, 237, 0.25);
+  }
+  .tw-srch-cat-img-{{ section.id }} {
+    aspect-ratio: 16 / 9;
+    background: var(--c-pp-soft);
+    overflow: hidden;
+    position: relative;
+  }
+  .tw-srch-cat-img-{{ section.id }} img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .tw-srch-cat-{{ section.id }}:hover .tw-srch-cat-img-{{ section.id }} img { transform: scale(1.04); }
+  .tw-srch-cat-body-{{ section.id }} {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .tw-srch-cat-name-{{ section.id }} {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--c-ink);
+    line-height: 1.25;
+  }
+  .tw-srch-cat-count-{{ section.id }} {
+    font-size: 11.5px;
+    color: var(--c-muted);
+    margin-top: 2px;
+  }
+  .tw-srch-cat-go-{{ section.id }} {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--c-pp-tint);
+    color: var(--c-pp);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tw-srch-cat-go-{{ section.id }} svg { width: 14px; height: 14px; transition: transform .18s ease; }
+  .tw-srch-cat-{{ section.id }}:hover .tw-srch-cat-go-{{ section.id }} svg { transform: translateX(3px); }
 
-  @media screen and (max-width: 991px) {
-    .tw-search-grid {
-      grid-template-columns: repeat({{ section.settings.tablet_columns }}, 1fr);
+  /* Pagination */
+  .tw-srch-pag-{{ section.id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 32px;
+  }
+  .tw-srch-pag-{{ section.id }} a,
+  .tw-srch-pag-{{ section.id }} span {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: var(--c-r-btn);
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: 1px solid var(--c-line);
+    background: #fff;
+    color: var(--c-ink);
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .tw-srch-pag-{{ section.id }} a:hover { border-color: var(--c-pp); color: var(--c-pp); background: var(--c-soft); }
+  .tw-srch-pag-{{ section.id }} .is-current { background: var(--c-pp); border-color: var(--c-pp); color: #fff; }
+  .tw-srch-pag-{{ section.id }} svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; }
+
+  /* Responsive */
+  @media (max-width: 991px) {
+    .tw-srch-grid-{{ section.id }} { grid-template-columns: repeat({{ tablet }}, minmax(0, 1fr)); }
+    .tw-srch-cats-{{ section.id }} { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .tw-srch-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.5 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
     }
-  }
-
-  @media screen and (max-width: 767px) {
-    .tw-search-title { font-size: 26px; }
-    .tw-search-grid {
-      grid-template-columns: repeat({{ section.settings.mobile_columns }}, 1fr);
-      gap: 15px;
-    }
-    .tw-search-submit {
-      padding: 8px 12px;
-      font-size: 13px;
-    }
+    .tw-srch-inner-{{ section.id }} { padding: 0 14px; }
+    .tw-srch-hero-{{ section.id }} { padding: 20px 18px 22px; margin-bottom: 18px; border-radius: 12px; }
+    .tw-srch-title-{{ section.id }} { font-size: 22px; }
+    .tw-srch-sub-{{ section.id }} { font-size: 13px; margin-bottom: 14px; }
+    .tw-srch-form-{{ section.id }} { padding: 4px 4px 4px 14px; }
+    .tw-srch-submit-{{ section.id }} { padding: 10px 14px; font-size: 13px; }
+    .tw-srch-submit-{{ section.id }} span { display: none; }
+    .tw-srch-input-{{ section.id }} { font-size: 14.5px; padding: 12px 8px; }
+    .tw-srch-grid-{{ section.id }} { grid-template-columns: repeat({{ mobile }}, minmax(0, 1fr)); gap: 10px; }
+    .tw-srch-cats-{{ section.id }} { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   }
 {% endstyle %}
 
-<div class="tw-search-section-{{ section.id }}">
-  <div class="tw-search-container">
-    
-    <div class="tw-search-header">
-      <h1 class="tw-search-title">{{ section.settings.heading }}</h1>
-      <p class="tw-search-subtitle">{{ section.settings.subheading }}</p>
+<section class="tw-srch-{{ section.id }}">
+  <div class="tw-srch-inner-{{ section.id }}">
 
-      <form action="{{ routes.search_url }}" method="get" role="search" class="tw-search-form">
+    {%- comment -%} HERO {%- endcomment -%}
+    <div class="tw-srch-hero-{{ section.id }}">
+      <nav class="tw-srch-crumbs-{{ section.id }}" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}">Anasayfa</a>
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="curr">Arama</span>
+      </nav>
+
+      {% if has_terms %}
+        <h1 class="tw-srch-title-{{ section.id }}">
+          {%- if search.performed and search.results_count > 0 -%}
+            <em>{{ search.results_count }}</em> sonuç bulundu
+          {%- elsif search.performed and search.results_count == 0 -%}
+            Sonuç bulunamadı
+          {%- else -%}
+            Arama Sonuçları
+          {%- endif -%}
+        </h1>
+        <p class="tw-srch-sub-{{ section.id }}">
+          Aramanız: <strong>"{{ terms | escape }}"</strong>
+        </p>
+      {% else %}
+        <h1 class="tw-srch-title-{{ section.id }}">Patilerin için <em>doğru ürün</em></h1>
+        <p class="tw-srch-sub-{{ section.id }}">Mama, kum, oyuncak, aksesuar — ne arıyorsan yazmaya başla.</p>
+      {% endif %}
+
+      <form action="{{ routes.search_url }}" method="get" role="search" class="tw-srch-form-{{ section.id }}" data-tw-search-form>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="options[prefix]" value="last">
-        
-        <svg class="tw-search-icon" viewBox="0 0 24 24">
-          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-        </svg>
-
-        <input 
-          type="search" 
-          name="q" 
-          value="{{ search.terms | escape }}" 
-          placeholder="{{ section.settings.placeholder_text }}" 
-          class="tw-search-input"
-        >
-        <button type="submit" class="tw-search-submit">{{ section.settings.button_text }}</button>
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          type="search"
+          name="q"
+          value="{{ terms | escape }}"
+          placeholder="{{ section.settings.placeholder_text }}"
+          class="tw-srch-input-{{ section.id }}"
+          autocomplete="off"
+          data-tw-search-input>
+        <button type="button" class="tw-srch-clear-{{ section.id }}{% if has_terms %} is-visible{% endif %}" data-tw-search-clear aria-label="Temizle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <button type="submit" class="tw-srch-submit-{{ section.id }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>{{ section.settings.button_text }}</span>
+        </button>
       </form>
+
+      {% if trend_list.size > 0 %}
+        <div class="tw-srch-trends-{{ section.id }}">
+          <span class="tw-srch-trends-label-{{ section.id }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            Popüler aramalar
+          </span>
+          {% for t in trend_list limit: 6 %}
+            {% assign t_clean = t | strip %}
+            {% if t_clean != blank %}
+              <a class="tw-srch-chip-{{ section.id }}" href="{{ routes.search_url }}?q={{ t_clean | url_encode }}&type=product">{{ t_clean }}</a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
 
-    {% if search.performed %}
-      {% paginate search.results by section.settings.results_per_page %}
-        
-        <div class="tw-search-results-info">
-          "<strong>{{ search.terms | escape }}</strong>" için {{ search.results_count }} sonuç bulundu.
-        </div>
+    {%- comment -%} RESULTS or STATES {%- endcomment -%}
+    {% if search.performed and has_terms %}
+      {% paginate search.results by per_page %}
 
-        {% if search.results_count == 0 %}
-          <div class="tw-search-empty">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-            <h3>Sonuç Bulunamadı</h3>
-            <p>Farklı kelimeler kullanarak tekrar aramayı deneyebilirsiniz.</p>
+        {% if search.results_count > 0 %}
+          <div class="tw-srch-toolbar-{{ section.id }}">
+            <span class="tw-srch-tb-count-{{ section.id }}"><strong>{{ search.results_count }}</strong> ürün listeleniyor</span>
           </div>
-        {% else %}
-          
-          <div class="tw-search-grid">
+
+          <div class="tw-srch-grid-{{ section.id }}">
             {% for item in search.results %}
               {% if item.object_type == 'product' %}
                 {% render 'product-card', product: item %}
@@ -233,178 +483,140 @@
           </div>
 
           {% if paginate.pages > 1 %}
-            <div class="tw-pagination">
+            <nav class="tw-srch-pag-{{ section.id }}" aria-label="Sayfalar">
               {% if paginate.previous %}
-                <a href="{{ paginate.previous.url }}" class="tw-page-link">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                <a href="{{ paginate.previous.url }}" aria-label="Önceki sayfa">
+                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                 </a>
               {% endif %}
-
               {% for part in paginate.parts %}
                 {% if part.is_link %}
-                  <a href="{{ part.url }}" class="tw-page-link">{{ part.title }}</a>
+                  <a href="{{ part.url }}">{{ part.title }}</a>
                 {% else %}
-                  <span class="{% if part.title == paginate.current_page %}tw-page-current{% else %}tw-page-link{% endif %}">{{ part.title }}</span>
+                  <span class="{% if part.title == paginate.current_page %}is-current{% endif %}">{{ part.title }}</span>
                 {% endif %}
               {% endfor %}
-
               {% if paginate.next %}
-                <a href="{{ paginate.next.url }}" class="tw-page-link">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                <a href="{{ paginate.next.url }}" aria-label="Sonraki sayfa">
+                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
               {% endif %}
-            </div>
+            </nav>
           {% endif %}
 
+        {% else %}
+          {%- comment -%} No results {%- endcomment -%}
+          <div class="tw-srch-empty-{{ section.id }}">
+            <div class="tw-srch-empty-ico-{{ section.id }}">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </div>
+            <h3>"{{ terms | escape }}" için sonuç bulamadık</h3>
+            <p>Aradığını farklı bir şekilde ifade etmeyi dene veya aşağıdaki popüler kategorilerden birine göz at.</p>
+            <ul class="tw-srch-empty-tips-{{ section.id }}">
+              <li>Yazımı kontrol et</li>
+              <li>Daha az veya farklı kelime kullan</li>
+              <li>Genel bir terim dene: "mama", "kum", "oyuncak"</li>
+            </ul>
+            <a href="{{ routes.all_products_collection_url }}" class="tw-srch-submit-{{ section.id }}">
+              Tüm Ürünleri Gör
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
         {% endif %}
 
       {% endpaginate %}
     {% endif %}
 
+    {%- comment -%} CATEGORIES — show when no query OR when search returned 0 {%- endcomment -%}
+    {% if has_terms == false or search.results_count == 0 %}
+      {%- liquid
+        assign cat_handles = section.settings.featured_collections | default: 'kedi-mamasi,kopek-mamasi,kum,oyuncak'
+        assign cat_list = cat_handles | split: ','
+      -%}
+      <div class="tw-srch-suggest-{{ section.id }}">
+        <h2 class="tw-srch-suggest-h-{{ section.id }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          {% if has_terms %}Bu kategorilere göz atmak ister misin?{% else %}Popüler kategoriler{% endif %}
+        </h2>
+        <div class="tw-srch-cats-{{ section.id }}">
+          {% for ch in cat_list limit: 4 %}
+            {%- assign handle = ch | strip -%}
+            {%- assign coll = collections[handle] -%}
+            {% if coll and coll.handle != '' %}
+              <a class="tw-srch-cat-{{ section.id }}" href="{{ coll.url }}">
+                <div class="tw-srch-cat-img-{{ section.id }}">
+                  {% if coll.image %}
+                    <img src="{{ coll.image | image_url: width: 500 }}" alt="{{ coll.title | escape }}" loading="lazy" width="500" height="282">
+                  {% elsif coll.products.first.featured_image %}
+                    <img src="{{ coll.products.first.featured_image | image_url: width: 500 }}" alt="{{ coll.title | escape }}" loading="lazy" width="500" height="282">
+                  {% endif %}
+                </div>
+                <div class="tw-srch-cat-body-{{ section.id }}">
+                  <div>
+                    <div class="tw-srch-cat-name-{{ section.id }}">{{ coll.title }}</div>
+                    <div class="tw-srch-cat-count-{{ section.id }}">{{ coll.products_count }} ürün</div>
+                  </div>
+                  <span class="tw-srch-cat-go-{{ section.id }}" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </span>
+                </div>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
   </div>
-</div>
+</section>
+
+<script>
+  (function() {
+    var form = document.querySelector('.tw-srch-{{ section.id }} [data-tw-search-form]');
+    if (!form) return;
+    var input = form.querySelector('[data-tw-search-input]');
+    var clear = form.querySelector('[data-tw-search-clear]');
+    if (!input || !clear) return;
+
+    function toggleClear() {
+      clear.classList.toggle('is-visible', !!input.value);
+    }
+    input.addEventListener('input', toggleClear);
+    clear.addEventListener('click', function () {
+      input.value = '';
+      toggleClear();
+      input.focus();
+    });
+    toggleClear();
+  })();
+</script>
 
 {% schema %}
 {
   "name": "Twinkle Search Page",
   "settings": [
-    {
-      "type": "header",
-      "content": "Metinler ve Başlıklar"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Ana Başlık",
-      "default": "Mağazada Ara"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "Alt Başlık",
-      "default": "Aradığınız ürünü bulmak için aşağıdaki alanı kullanın."
-    },
-    {
-      "type": "text",
-      "id": "placeholder_text",
-      "label": "Arama Kutusu Metni",
-      "default": "Ürün adı, marka veya kategori yazın..."
-    },
-    {
-      "type": "text",
-      "id": "button_text",
-      "label": "Buton Metni",
-      "default": "Ara"
-    },
-    {
-      "type": "header",
-      "content": "Grid ve Sayfalama Ayarları"
-    },
-    {
-      "type": "range",
-      "id": "results_per_page",
-      "min": 8,
-      "max": 48,
-      "step": 4,
-      "label": "Sayfa Başına Ürün",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "desktop_columns",
-      "min": 2,
-      "max": 6,
-      "step": 1,
-      "label": "Masaüstü Sütun Sayısı",
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "tablet_columns",
-      "min": 2,
-      "max": 4,
-      "step": 1,
-      "label": "Tablet Sütun Sayısı",
-      "default": 3
-    },
-    {
-      "type": "range",
-      "id": "mobile_columns",
-      "min": 1,
-      "max": 3,
-      "step": 1,
-      "label": "Mobil Sütun Sayısı",
-      "default": 2
-    },
-    {
-      "type": "range",
-      "id": "grid_gap",
-      "min": 10,
-      "max": 40,
-      "step": 5,
-      "label": "Ürünler Arası Boşluk",
-      "default": 20
-    },
-    {
-      "type": "header",
-      "content": "Renk ve Stil Ayarları"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Arkaplan Rengi",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Metin Rengi",
-      "default": "#333333"
-    },
-    {
-      "type": "color",
-      "id": "primary_color",
-      "label": "Vurgu Rengi (Buton/Hover)",
-      "default": "#8a3b8e"
-    },
-    {
-      "type": "color",
-      "id": "border_color",
-      "label": "Çizgi Rengi",
-      "default": "#eeeeee"
-    },
-    {
-      "type": "header",
-      "content": "Boşluk Ayarları"
-    },
-    {
-      "type": "range",
-      "id": "container_max_width",
-      "min": 1000,
-      "max": 1600,
-      "step": 50,
-      "unit": "px",
-      "label": "Maksimum İçerik Genişliği",
-      "default": 1200
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "label": "Üst Boşluk (Padding Top)",
-      "default": 60
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "label": "Alt Boşluk (Padding Bottom)",
-      "default": 60
-    }
+    { "type": "header", "content": "Metinler" },
+    { "type": "text", "id": "placeholder_text", "label": "Arama placeholder", "default": "Mama, kum, oyuncak..." },
+    { "type": "text", "id": "button_text", "label": "Buton metni", "default": "Ara" },
+    { "type": "textarea", "id": "trends", "label": "Popüler aramalar (virgülle)", "default": "kedi maması,köpek maması,kum,kuru mama,yaş mama,oyuncak" },
+    { "type": "text", "id": "featured_collections", "label": "Önerilen koleksiyon handle'ları (virgülle)", "default": "kedi-mamasi,kopek-mamasi,kum,oyuncak" },
+
+    { "type": "header", "content": "Grid" },
+    { "type": "range", "id": "results_per_page", "min": 8, "max": 48, "step": 4, "label": "Sayfa başına ürün", "default": 24 },
+    { "type": "range", "id": "desktop_columns", "min": 2, "max": 6, "step": 1, "label": "Masaüstü sütun", "default": 4 },
+    { "type": "range", "id": "tablet_columns", "min": 2, "max": 4, "step": 1, "label": "Tablet sütun", "default": 3 },
+    { "type": "range", "id": "mobile_columns", "min": 1, "max": 3, "step": 1, "label": "Mobil sütun", "default": 2 },
+    { "type": "range", "id": "grid_gap", "min": 8, "max": 32, "step": 2, "unit": "px", "label": "Kartlar arası boşluk", "default": 18 },
+
+    { "type": "header", "content": "Renk & Düzen" },
+    { "type": "color", "id": "bg_color", "label": "Arka plan", "default": "#ffffff" },
+    { "type": "color", "id": "primary_color", "label": "Vurgu rengi", "default": "#7C3AED" },
+    { "type": "range", "id": "container_max_width", "min": 1000, "max": 1800, "step": 20, "unit": "px", "label": "Maks. genişlik", "default": 1400 },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Üst boşluk", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Alt boşluk", "default": 60 }
+  ],
+  "presets": [
+    { "name": "Twinkle Search Page" }
   ]
 }
 {% endschema %}
