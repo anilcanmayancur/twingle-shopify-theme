@@ -297,7 +297,7 @@
                  srcset="{{ m.image | image_url: width: 800 }} 800w, {{ m.image | image_url: width: 1200 }} 1200w, {{ m.image | image_url: width: 1600 }} 1600w, {{ m.image | image_url: width: 2000 }} 2000w"
                  sizes="(min-width: 1024px) 66vw, 100vw"
                  alt="{{ m.title | default: 'Banner' | strip_html }}"
-                 width="1600" height="1000" loading="eager" fetchpriority="high">
+                 width="1600" height="1000" loading="eager" fetchpriority="high" decoding="async">
           {%- else -%}
             <div class="tw-hero-{{ section.id }}__placeholder" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -342,7 +342,7 @@
                  srcset="{{ s.image | image_url: width: 500 }} 500w, {{ s.image | image_url: width: 800 }} 800w, {{ s.image | image_url: width: 1100 }} 1100w"
                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                  alt="{{ s.title | default: 'Banner' | strip_html }}"
-                 width="900" height="600" loading="eager">
+                 width="900" height="600" loading="lazy" decoding="async">
           {%- else -%}
             <div class="tw-hero-{{ section.id }}__placeholder" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">

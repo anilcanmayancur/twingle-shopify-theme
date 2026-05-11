@@ -104,6 +104,7 @@
             <img src="{{ block.settings.image | image_url: width: 400 }}"
                  alt="{{ block.settings.image.alt | default: 'Brand Logo' }}"
                  loading="lazy"
+                 decoding="async"
                  width="{{ block.settings.image.width }}"
                  height="{{ block.settings.image.height }}"
                  {% if block_height > 0 %}style="max-height: {{ block_height }}px;"{% endif %}>

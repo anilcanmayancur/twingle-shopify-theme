@@ -6,6 +6,10 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="dns-prefetch" href="//cdn.shopify.com">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
@@ -39,6 +43,17 @@
     <style>
       body { overflow-x: clip; }
       @supports not (overflow-x: clip) { body { overflow-x: hidden; } }
+      img { max-width: 100%; height: auto; }
+      @supports (content-visibility: auto) {
+        #MainContent > .shopify-section:nth-child(n+4) {
+          content-visibility: auto;
+          contain-intrinsic-size: 0 720px;
+        }
+        footer > .shopify-section {
+          content-visibility: auto;
+          contain-intrinsic-size: 0 480px;
+        }
+      }
     </style>
   </head>
 

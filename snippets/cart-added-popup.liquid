@@ -324,6 +324,13 @@
   }
 </style>
 
+<script>
+  window.twinglePopupUrls = window.twinglePopupUrls || {
+    cart: {{ routes.cart_url | json }},
+    wishlist: {% if pages.wishlist %}{{ pages.wishlist.url | json }}{% else %}{{ '/pages/wishlist' | json }}{% endif %}
+  };
+</script>
+
 <div
   id="TwingleCartPopup"
   class="twingle-cart-popup"
@@ -406,10 +413,17 @@
   var imgEl = popup.querySelector('[data-twingle-product-img]');
   var titleEl = popup.querySelector('[data-twingle-product-title]');
   var priceEl = popup.querySelector('[data-twingle-product-price]');
+  var headingEl = popup.querySelector('.twingle-cart-popup__heading');
   var subheadingEl = popup.querySelector('.twingle-cart-popup__subheading');
   var countBadge = popup.querySelector('[data-twingle-cart-count]');
+  var primaryGoBtn = popup.querySelector('[data-twingle-popup-go-to-cart]');
+  var primaryLabelEl = primaryGoBtn ? primaryGoBtn.querySelector('span:first-of-type') : null;
   var lastFocused = null;
   var defaultSubheading = subheadingEl ? subheadingEl.textContent : '';
+  var defaultHeading = headingEl ? headingEl.textContent.trim() : 'Sepete eklendi';
+  var defaultPrimaryHref = primaryGoBtn ? primaryGoBtn.getAttribute('href') : '';
+  var defaultPrimaryLabel = primaryLabelEl ? primaryLabelEl.textContent.trim() : 'Sepete İlerle';
+  var urls = window.twinglePopupUrls || {};
 
   function setCartCount(count) {
     if (count == null) return;
@@ -423,6 +437,10 @@
   }
 
   function openPopup(detail) {
+    detail = detail || {};
+    var mode = detail.mode === 'wishlist' ? 'wishlist' : 'cart';
+    popup.dataset.twingleMode = mode;
+
     if (detail.imageUrl) {
       imgEl.src = detail.imageUrl;
       imgEl.alt = detail.title || '';
@@ -434,10 +452,26 @@
     titleEl.textContent = detail.title || '';
     priceEl.textContent = detail.priceFormatted || '';
 
-    if (subheadingEl) subheadingEl.textContent = defaultSubheading;
+    if (headingEl) {
+      headingEl.textContent = mode === 'wishlist' ? 'Favoriye eklendi' : defaultHeading;
+    }
+    if (subheadingEl) {
+      subheadingEl.textContent = mode === 'wishlist'
+        ? 'Ürün favori listenize kaydedildi.'
+        : defaultSubheading;
+    }
     if (countBadge) {
       countBadge.textContent = '';
-      countBadge.hidden = true;
+      countBadge.hidden = mode === 'wishlist';
+    }
+    if (primaryGoBtn && primaryLabelEl) {
+      if (mode === 'wishlist') {
+        primaryGoBtn.setAttribute('href', urls.wishlist || '/pages/wishlist');
+        primaryLabelEl.textContent = 'Favorilerime Git';
+      } else {
+        primaryGoBtn.setAttribute('href', defaultPrimaryHref);
+        primaryLabelEl.textContent = defaultPrimaryLabel;
+      }
     }
 
     lastFocused = document.activeElement;
@@ -467,6 +501,11 @@
     if (e.target.closest('[data-twingle-popup-go-to-cart]')) {
       e.preventDefault();
       closePopup();
+      if (popup.dataset.twingleMode === 'wishlist') {
+        var h = primaryGoBtn ? primaryGoBtn.getAttribute('href') : '';
+        if (h) window.location.href = h;
+        return;
+      }
       document.dispatchEvent(new CustomEvent('twingle:cart:open'));
     }
   });
@@ -581,5 +620,8 @@
         }
       });
   }, false);
+
+  window.twingleFormatMoney = formatMoney;
+  window.twingleOpenAddedPopup = openPopup;
 })();
 </script>

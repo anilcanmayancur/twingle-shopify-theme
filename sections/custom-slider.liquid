@@ -196,6 +196,8 @@
   align-items: center;
   gap: 14px;
   margin-bottom: 36px;
+  margin-left: auto;
+  margin-right: auto;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--pet-line);
   width: 100%;
@@ -221,21 +223,16 @@
 .pet-trust-avatar-{{ section.id }}:nth-child(4) { background: linear-gradient(135deg, var(--pet-primary), var(--pet-primary-deep)); }
 
 .pet-trust-text-{{ section.id }} { font-size: 13px; color: var(--pet-body); line-height: 1.4; }
-.pet-trust-stars-{{ section.id }} {
-  color: var(--pet-primary);
-  font-size: 14px;
-  letter-spacing: 1px;
-  display: block;
-  margin-bottom: 1px;
-}
 .pet-trust-text-{{ section.id }} strong { color: var(--pet-ink); font-weight: 700; }
 
 /* Stats */
 .pet-hero-stats-{{ section.id }} {
   display: flex;
   align-items: stretch;
+  justify-content: center;
   gap: 28px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .pet-stat-item-{{ section.id }} {
@@ -260,12 +257,24 @@
   color: var(--pet-ink);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   line-height: 1;
   letter-spacing: -0.025em;
 }
 
-.pet-stat-value-{{ section.id }} svg { color: var(--pet-primary); }
+.pet-stat-stars-inline-{{ section.id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  margin-right: 2px;
+}
+.pet-stat-stars-inline-{{ section.id }} svg {
+  width: 13px;
+  height: 13px;
+  color: #F59E0B;
+  fill: currentColor;
+  flex-shrink: 0;
+}
 .pet-stat-label-{{ section.id }} { font-size: 13px; color: var(--pet-body); font-weight: 500; }
 
 /* SAĞ — Trust Showcase */
@@ -552,22 +561,21 @@
     margin-left: -8px;
   }
   .pet-trust-text-{{ section.id }} { font-size: 12px; text-align: left; }
-  .pet-trust-stars-{{ section.id }} { font-size: 12px; }
 
   .pet-hero-stats-{{ section.id }} {
-    gap: 0;
+    gap: 12px 16px;
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
   }
   .pet-stat-item-{{ section.id }} {
     padding-right: 12px;
-    flex: 1;
+    flex: 0 1 auto;
     align-items: center;
     text-align: center;
   }
   .pet-stat-item-{{ section.id }}:last-child { padding-right: 0; }
   .pet-stat-value-{{ section.id }} { font-size: 20px; justify-content: center; }
-  .pet-stat-value-{{ section.id }} svg { width: 14px; height: 14px; }
+  .pet-stat-stars-inline-{{ section.id }} svg { width: 11px; height: 11px; }
   .pet-stat-label-{{ section.id }} { font-size: 11px; text-align: center; }
 }
 
@@ -640,7 +648,6 @@
             <span class="pet-trust-avatar-{{ section.id }}">🐾</span>
           </div>
           <div class="pet-trust-text-{{ section.id }}">
-            <span class="pet-trust-stars-{{ section.id }}">★★★★★</span>
             <strong>{{ section.settings.trust_count }}</strong> {{ section.settings.trust_text }}
           </div>
         </div>
@@ -652,10 +659,14 @@
           {% for block in stat_blocks %}
             <div class="pet-stat-item-{{ section.id }}" {{ block.shopify_attributes }}>
               <div class="pet-stat-value-{{ section.id }}">
-                {{ block.settings.value }}
                 {% if block.settings.show_star %}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <span class="pet-stat-stars-inline-{{ section.id }}" aria-hidden="true">
+                    {%- for si in (1..5) -%}
+                      <svg viewBox="0 0 24 24" focusable="false"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    {%- endfor -%}
+                  </span>
                 {% endif %}
+                {{ block.settings.value }}
               </div>
               <div class="pet-stat-label-{{ section.id }}">{{ block.settings.label }}</div>
             </div>

@@ -126,6 +126,21 @@
       btn.classList.toggle('twinkle-active', added);
       btn.classList.toggle('active', added);
       btn.setAttribute('aria-label', added ? 'Favorilerden çıkar' : 'Favorilere ekle');
+
+      if (added && typeof window.twingleOpenAddedPopup === 'function') {
+        var p = btn.dataset.productPrice;
+        var cents = p !== undefined && p !== '' ? parseInt(p, 10) : NaN;
+        var priceFormatted = btn.dataset.productPriceFormatted || '';
+        if (!priceFormatted && typeof window.twingleFormatMoney === 'function' && !isNaN(cents)) {
+          priceFormatted = window.twingleFormatMoney(cents);
+        }
+        window.twingleOpenAddedPopup({
+          mode: 'wishlist',
+          title: btn.dataset.productTitle || '',
+          imageUrl: btn.dataset.productImage || '',
+          priceFormatted: priceFormatted
+        });
+      }
     });
 
     window.addEventListener('twinkle-wishlist-change', updateBadge);

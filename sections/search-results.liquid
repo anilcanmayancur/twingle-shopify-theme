@@ -4,7 +4,7 @@
   assign tablet     = section.settings.tablet_columns | default: 3
   assign mobile     = section.settings.mobile_columns | default: 2
   assign per_page   = section.settings.results_per_page | default: 24
-  assign trends     = section.settings.trends | default: 'kedi maması,köpek maması,kum,kuru mama,yaş mama,oyuncak'
+  assign trends     = section.settings.trends | default: 'kedi maması,köpek maması,kum,oyuncak'
   assign trend_list = trends | split: ','
   assign terms      = search.terms | default: '' | strip
   assign has_terms  = false
@@ -74,6 +74,12 @@
     font-style: normal;
     color: var(--c-pp);
   }
+  .tw-srch-hero-hasq-{{ section.id }} {
+    padding: 24px 28px 22px;
+  }
+  .tw-srch-hero-hasq-{{ section.id }} .tw-srch-title-{{ section.id }} {
+    margin-bottom: 14px;
+  }
   .tw-srch-sub-{{ section.id }} {
     margin: 0 0 22px;
     font-size: 14.5px;
@@ -82,67 +88,13 @@
   }
   .tw-srch-sub-{{ section.id }} strong { color: var(--c-ink); font-weight: 700; }
 
-  /* Search box */
-  .tw-srch-form-{{ section.id }} {
-    position: relative;
-    display: flex;
-    background: #fff;
-    border: 1.5px solid var(--c-line);
-    border-radius: 999px;
-    padding: 4px 4px 4px 18px;
-    transition: border-color .18s ease, box-shadow .18s ease;
-    max-width: 720px;
-  }
-  .tw-srch-form-{{ section.id }}:focus-within {
-    border-color: var(--c-pp);
-    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.10);
-  }
-  .tw-srch-form-{{ section.id }} svg.icon {
-    width: 20px; height: 20px;
-    stroke: var(--c-muted);
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    flex-shrink: 0;
-    align-self: center;
-  }
-  .tw-srch-input-{{ section.id }} {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    padding: 14px 12px;
-    font: inherit;
-    font-size: 15px;
-    color: var(--c-ink);
-    min-width: 0;
-  }
-  .tw-srch-input-{{ section.id }}::placeholder { color: var(--c-muted); }
-  .tw-srch-clear-{{ section.id }} {
-    width: 32px; height: 32px;
-    border: none;
-    background: var(--c-pp-soft);
-    color: var(--c-muted);
-    border-radius: 999px;
-    cursor: pointer;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    margin-right: 4px;
-    transition: background .15s ease, color .15s ease;
-    align-self: center;
-    flex-shrink: 0;
-  }
-  .tw-srch-clear-{{ section.id }}:hover { background: var(--c-pp-tint); color: var(--c-pp); }
-  .tw-srch-clear-{{ section.id }}.is-visible { display: inline-flex; }
-  .tw-srch-clear-{{ section.id }} svg { width: 12px; height: 12px; }
-
+  /* CTA buton (boş durum) */
   .tw-srch-submit-{{ section.id }} {
     background: linear-gradient(135deg, var(--c-pp) 0%, #5B2FB2 100%);
     color: #fff;
     border: none;
     padding: 10px 22px;
-    border-radius: 999px;
+    border-radius: var(--c-r-btn);
     font: inherit;
     font-size: 14px;
     font-weight: 700;
@@ -157,24 +109,41 @@
   .tw-srch-submit-{{ section.id }}:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 10px 22px -8px rgba(124, 58, 237, 0.55); }
   .tw-srch-submit-{{ section.id }} svg { width: 14px; height: 14px; }
 
-  /* Trends */
+  /* Trends — tek satır, yatay kaydırma */
   .tw-srch-trends-{{ section.id }} {
-    margin-top: 14px;
+    margin-top: 12px;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 8px;
-    font-size: 12.5px;
+    gap: 10px;
+    font-size: 12px;
     color: var(--c-muted);
+    min-width: 0;
   }
   .tw-srch-trends-label-{{ section.id }} {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     font-weight: 700;
     color: var(--c-ink);
+    flex-shrink: 0;
+    white-space: nowrap;
   }
-  .tw-srch-trends-label-{{ section.id }} svg { width: 14px; height: 14px; color: var(--c-pp); }
+  .tw-srch-trends-label-{{ section.id }} svg { width: 13px; height: 13px; color: var(--c-pp); flex-shrink: 0; }
+  .tw-srch-trends-scroll-{{ section.id }} {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 0;
+    flex: 1;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tw-srch-trends-scroll-{{ section.id }}::-webkit-scrollbar { display: none; }
   .tw-srch-chip-{{ section.id }} {
     display: inline-flex;
     align-items: center;
@@ -182,11 +151,13 @@
     background: #fff;
     border: 1px solid var(--c-line);
     color: var(--c-ink);
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 12.5px;
+    padding: 5px 10px;
+    border-radius: var(--c-r-chip);
+    font-size: 12px;
     font-weight: 600;
     text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
     transition: background .15s ease, border-color .15s ease, color .15s ease;
   }
   .tw-srch-chip-{{ section.id }}:hover { background: var(--c-soft); border-color: var(--c-pp); color: var(--c-pp); }
@@ -390,10 +361,7 @@
     .tw-srch-hero-{{ section.id }} { padding: 20px 18px 22px; margin-bottom: 18px; border-radius: 12px; }
     .tw-srch-title-{{ section.id }} { font-size: 22px; }
     .tw-srch-sub-{{ section.id }} { font-size: 13px; margin-bottom: 14px; }
-    .tw-srch-form-{{ section.id }} { padding: 4px 4px 4px 14px; }
     .tw-srch-submit-{{ section.id }} { padding: 10px 14px; font-size: 13px; }
-    .tw-srch-submit-{{ section.id }} span { display: none; }
-    .tw-srch-input-{{ section.id }} { font-size: 14.5px; padding: 12px 8px; }
     .tw-srch-grid-{{ section.id }} { grid-template-columns: repeat({{ mobile }}, minmax(0, 1fr)); gap: 10px; }
     .tw-srch-cats-{{ section.id }} { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   }
@@ -403,7 +371,7 @@
   <div class="tw-srch-inner-{{ section.id }}">
 
     {%- comment -%} HERO {%- endcomment -%}
-    <div class="tw-srch-hero-{{ section.id }}">
+    <div class="tw-srch-hero-{{ section.id }}{% if has_terms %} tw-srch-hero-hasq-{{ section.id }}{% endif %}">
       <nav class="tw-srch-crumbs-{{ section.id }}" aria-label="Breadcrumb">
         <a href="{{ routes.root_url }}">Anasayfa</a>
         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
@@ -420,47 +388,25 @@
             Arama Sonuçları
           {%- endif -%}
         </h1>
-        <p class="tw-srch-sub-{{ section.id }}">
-          Aramanız: <strong>"{{ terms | escape }}"</strong>
-        </p>
       {% else %}
         <h1 class="tw-srch-title-{{ section.id }}">Patilerin için <em>doğru ürün</em></h1>
         <p class="tw-srch-sub-{{ section.id }}">Mama, kum, oyuncak, aksesuar — ne arıyorsan yazmaya başla.</p>
       {% endif %}
 
-      <form action="{{ routes.search_url }}" method="get" role="search" class="tw-srch-form-{{ section.id }}" data-tw-search-form>
-        <input type="hidden" name="type" value="product">
-        <input type="hidden" name="options[prefix]" value="last">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input
-          type="search"
-          name="q"
-          value="{{ terms | escape }}"
-          placeholder="{{ section.settings.placeholder_text }}"
-          class="tw-srch-input-{{ section.id }}"
-          autocomplete="off"
-          data-tw-search-input>
-        <button type="button" class="tw-srch-clear-{{ section.id }}{% if has_terms %} is-visible{% endif %}" data-tw-search-clear aria-label="Temizle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <button type="submit" class="tw-srch-submit-{{ section.id }}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <span>{{ section.settings.button_text }}</span>
-        </button>
-      </form>
-
       {% if trend_list.size > 0 %}
         <div class="tw-srch-trends-{{ section.id }}">
           <span class="tw-srch-trends-label-{{ section.id }}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            Popüler aramalar
+            Popüler
           </span>
-          {% for t in trend_list limit: 6 %}
-            {% assign t_clean = t | strip %}
-            {% if t_clean != blank %}
-              <a class="tw-srch-chip-{{ section.id }}" href="{{ routes.search_url }}?q={{ t_clean | url_encode }}&type=product">{{ t_clean }}</a>
-            {% endif %}
-          {% endfor %}
+          <div class="tw-srch-trends-scroll-{{ section.id }}">
+            {% for t in trend_list limit: 4 %}
+              {% assign t_clean = t | strip %}
+              {% if t_clean != blank %}
+                <a class="tw-srch-chip-{{ section.id }}" href="{{ routes.search_url }}?q={{ t_clean | url_encode }}&type=product">{{ t_clean }}</a>
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
       {% endif %}
     </div>
@@ -570,35 +516,13 @@
   </div>
 </section>
 
-<script>
-  (function() {
-    var form = document.querySelector('.tw-srch-{{ section.id }} [data-tw-search-form]');
-    if (!form) return;
-    var input = form.querySelector('[data-tw-search-input]');
-    var clear = form.querySelector('[data-tw-search-clear]');
-    if (!input || !clear) return;
-
-    function toggleClear() {
-      clear.classList.toggle('is-visible', !!input.value);
-    }
-    input.addEventListener('input', toggleClear);
-    clear.addEventListener('click', function () {
-      input.value = '';
-      toggleClear();
-      input.focus();
-    });
-    toggleClear();
-  })();
-</script>
-
 {% schema %}
 {
   "name": "Twinkle Search Page",
   "settings": [
     { "type": "header", "content": "Metinler" },
-    { "type": "text", "id": "placeholder_text", "label": "Arama placeholder", "default": "Mama, kum, oyuncak..." },
-    { "type": "text", "id": "button_text", "label": "Buton metni", "default": "Ara" },
-    { "type": "textarea", "id": "trends", "label": "Popüler aramalar (virgülle)", "default": "kedi maması,köpek maması,kum,kuru mama,yaş mama,oyuncak" },
+    { "type": "paragraph", "content": "Arama kutusu site başlığındaki aramadan kullanılıyor. Bu sayfa sadece sonuçları ve popüler kategorileri göstermek için tasarlandı." },
+    { "type": "textarea", "id": "trends", "label": "Popüler aramalar (virgülle, en fazla 4 gösterilir)", "default": "kedi maması,köpek maması,kum,oyuncak" },
     { "type": "text", "id": "featured_collections", "label": "Önerilen koleksiyon handle'ları (virgülle)", "default": "kedi-mamasi,kopek-mamasi,kum,oyuncak" },
 
     { "type": "header", "content": "Grid" },

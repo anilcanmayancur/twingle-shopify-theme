@@ -21,68 +21,135 @@
   box-shadow: 0 1px 0 var(--line), 0 8px 24px rgba(15, 10, 38, 0.04);
 }
 
-/* Topbar */
+/* Topbar — minimal, Petibi lavanta + yüksek okunabilirlik */
 .pet-tb-{{ section.id }} {
-  background: linear-gradient(90deg, #FAF7FF 0%, #F0EBFF 50%, #FAF7FF 100%);
-  color: var(--ink);
+  --tb-fg: #140a22;
+  --tb-muted: rgba(20, 10, 34, 0.62);
+  background: #faf7ff;
+  color: var(--tb-fg);
   font-size: 12.5px;
   font-weight: 500;
+  line-height: 1.45;
   position: relative;
-  border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.09);
 }
 
 .pet-tb-inner-{{ section.id }} {
   max-width: {{ section.settings.max_width }}px;
   margin: 0 auto;
-  padding: 8px 24px;
+  padding: 7px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 20px;
 }
 
 .pet-tb-item-{{ section.id }} {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   text-decoration: none;
-  color: rgba(15, 10, 38, 0.7);
-  transition: color 0.2s ease;
+  color: var(--tb-muted);
+  transition: color 0.15s ease;
   white-space: nowrap;
 }
 
-.pet-tb-item-{{ section.id }}:hover { color: var(--ink); }
+.pet-tb-item-{{ section.id }}:hover { color: var(--tb-fg); }
 .pet-tb-item-{{ section.id }} .pet-tb-ico {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.pet-tb-item-{{ section.id }}.is-promo {
-  color: var(--ink);
-  font-weight: 700;
-  background: #fff;
-  padding: 4px 14px 4px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(124, 58, 237, 0.2);
-  box-shadow: 0 2px 8px -2px rgba(124, 58, 237, 0.15);
+/* Dönen mesaj — düz satır, kutu yok */
+.pet-tb-ticker-{{ section.id }} {
+  flex: 1 1 auto;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  max-width: min(100%, 680px);
+  min-height: 32px;
 }
-
-.pet-tb-item-{{ section.id }}.is-promo .pet-tb-ico {
-  font-size: 15px;
+.pet-tb-promo-{{ section.id }} {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 2px 4px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--tb-fg);
+  transition: opacity 0.15s ease;
+  animation: pet-tb-fade-{{ section.id }} 0.35s ease both;
 }
-
-.pet-tb-item-{{ section.id }}.is-promo b,
-.pet-tb-item-{{ section.id }}.is-promo strong {
+.pet-tb-promo-{{ section.id }}.is-active { display: inline-flex; }
+.pet-tb-promo-{{ section.id }}:hover { opacity: 0.88; }
+.pet-tb-promo-{{ section.id }} .pet-tb-promo-ico {
+  width: auto;
+  height: auto;
+  min-width: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   color: var(--pp);
-  font-weight: 800;
 }
+.pet-tb-promo-{{ section.id }} .pet-tb-promo-ico svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pet-tb-promo-{{ section.id }} .pet-tb-promo-text {
+  min-width: 0;
+  text-align: center;
+}
+.pet-tb-promo-{{ section.id }} .pet-tb-promo-text strong { font-weight: 700; color: var(--pp); }
+
+/* default — tam metin mor vurgu yerine isteğe bağlı sadece strong mor */
+.pet-tb-promo-{{ section.id }}.is-variant-default .pet-tb-promo-text strong { color: var(--pp); }
+
+/* gold slot = vurgulu kampanya (aynı palet, sadece % / ana kelime biraz daha belirgin) */
+.pet-tb-promo-{{ section.id }}.is-variant-gold .pet-tb-promo-ico { color: var(--pp); }
+.pet-tb-promo-{{ section.id }}.is-variant-gold .pet-tb-promo-text strong { color: #5b21b6; font-weight: 700; }
+
+@keyframes pet-tb-fade-{{ section.id }} {
+  from { opacity: 0.65; }
+  to { opacity: 1; }
+}
+
+/* Eski tek satır promo (yedek) */
+.pet-tb-item-{{ section.id }}.is-promo {
+  color: var(--tb-fg);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  background: transparent;
+  padding: 2px 4px;
+  border: none;
+  box-shadow: none;
+}
+.pet-tb-item-{{ section.id }}.is-promo .pet-tb-ico { font-size: 13px; }
+.pet-tb-item-{{ section.id }}.is-promo b,
+.pet-tb-item-{{ section.id }}.is-promo strong { color: var(--pp); font-weight: 700; }
 
 .pet-tb-dot-{{ section.id }} {
   width: 3px; height: 3px; border-radius: 50%;
-  background: rgba(15, 10, 38, 0.2);
+  background: rgba(124, 58, 237, 0.28);
+  flex-shrink: 0;
 }
 
 /* Main */
@@ -185,7 +252,8 @@
   min-width: 0;
 }
 
-.pet-search-input-{{ section.id }}::placeholder { color: var(--muted); }
+.pet-search-input-{{ section.id }}::placeholder { color: var(--body); opacity: 0.85; font-weight: 500; }
+.pet-search-input-{{ section.id }}::-webkit-input-placeholder { color: var(--body); opacity: 0.85; font-weight: 500; }
 
 .pet-search-btn-{{ section.id }} {
   height: 100%;
@@ -229,6 +297,28 @@
 .pet-act-{{ section.id }}:hover {
   background: var(--pp-tint);
   color: var(--pp);
+}
+
+.pet-wl-count-{{ section.id }} {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--pp);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px -2px rgba(123, 63, 242, 0.4);
+  pointer-events: none;
+  letter-spacing: -0.02em;
 }
 
 /* Account dropdown trigger */
@@ -594,18 +684,34 @@
 
 @media screen and (max-width: 1024px) {
   .pet-tb-inner-{{ section.id }} {
-    gap: 14px;
-    padding: 7px 14px;
+    gap: 12px;
+    padding: 8px 14px;
     font-size: 11.5px;
     overflow-x: auto;
-    justify-content: flex-start;
+    justify-content: center;
+    flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
 
   .pet-tb-inner-{{ section.id }}::-webkit-scrollbar { display: none; }
   .pet-tb-item-{{ section.id }} { flex-shrink: 0; white-space: nowrap; }
-  .pet-tb-item-{{ section.id }}.is-promo { padding: 4px 10px 4px 9px; font-size: 11.5px; }
+  .pet-tb-ticker-{{ section.id }} {
+    max-width: 100%;
+    min-height: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .pet-tb-promo-{{ section.id }} {
+    padding: 4px 2px;
+    font-size: 12px;
+    gap: 6px;
+    white-space: normal;
+    max-width: 100%;
+  }
+  .pet-tb-promo-{{ section.id }} .pet-tb-promo-ico { align-self: flex-start; margin-top: 2px; }
+  .pet-tb-promo-{{ section.id }} .pet-tb-promo-ico svg { width: 14px; height: 14px; }
+  .pet-tb-item-{{ section.id }}.is-promo { padding: 3px 4px; font-size: 12px; }
   .pet-tb-item-{{ section.id }}.is-promo .pet-tb-ico { font-size: 13px; }
 
   .pet-search-{{ section.id }},
@@ -849,8 +955,64 @@ html.pet-drawer-locked body { overflow: hidden; }
 
   <div class="pet-tb-{{ section.id }}">
     <div class="pet-tb-inner-{{ section.id }}">
-      {% if section.settings.top_text_1 != blank %}
-        <a href="{{ section.settings.top_link_1 | default: '#' }}" class="pet-tb-item-{{ section.id }} is-promo">
+      {%- liquid
+        assign ticker_raw = section.settings.top_ticker_messages | strip
+        if ticker_raw == blank
+          assign ticker_raw = section.settings.top_text_1
+        endif
+        assign ticker_parts = ticker_raw | newline_to_br | split: '<br />'
+        assign tick_link = section.settings.top_link_1
+        if tick_link == blank
+          assign tick_link = routes.all_products_collection_url
+        endif
+      -%}
+      {% if ticker_raw != blank %}
+        <div
+          class="pet-tb-ticker-{{ section.id }}"
+          id="PetTicker-{{ section.id }}"
+          data-ticker-ms="{{ section.settings.top_ticker_seconds | default: 6 | times: 1000 }}"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {% for seg in ticker_parts %}
+            {%- liquid
+              assign line = seg | strip
+              if line == blank
+                continue
+              endif
+              assign parts = line | split: '|'
+              if parts.size >= 3
+                assign promo_variant = parts[0] | strip
+                assign promo_icon = parts[1] | strip
+                assign promo_text = parts[2] | strip
+              else
+                assign promo_variant = 'default'
+                assign promo_icon = 'truck'
+                assign promo_text = line
+              endif
+            -%}
+            <a href="{{ tick_link }}" class="pet-tb-promo-{{ section.id }} is-variant-{{ promo_variant }}{% if forloop.first %} is-active{% endif %}">
+              <span class="pet-tb-promo-ico" aria-hidden="true">
+                {%- case promo_icon -%}
+                  {%- when 'gift' -%}
+                    <svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                  {%- when 'tag' -%}
+                    <svg viewBox="0 0 24 24"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  {%- when 'star' -%}
+                    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  {%- when 'paw' -%}
+                    <svg viewBox="0 0 24 24"><circle cx="5" cy="9" r="2"/><circle cx="19" cy="9" r="2"/><circle cx="8.5" cy="4.5" r="2"/><circle cx="15.5" cy="4.5" r="2"/><path d="M12 11c-3 0-5 3-5 5.5C7 19 9 20 12 20s5-1 5-3.5C17 14 15 11 12 11z"/></svg>
+                  {%- else -%}
+                    <svg viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+                {%- endcase -%}
+              </span>
+              <span class="pet-tb-promo-text">{{ promo_text }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      {% elsif section.settings.top_text_1 != blank %}
+        <a href="{{ tick_link }}" class="pet-tb-item-{{ section.id }} is-promo">
           {%- if section.settings.top_icon_1 != blank -%}<span class="pet-tb-ico" aria-hidden="true">{{ section.settings.top_icon_1 }}</span>{%- endif -%}
           <span>{{ section.settings.top_text_1 }}</span>
         </a>
@@ -906,8 +1068,9 @@ html.pet-drawer-locked body { overflow: hidden; }
     </div>
 
     <div class="pet-actions-{{ section.id }}">
-      <a href="/pages/wishlist" class="pet-act-{{ section.id }}" aria-label="Favoriler">
+      <a href="/pages/wishlist" class="pet-act-{{ section.id }} pet-act-wl-{{ section.id }}" aria-label="Favoriler">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="twinkle-wishlist-badge" class="pet-wl-count-{{ section.id }}" aria-hidden="true" style="display:none;">0</span>
       </a>
 
       {% if customer %}
@@ -1243,6 +1406,43 @@ html.pet-drawer-locked body { overflow: hidden; }
 })();
 </script>
 
+<script>
+(function() {
+  var root = document.getElementById('PetTicker-{{ section.id }}');
+  if (!root) return;
+  var lines = root.querySelectorAll('.pet-tb-promo-{{ section.id }}');
+  if (lines.length < 2) return;
+  var ms = parseInt(root.getAttribute('data-ticker-ms'), 10) || 6000;
+  var i = 0;
+  function show(ix) {
+    for (var k = 0; k < lines.length; k++) {
+      lines[k].classList.toggle('is-active', k === ix);
+    }
+  }
+  setInterval(function() {
+    i = (i + 1) % lines.length;
+    show(i);
+  }, ms);
+})();
+
+(function() {
+  var input = document.getElementById('PSearchInput-{{ section.id }}');
+  if (!input) return;
+  var raw = (input.getAttribute('data-ps-trends') || '').trim();
+  if (!raw) return;
+  var hints = raw.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+  if (hints.length < 2) return;
+  var i = 0;
+  var paused = false;
+  input.addEventListener('focus', function(){ paused = true; });
+  input.addEventListener('blur',  function(){ paused = false; });
+  setInterval(function() {
+    if (paused || input.value) return;
+    i = (i + 1) % hints.length;
+    input.setAttribute('placeholder', hints[i]);
+  }, 2400);
+})();</script>
+
 {% schema %}
 {
   "name": "Premium Header",
@@ -1264,10 +1464,27 @@ html.pet-drawer-locked body { overflow: hidden; }
       "default": 1400
     },
     { "type": "header", "content": "Üst Bar" },
-    { "type": "paragraph", "content": "1. öğe promo olarak öne çıkar (altın gradient). 2 ve 3. öğeler hızlı erişim linkleri." },
-    { "type": "text", "id": "top_icon_1", "label": "Promo İkonu", "default": "🎁" },
-    { "type": "text", "id": "top_text_1", "label": "Promo Metni", "default": "İlk siparişe özel %25 hoş geldin indirimi" },
-    { "type": "url", "id": "top_link_1", "label": "Promo Link" },
+    { "type": "paragraph", "content": "Her satır bir mesajdır; üstten alta yazdığınız sırayla tek tek gösterilir (ücretsiz kargo → indirim gibi). En az 2 satır ekleyin. Tek mesaj kalırsa dönüş olmaz." },
+    {
+      "type": "textarea",
+      "id": "top_ticker_messages",
+      "label": "Dönen üst bar mesajları",
+      "info": "Satır başına: variant|ikon|metin. Sıra önemlidir. variant: default | gold (indirim satırı için). İkon: truck | gift | tag | star | paw.",
+      "default": "default|truck|Tüm ürünlerde ücretsiz kargo\ngold|gift|İlk siparişe özel %25 indirim"
+    },
+    {
+      "type": "range",
+      "id": "top_ticker_seconds",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "unit": "sn",
+      "label": "Mesajlar arası süre (sırayla)",
+      "default": 6
+    },
+    { "type": "url", "id": "top_link_1", "label": "Üst bar tıklanınca gidecek link (boşsa tüm ürünler)" },
+    { "type": "text", "id": "top_text_1", "label": "Yedek promo metni", "info": "Dönen mesajlar boşsa kullanılır.", "default": "Tüm ürünlerde ücretsiz kargo" },
+    { "type": "text", "id": "top_icon_1", "label": "Yedek promo emoji (sadece yedek modda)", "default": "🚚" },
     { "type": "text", "id": "top_icon_2", "label": "İkon 2", "default": "📦" },
     { "type": "text", "id": "top_text_2", "label": "Metin 2", "default": "Siparişlerim" },
     { "type": "url", "id": "top_link_2", "label": "Link 2" },
@@ -1279,7 +1496,7 @@ html.pet-drawer-locked body { overflow: hidden; }
     { "type": "text", "id": "logo_emoji", "label": "Logo İkonu", "default": "🐾" },
     { "type": "text", "id": "logo_text", "label": "Logo Metni", "default": "Petibi" },
     { "type": "header", "content": "Arama" },
-    { "type": "text", "id": "search_placeholder", "label": "Placeholder", "default": "Mama, kedi yatağı, şampuan ara..." },
+    { "type": "text", "id": "search_placeholder", "label": "Placeholder", "default": "kedi maması" },
     { "type": "text", "id": "trends", "label": "Popüler Aramalar (virgülle)", "default": "kedi maması, otomatik kum kabı, köpek tasması, kedi yatağı, vitamin, şampuan, kuş yemi" },
     { "type": "header", "content": "Navigasyon" },
     { "type": "link_list", "id": "menu", "label": "Ana Menü" },
