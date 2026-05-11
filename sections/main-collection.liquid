@@ -128,8 +128,68 @@
     overflow: hidden;
     max-height: calc(100vh - 100px);
   }
-  .tw-coll-{{ section.id }}__sidebar-head,
-  .tw-coll-{{ section.id }}__sidebar-foot { display: none; }
+  .tw-coll-{{ section.id }}__sidebar-head { display: none; }
+
+  .tw-coll-{{ section.id }}__sidebar-foot {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    margin-top: 6px;
+    border-top: 1px solid var(--c-line);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: saturate(180%) blur(6px);
+    -webkit-backdrop-filter: saturate(180%) blur(6px);
+    border-radius: 0 0 16px 16px;
+    z-index: 2;
+  }
+  .tw-coll-{{ section.id }}__apply,
+  .tw-coll-{{ section.id }}__reset {
+    flex: 1;
+    padding: 11px 12px;
+    border-radius: var(--c-r-btn);
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: filter 0.18s ease, background 0.15s ease, opacity 0.15s ease, box-shadow 0.18s ease;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    line-height: 1;
+  }
+  .tw-coll-{{ section.id }}__apply {
+    background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
+    color: #fff;
+    box-shadow: 0 6px 18px -10px rgba(123, 63, 242, 0.55);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .tw-coll-{{ section.id }}__apply.is-dirty {
+    opacity: 1;
+    pointer-events: auto;
+    box-shadow: 0 10px 24px -8px rgba(123, 63, 242, 0.45);
+  }
+  .tw-coll-{{ section.id }}__apply.is-dirty:hover { filter: brightness(1.06); }
+  .tw-coll-{{ section.id }}__apply-count {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 6px;
+    padding: 2px 7px;
+    font-size: 11.5px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .tw-coll-{{ section.id }}__reset {
+    background: #fff;
+    color: var(--c-ink);
+    border: 1.5px solid var(--c-line);
+    text-decoration: none;
+  }
+  .tw-coll-{{ section.id }}__reset:hover { background: var(--c-soft); }
 
   .tw-coll-{{ section.id }}__filter-form {
     flex: 1;
@@ -732,37 +792,20 @@
     }
 
     .tw-coll-{{ section.id }}__sidebar-foot {
-      display: flex;
-      gap: 8px;
+      position: sticky;
+      bottom: 0;
       padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
-      border-top: 1px solid var(--c-line);
+      margin-top: 0;
+      border-radius: 0;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       background: #fff;
       flex-shrink: 0;
     }
     .tw-coll-{{ section.id }}__apply,
     .tw-coll-{{ section.id }}__reset {
-      flex: 1;
       padding: 12px;
-      border-radius: var(--c-r-btn);
-      font-size: 13.5px;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-      transition: filter 0.18s ease, background 0.15s ease;
     }
-    .tw-coll-{{ section.id }}__apply {
-      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
-      color: #fff;
-      box-shadow: 0 8px 20px -8px rgba(123, 63, 242, 0.4);
-    }
-    .tw-coll-{{ section.id }}__apply:hover { filter: brightness(1.05); }
-    .tw-coll-{{ section.id }}__reset {
-      background: #fff;
-      color: var(--c-ink);
-      border: 1.5px solid var(--c-line);
-    }
-    .tw-coll-{{ section.id }}__reset:hover { background: var(--c-soft); }
 
     .tw-coll-{{ section.id }}__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -884,7 +927,7 @@
                                     value="{{ filter_value.value }}"
                                     {% if filter_value.active -%}checked{%- endif %}
                                     {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
-                                    onchange="document.getElementById('CollectionFiltersForm-{{ section.id }}').submit();">
+                                    data-tw-filter-input>
                                   <span class="tw-coll-{{ section.id }}__box">
                                     <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                                   </span>
@@ -902,14 +945,14 @@
                                    placeholder="Min ₺"
                                    class="tw-coll-{{ section.id }}__price-input"
                                    {% if filter.min_value.value %}value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"{% endif %}
-                                   onchange="document.getElementById('CollectionFiltersForm-{{ section.id }}').submit();">
+                                   data-tw-filter-input>
                             <span>–</span>
                             <input type="number"
                                    name="{{ filter.max_value.param_name }}"
                                    placeholder="Max ₺"
                                    class="tw-coll-{{ section.id }}__price-input"
                                    {% if filter.max_value.value %}value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"{% endif %}
-                                   onchange="document.getElementById('CollectionFiltersForm-{{ section.id }}').submit();">
+                                   data-tw-filter-input>
                           </div>
                       {% endcase %}
                     </div>
@@ -921,7 +964,13 @@
 
         <div class="tw-coll-{{ section.id }}__sidebar-foot">
           <a href="{{ collection.url }}" class="tw-coll-{{ section.id }}__reset">Temizle</a>
-          <button type="button" class="tw-coll-{{ section.id }}__apply" data-tw-filter-close>Sonuçları Göster</button>
+          <button type="button"
+                  class="tw-coll-{{ section.id }}__apply"
+                  data-tw-filter-apply
+                  data-form="CollectionFiltersForm-{{ section.id }}">
+            <span data-tw-apply-label>Sonuçları Göster</span>
+            <span class="tw-coll-{{ section.id }}__apply-count" data-tw-apply-count hidden></span>
+          </button>
         </div>
       </aside>
 
@@ -1122,6 +1171,67 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && sidebar && sidebar.classList.contains('is-open')) closeDrawer();
   });
+
+  /* ---------- Batch filter: dirty state + apply on click ---------- */
+  var filterForm = root.querySelector('#CollectionFiltersForm-{{ section.id }}');
+  var applyBtn   = root.querySelector('[data-tw-filter-apply]');
+  var applyLbl   = root.querySelector('[data-tw-apply-label]');
+  var applyCount = root.querySelector('[data-tw-apply-count]');
+
+  function serialize(form) {
+    if (!form) return '';
+    var data = new FormData(form);
+    var pairs = [];
+    data.forEach(function(v, k) {
+      if (v !== '' && v !== null && v !== undefined) pairs.push(k + '=' + v);
+    });
+    pairs.sort();
+    return pairs.join('&');
+  }
+  function countSelected(form) {
+    if (!form) return 0;
+    var n = 0;
+    form.querySelectorAll('input[type="checkbox"]').forEach(function(el) { if (el.checked) n++; });
+    form.querySelectorAll('input[type="number"]').forEach(function(el) {
+      if (el.value !== '' && el.value !== null && el.value !== undefined) n++;
+    });
+    return n;
+  }
+
+  if (filterForm && applyBtn) {
+    var initialState = serialize(filterForm);
+
+    function refreshApply() {
+      var current = serialize(filterForm);
+      var dirty = current !== initialState;
+      var total = countSelected(filterForm);
+      applyBtn.classList.toggle('is-dirty', dirty);
+      applyBtn.setAttribute('aria-disabled', dirty ? 'false' : 'true');
+      if (applyLbl) applyLbl.textContent = dirty ? 'Sonuçları Göster' : (total > 0 ? 'Filtreler Uygulandı' : 'Sonuçları Göster');
+      if (applyCount) {
+        if (dirty && total > 0) {
+          applyCount.textContent = total;
+          applyCount.hidden = false;
+        } else {
+          applyCount.hidden = true;
+        }
+      }
+    }
+
+    filterForm.addEventListener('change', refreshApply);
+    filterForm.addEventListener('input', refreshApply);
+    refreshApply();
+
+    applyBtn.addEventListener('click', function() {
+      if (!applyBtn.classList.contains('is-dirty')) {
+        closeDrawer();
+        return;
+      }
+      var sortInput = filterForm.querySelector('input[name="sort_by"]');
+      if (sortInput && !sortInput.value) sortInput.removeAttribute('name');
+      filterForm.submit();
+    });
+  }
 })();
 </script>
 
