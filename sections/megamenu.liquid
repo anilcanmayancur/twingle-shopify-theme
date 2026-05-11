@@ -527,13 +527,35 @@
   .pet-logo-text-{{ section.id }} { font-size: 19px; }
   .pet-logo-mark-{{ section.id }} { width: 34px; height: 34px; font-size: 17px; }
 
-  .pet-actions-{{ section.id }} { gap: 2px; }
+  .pet-actions-{{ section.id }} { gap: 6px; }
   .pet-act-{{ section.id }} { width: 40px; height: 40px; }
 
   .pet-acc-{{ section.id }} {
-    padding: 6px 8px;
+    padding: 0;
+    width: 40px;
     height: 40px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    justify-content: center;
+    gap: 0;
+    color: var(--ink);
   }
+
+  .pet-acc-{{ section.id }}:hover {
+    background: var(--pp-tint);
+    border: none;
+  }
+
+  .pet-acc-icon-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border-radius: 8px;
+    color: var(--ink);
+  }
+
+  .pet-acc-icon-{{ section.id }} svg { width: 20px; height: 20px; }
 
   .pet-acc-text-{{ section.id }} { display: none; }
   .pet-acc-chev-{{ section.id }} { display: none; }
