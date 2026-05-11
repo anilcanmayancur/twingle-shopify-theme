@@ -5,86 +5,117 @@
     background-color: {{ section.settings.bg_color }};
   }
   .twinkle-logo-container-{{ section.id }} {
-    max-width: 1400px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
   }
   .twinkle-logo-title-{{ section.id }} {
     text-align: center;
-    font-size: 28px;
+    font-size: clamp(20px, 2.6vw, 26px);
     font-weight: 700;
-    color: #222222;
-    margin-bottom: 40px;
+    color: #1F1342;
+    margin: 0 0 28px;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
   }
   .twinkle-logo-grid-{{ section.id }} {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 18px 36px;
   }
   .twinkle-logo-item-{{ section.id }} {
-    flex: 0 1 calc(16.666% - 40px);
-    min-width: 120px;
-    display: flex;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    transition: opacity 0.3s ease, transform 0.3s ease;
     text-decoration: none;
+    transition: opacity 0.2s ease, filter 0.3s ease;
+    flex-shrink: 0;
+    {% if section.settings.grayscale %}
+    filter: grayscale(100%);
+    opacity: 0.7;
+    {% endif %}
   }
   .twinkle-logo-item-{{ section.id }}:hover {
-    opacity: 0.7;
-    transform: scale(1.05);
+    opacity: 1;
+    filter: none;
   }
   .twinkle-logo-item-{{ section.id }} img {
-    max-width: 100%;
-    height: auto;
-    max-height: 80px;
+    max-height: {{ section.settings.logo_max_height }}px;
+    width: auto;
+    max-width: {{ section.settings.logo_max_width }}px;
     object-fit: contain;
+    display: block;
     mix-blend-mode: multiply;
   }
-
-  @media screen and (max-width: 991px) {
-    .twinkle-logo-item-{{ section.id }} {
-      flex: 0 1 calc(33.333% - 40px);
-    }
+  .twinkle-logo-placeholder-{{ section.id }} {
+    height: {{ section.settings.logo_max_height }}px;
+    min-width: 96px;
+    padding: 0 14px;
+    background: #F5F3FA;
+    color: #9088A8;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1.5px dashed #DDD6E8;
   }
+
   @media screen and (max-width: 768px) {
     .twinkle-logo-grid-{{ section.id }} {
-      gap: 20px;
+      gap: 14px 24px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: flex-start;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin: 0 -24px;
+      padding: 4px 24px;
     }
-    .twinkle-logo-item-{{ section.id }} {
-      flex: 0 1 calc(50% - 20px);
-      min-width: unset;
-    }
+    .twinkle-logo-grid-{{ section.id }}::-webkit-scrollbar { display: none; }
     .twinkle-logo-item-{{ section.id }} img {
-      max-height: 60px;
+      max-height: {{ section.settings.logo_max_height_mobile }}px;
+    }
+    .twinkle-logo-placeholder-{{ section.id }} {
+      height: {{ section.settings.logo_max_height_mobile }}px;
     }
   }
 {% endstyle %}
 
-<div class="twinkle-logo-list-{{ section.id }}">
+<section class="twinkle-logo-list-{{ section.id }}">
   <div class="twinkle-logo-container-{{ section.id }}">
-    
+
     {% if section.settings.title != blank %}
       <h2 class="twinkle-logo-title-{{ section.id }}">{{ section.settings.title }}</h2>
     {% endif %}
-    
-    <div class="twinkle-logo-grid-{{ section.id }}">
+
+    <div class="twinkle-logo-grid-{{ section.id }}" role="list">
       {% for block in section.blocks %}
-        <a href="{{ block.settings.link | default: '#' }}" class="twinkle-logo-item-{{ section.id }}" {{ block.shopify_attributes }}>
+        {%- assign block_height = block.settings.height_override -%}
+        <a href="{{ block.settings.link | default: '#' }}"
+           class="twinkle-logo-item-{{ section.id }}"
+           role="listitem"
+           {% unless block.settings.link != blank %}aria-disabled="true" tabindex="-1"{% endunless %}
+           {{ block.shopify_attributes }}>
           {% if block.settings.image != blank %}
-            <img src="{{ block.settings.image | img_url: 'master' }}" alt="{{ block.settings.image.alt | default: 'Brand Logo' }}" loading="lazy">
+            <img src="{{ block.settings.image | image_url: width: 400 }}"
+                 alt="{{ block.settings.image.alt | default: 'Brand Logo' }}"
+                 loading="lazy"
+                 width="{{ block.settings.image.width }}"
+                 height="{{ block.settings.image.height }}"
+                 {% if block_height > 0 %}style="max-height: {{ block_height }}px;"{% endif %}>
           {% else %}
-            <div style="width: 120px; height: 60px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999; font-size: 12px; border-radius: 4px;">
-              Logo Seçin
-            </div>
+            <span class="twinkle-logo-placeholder-{{ section.id }}">Logo Seç</span>
           {% endif %}
         </a>
       {% endfor %}
     </div>
 
   </div>
-</div>
+</section>
 
 {% schema %}
 {
@@ -93,14 +124,62 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Section Title",
+      "label": "Bölüm Başlığı",
       "default": "Sattığımız Markalar"
     },
     {
       "type": "color",
       "id": "bg_color",
-      "label": "Background Color",
+      "label": "Arka Plan",
       "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Logo Boyutlandırma"
+    },
+    {
+      "type": "paragraph",
+      "content": "Logo boyutu seçilen yükseklik baz alınarak otomatik korunur. Her logo için ayrıca özel yükseklik girilebilir."
+    },
+    {
+      "type": "range",
+      "id": "logo_max_height",
+      "label": "Logo Yüksekliği (Desktop)",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "logo_max_height_mobile",
+      "label": "Logo Yüksekliği (Mobil)",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "label": "Logo Maks. Genişlik",
+      "min": 60,
+      "max": 220,
+      "step": 10,
+      "unit": "px",
+      "default": 140
+    },
+    {
+      "type": "checkbox",
+      "id": "grayscale",
+      "label": "Gri Tonlama (hover'da renklenir)",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout"
     },
     {
       "type": "range",
@@ -110,7 +189,7 @@
       "step": 5,
       "unit": "px",
       "label": "Padding Top",
-      "default": 50
+      "default": 40
     },
     {
       "type": "range",
@@ -120,7 +199,7 @@
       "step": 5,
       "unit": "px",
       "label": "Padding Bottom",
-      "default": 50
+      "default": 40
     }
   ],
   "blocks": [
@@ -131,12 +210,23 @@
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Logo Image"
+          "label": "Logo Görseli"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Logo Link (Optional)"
+          "label": "Logo Linki (opsiyonel)"
+        },
+        {
+          "type": "range",
+          "id": "height_override",
+          "label": "Özel Yükseklik (opsiyonel)",
+          "info": "0 bırakırsan bölüm varsayılanı kullanılır.",
+          "min": 0,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "default": 0
         }
       ]
     }
