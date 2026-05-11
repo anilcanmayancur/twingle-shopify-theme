@@ -862,7 +862,6 @@
       {% endif %}
 
       <h1 class="tw-coll-{{ section.id }}__title">{{ collection.title }}</h1>
-      <p class="tw-coll-{{ section.id }}__sub"><strong>{{ collection.products_count }}</strong> ürün</p>
 
       {% if section.settings.show_description and collection.description != blank %}
         <p class="tw-coll-{{ section.id }}__desc">{{ collection.description | strip_html | truncate: 240 }}</p>
