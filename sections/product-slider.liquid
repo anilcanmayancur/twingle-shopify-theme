@@ -40,25 +40,43 @@
 /* HEADER */
 .pet-ps-header-{{ section.id }} {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   gap: 16px;
 }
 
+.pet-ps-title-wrap-{{ section.id }} {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
 .pet-ps-title-{{ section.id }} {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--pet-ink);
   margin: 0;
   letter-spacing: -0.025em;
-  line-height: 1.2;
+  line-height: 1.15;
+}
+
+.pet-ps-count-{{ section.id }} {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--pet-mute);
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 @media (min-width: 750px) {
   .pet-ps-title-{{ section.id }} {
-    font-size: clamp(22px, 2.4vw, {{ section.settings.title_size }}px);
+    font-size: clamp(20px, 1.9vw, {{ section.settings.title_size }}px);
     line-height: 1.15;
+  }
+  .pet-ps-count-{{ section.id }} {
+    font-size: 13px;
   }
 }
 
@@ -75,9 +93,9 @@
 }
 
 .pet-ps-nav-btn-{{ section.id }} {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   background: var(--pet-card);
   border: 1.5px solid var(--pet-line-strong);
   color: var(--pet-ink);
@@ -90,8 +108,8 @@
 }
 
 .pet-ps-nav-btn-{{ section.id }} svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   stroke: currentColor;
   fill: none;
   stroke-width: 2.4;
@@ -165,13 +183,13 @@
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-width: none;
-  padding: 4px 0 16px;
+  padding: 4px 0 12px;
   -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 750px) {
   .pet-ps-track-{{ section.id }} {
-    gap: 14px;
+    gap: 12px;
   }
 }
 
@@ -179,31 +197,38 @@
   display: none;
 }
 
-/* MOBİL: 2.4 kart - daha küçük görsel */
+/* MOBİL: 2.5 kart - daha kompakt */
 .pet-ps-slide-{{ section.id }} {
-  flex: 0 0 calc((100% - 24px) / 2.4);
+  flex: 0 0 calc((100% - 25px) / 2.5);
   scroll-snap-align: start;
   min-width: 0;
 }
 
-/* TABLET: 3 kart */
+/* SMALL TABLET: 3 kart */
 @media (min-width: 540px) {
   .pet-ps-slide-{{ section.id }} {
     flex: 0 0 calc((100% - 20px) / 3);
   }
 }
 
-/* TABLET-DESKTOP geçiş: 3 kart */
+/* TABLET: 4 kart */
 @media (min-width: 750px) {
   .pet-ps-slide-{{ section.id }} {
-    flex: 0 0 calc((100% - 28px) / 3);
+    flex: 0 0 calc((100% - 36px) / 4);
   }
 }
 
-/* DESKTOP: 4 kart */
+/* DESKTOP: 5 kart (kompakt görünüm) */
 @media (min-width: 1024px) {
   .pet-ps-slide-{{ section.id }} {
-    flex: 0 0 calc((100% - 42px) / 4);
+    flex: 0 0 calc((100% - 48px) / 5);
+  }
+}
+
+/* WIDE DESKTOP: 6 kart */
+@media (min-width: 1440px) {
+  .pet-ps-slide-{{ section.id }} {
+    flex: 0 0 calc((100% - 60px) / 6);
   }
 }
 
@@ -223,7 +248,87 @@
   transform: translateY(-2px);
 }
 
-/* Ürün kartı içindeki görsel ve metin boyutlarını mobil için küçült */
+/* Kart içi alanları kompakt hale getir */
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-card {
+  border-radius: 12px;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-image-wrap {
+  padding: 16px !important;
+  background-color: var(--pet-image-bg);
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-info {
+  padding: 12px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-vendor {
+  font-size: 9.5px !important;
+  margin-bottom: 4px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-title {
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+  font-weight: 600 !important;
+  margin: 0 0 6px 0 !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-reviews {
+  margin-bottom: 8px !important;
+  gap: 4px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-stars {
+  font-size: 12px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-review-count {
+  font-size: 10.5px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-prices {
+  margin-bottom: 10px !important;
+  gap: 6px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-price-current {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-price-compare {
+  font-size: 11.5px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-add-btn {
+  padding: 9px 10px !important;
+  font-size: 12.5px !important;
+  border-radius: 8px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-badges {
+  top: 8px !important;
+  left: 8px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-badge {
+  padding: 3px 8px !important;
+  font-size: 10px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-wishlist {
+  top: 8px !important;
+  right: 8px !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.pet-ps-slide-{{ section.id }} .forspaceon-pc-wishlist svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
 .pet-ps-slide-{{ section.id }} img {
   width: 100%;
   height: auto;
@@ -231,36 +336,28 @@
 }
 
 @media (max-width: 749px) {
-  /* Product card içindeki başlık/fiyat mobil küçük */
-  .pet-ps-slide-{{ section.id }} h2,
-  .pet-ps-slide-{{ section.id }} h3,
-  .pet-ps-slide-{{ section.id }} h4,
-  .pet-ps-slide-{{ section.id }} .product-card__title,
-  .pet-ps-slide-{{ section.id }} .card__heading,
-  .pet-ps-slide-{{ section.id }} [class*="title"] {
-    font-size: 12.5px !important;
-    line-height: 1.35 !important;
-    font-weight: 600;
+  .pet-ps-slide-{{ section.id }} .forspaceon-pc-info {
+    padding: 10px !important;
   }
-
-  .pet-ps-slide-{{ section.id }} .price,
-  .pet-ps-slide-{{ section.id }} .product-card__price,
-  .pet-ps-slide-{{ section.id }} [class*="price"]:not([class*="container"]) {
-    font-size: 13px !important;
-    font-weight: 700;
-  }
-
-  .pet-ps-slide-{{ section.id }} button,
-  .pet-ps-slide-{{ section.id }} .button {
+  .pet-ps-slide-{{ section.id }} .forspaceon-pc-title {
     font-size: 12px !important;
-    padding: 8px 10px !important;
+    margin-bottom: 4px !important;
   }
-
-  /* Görsel kapsayıcısını küçük tutmak için */
-  .pet-ps-slide-{{ section.id }} .product-card__media,
-  .pet-ps-slide-{{ section.id }} [class*="media"],
-  .pet-ps-slide-{{ section.id }} [class*="image"] {
-    border-radius: 10px;
+  .pet-ps-slide-{{ section.id }} .forspaceon-pc-price-current {
+    font-size: 14px !important;
+  }
+  .pet-ps-slide-{{ section.id }} .forspaceon-pc-price-compare {
+    font-size: 10.5px !important;
+  }
+  .pet-ps-slide-{{ section.id }} .forspaceon-pc-add-btn {
+    padding: 8px 10px !important;
+    font-size: 11.5px !important;
+  }
+  .pet-ps-slide-{{ section.id }} .forspaceon-pc-image-wrap {
+    padding: 12px !important;
+  }
+  .pet-ps-slide-{{ section.id }} .forspaceon-pc-reviews {
+    margin-bottom: 6px !important;
   }
 }
 
@@ -383,7 +480,14 @@
   <div class="pet-ps-container-{{ section.id }}">
 
     <div class="pet-ps-header-{{ section.id }}">
-      <h2 class="pet-ps-title-{{ section.id }}">{{ section.settings.title }}</h2>
+      <div class="pet-ps-title-wrap-{{ section.id }}">
+        <h2 class="pet-ps-title-{{ section.id }}">{{ section.settings.title }}</h2>
+        {% if section.settings.show_count and section.settings.collection != blank and section.settings.collection.products_count > 0 %}
+          {%- assign visible_count = section.settings.collection.products_count -%}
+          {%- if visible_count > section.settings.limit -%}{%- assign visible_count = section.settings.limit -%}{%- endif -%}
+          <span class="pet-ps-count-{{ section.id }}">{{ visible_count }} ürün</span>
+        {% endif %}
+      </div>
 
       <div class="pet-ps-actions-{{ section.id }}">
         {% if section.settings.show_nav_buttons %}
@@ -532,19 +636,20 @@
 
     { "type": "header", "content": "Header" },
     { "type": "text", "id": "title", "label": "Section Title", "default": "Çok Satanlar" },
-    { "type": "range", "id": "title_size", "min": 22, "max": 40, "step": 2, "unit": "px", "label": "Desktop Title Size", "default": 28 },
+    { "type": "range", "id": "title_size", "min": 18, "max": 36, "step": 1, "unit": "px", "label": "Desktop Title Size", "default": 24 },
+    { "type": "checkbox", "id": "show_count", "label": "Ürün Sayısı Göster (başlık yanında)", "default": true },
     { "type": "text", "id": "btn_label", "label": "View All Button Label", "default": "Tümünü Gör" },
 
     { "type": "header", "content": "Slider" },
     { "type": "collection", "id": "collection", "label": "Select Collection" },
-    { "type": "range", "id": "limit", "min": 4, "max": 24, "step": 1, "label": "Maximum Products", "default": 12 },
+    { "type": "range", "id": "limit", "min": 4, "max": 24, "step": 1, "label": "Maximum Products", "default": 10 },
     { "type": "checkbox", "id": "show_nav_buttons", "label": "Prev/Next Butonları", "default": true },
     { "type": "checkbox", "id": "show_pagination", "label": "Mobile Dots", "default": true },
 
     { "type": "header", "content": "Spacing" },
     { "type": "range", "id": "max_width", "min": 1000, "max": 1800, "step": 50, "unit": "px", "label": "Max Width", "default": 1300 },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 5, "unit": "px", "label": "Padding Top", "default": 50 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 5, "unit": "px", "label": "Padding Bottom", "default": 50 }
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 2, "unit": "px", "label": "Padding Top", "default": 30 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 2, "unit": "px", "label": "Padding Bottom", "default": 30 }
   ],
   "presets": [
     { "name": "Pet Product Slider" }
