@@ -100,46 +100,44 @@
 .del-ico { width: 26px; height: 26px; border-radius: 7px; background: var(--p1); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
 .del-row strong { color: var(--g900); font-weight: 700; }
 
-/* === Top shipping highlight (under price) === */
-.ship-hl {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 14px;
-  margin-top: 10px;
-  padding: 10px 12px;
-  background: var(--p1);
-  border: 1px solid #E0D7FE;
-  border-radius: 10px;
-}
-.ship-hl-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--p4); line-height: 1.3; }
-.ship-hl-item .shi-ico { font-size: 15px; flex-shrink: 0; line-height: 1; }
-.ship-hl-item .shi-text strong { font-weight: 700; color: var(--p4); }
-.ship-hl-item .shi-d { color: var(--p3); font-weight: 500; }
-
 /* === Cart info (below buy button) === */
 .cart-info {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--g200);
   font-size: 12.5px;
   color: var(--g600);
   line-height: 1.4;
 }
-.ci-row { display: flex; align-items: center; gap: 9px; }
-.ci-ico {
-  width: 20px; height: 20px; border-radius: 6px;
-  background: var(--g100);
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 11px; color: var(--g600); flex-shrink: 0;
+.cart-info .ci-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
 }
-.ci-ico.ci-ok {
+.cart-info .ci-ico {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--p1);
+  color: var(--p);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.cart-info .ci-ico--ok {
   background: var(--green1);
-  color: #065F46;
-  font-weight: 800;
+  color: #047857;
 }
-.ci-text strong { color: var(--g900); font-weight: 700; }
-.ci-h { color: var(--red); font-weight: 700; }
+.cart-info .ci-text { min-width: 0; }
+.cart-info .ci-text strong { color: var(--g900); font-weight: 700; }
+.cart-info .ci-d { color: var(--g500); }
+.cart-info .ci-h { color: var(--red); font-weight: 700; }
 
 /* === Slim trust strip & payment === */
 .sec-trust { padding-top: 4px; }
@@ -221,10 +219,8 @@
   .del-row { font-size: 12px; gap: 8px; }
   .del-ico { width: 22px; height: 22px; font-size: 11px; border-radius: 6px; }
 
-  .ship-hl { grid-template-columns: 1fr; gap: 6px; padding: 9px 11px; }
-  .ship-hl-item { font-size: 11.5px; }
-  .cart-info { font-size: 12px; gap: 6px; margin-top: 9px; }
-  .ci-ico { width: 18px; height: 18px; font-size: 10px; }
+  .cart-info { font-size: 12px; gap: 9px; margin-top: 12px; padding-top: 12px; }
+  .cart-info .ci-ico { width: 26px; height: 26px; font-size: 13px; border-radius: 7px; }
 
   .trust-strip { grid-template-columns: repeat(2, 1fr); gap: 6px 10px; }
   .ts-lbl { font-size: 11px; }

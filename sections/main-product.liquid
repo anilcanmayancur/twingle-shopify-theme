@@ -41,9 +41,6 @@
             product: product,
             block: block
           -%}
-          {%- if delivery_block -%}
-            {%- render 'product-shipping-highlight', block: delivery_block -%}
-          {%- endif -%}
 
         {%- when 'vet_note' -%}
           {%- render 'product-vet-note', block: block -%}

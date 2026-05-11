@@ -1,24 +1,54 @@
 {%- comment -%}
-  Cart info line (rendered right under buy-buttons).
-  Uses delivery_info block settings (row2 = tahmini teslimat, row4 = stok).
+  Below-cart info block: 4 satır kargo/stok bilgisi.
+  delivery_info block ayarlarından okur. Sıra:
+    row1 = Aynı Gün Kargo
+    row3 = Ücretsiz Kargo & İade
+    row2 = Tahmini Teslimat
+    row4 = Stokta Var
 {%- endcomment -%}
 
-{%- if block.settings.row2_title != blank or block.settings.row4_title != blank -%}
-  <div class="cart-info" aria-live="polite">
-    {%- if block.settings.row2_title != blank -%}
-      <div class="ci-row">
-        <span class="ci-ico" aria-hidden="true">{{ block.settings.row2_icon }}</span>
-        <span class="ci-text"><strong>{{ block.settings.row2_title }}:</strong> {{ block.settings.row2_desc }}</span>
-      </div>
-    {%- endif -%}
-    {%- if block.settings.row4_title != blank -%}
-      <div class="ci-row">
-        <span class="ci-ico ci-ok" aria-hidden="true">✓</span>
-        <span class="ci-text">
-          <strong>{{ block.settings.row4_title }}</strong>
-          {%- if block.settings.row4_highlight != blank -%} <span class="ci-h">— {{ block.settings.row4_highlight }}</span>{%- endif -%}
-        </span>
-      </div>
-    {%- endif -%}
-  </div>
-{%- endif -%}
+<div class="cart-info" aria-live="polite">
+
+  {%- if block.settings.row1_title != blank -%}
+    <div class="ci-row">
+      <span class="ci-ico" aria-hidden="true">{{ block.settings.row1_icon }}</span>
+      <span class="ci-text">
+        <strong>{{ block.settings.row1_title }}</strong>
+        {%- if block.settings.row1_desc != blank -%}<span class="ci-d"> · {{ block.settings.row1_desc }}</span>{%- endif -%}
+      </span>
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.row3_title != blank -%}
+    <div class="ci-row">
+      <span class="ci-ico" aria-hidden="true">{{ block.settings.row3_icon }}</span>
+      <span class="ci-text">
+        <strong>{{ block.settings.row3_title }}</strong>
+        {%- if block.settings.row3_desc != blank -%}<span class="ci-d"> · {{ block.settings.row3_desc }}</span>{%- endif -%}
+      </span>
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.row2_title != blank -%}
+    <div class="ci-row">
+      <span class="ci-ico" aria-hidden="true">{{ block.settings.row2_icon }}</span>
+      <span class="ci-text">
+        <strong>{{ block.settings.row2_title }}:</strong>
+        {%- if block.settings.row2_desc != blank -%} <span class="ci-d">{{ block.settings.row2_desc }}</span>{%- endif -%}
+      </span>
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.row4_title != blank -%}
+    <div class="ci-row ci-row--ok">
+      <span class="ci-ico ci-ico--ok" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span class="ci-text">
+        <strong>{{ block.settings.row4_title }}</strong>
+        {%- if block.settings.row4_highlight != blank -%} <span class="ci-h">— {{ block.settings.row4_highlight }}</span>{%- endif -%}
+      </span>
+    </div>
+  {%- endif -%}
+
+</div>
