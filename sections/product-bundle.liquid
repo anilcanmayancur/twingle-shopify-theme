@@ -84,6 +84,7 @@
       })
       .then(function() {
         petibiShowToast('📦', '{{ section.settings.added_toast }}');
+        document.dispatchEvent(new CustomEvent('twingle:cart:refresh'));
       })
       .catch(function() {
         petibiShowToast('⚠️', '{{ section.settings.error_toast }}');

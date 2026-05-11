@@ -13,11 +13,11 @@
     position: fixed;
     inset: 0;
     z-index: 9998;
-    display: none;
+    visibility: hidden;
     pointer-events: none;
   }
   .twingle-drawer.is-open {
-    display: block;
+    visibility: visible;
     pointer-events: auto;
   }
   .twingle-drawer__backdrop {
@@ -25,10 +25,13 @@
     inset: 0;
     background: rgba(20, 14, 40, 0.55);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
     cursor: pointer;
+    will-change: opacity;
   }
   .twingle-drawer.is-open .twingle-drawer__backdrop { opacity: 1; }
+  html.twingle-cart-locked { overflow: hidden; }
+  html.twingle-cart-locked body { overflow: hidden; }
   .twingle-drawer__panel {
     position: absolute;
     top: 0;
@@ -38,13 +41,15 @@
     max-width: 420px;
     background: #fff;
     box-shadow: -16px 0 48px -12px rgba(20, 14, 40, 0.25);
-    transform: translateX(100%);
-    transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform: translate3d(100%, 0, 0);
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+    contain: layout paint;
     display: flex;
     flex-direction: column;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
   }
-  .twingle-drawer.is-open .twingle-drawer__panel { transform: translateX(0); }
+  .twingle-drawer.is-open .twingle-drawer__panel { transform: translate3d(0, 0, 0); }
   @media (max-width: 480px) {
     .twingle-drawer__panel { max-width: 100%; }
   }
@@ -297,7 +302,7 @@
     <header class="twingle-drawer__header">
       <h3 id="TwingleCartDrawerTitle" class="twingle-drawer__title">
         Sepetim
-        <span class="twingle-drawer__count" data-twingle-drawer-count>0</span>
+        <span class="twingle-drawer__count" data-twingle-drawer-count>{{ cart.item_count }}</span>
       </h3>
       <button type="button" class="twingle-drawer__close" data-twingle-drawer-close aria-label="Sepeti kapat">
         <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -305,7 +310,7 @@
     </header>
 
     <div class="twingle-drawer__body" data-twingle-drawer-body>
-      <div class="twingle-drawer__empty" data-twingle-drawer-empty hidden>
+      <div class="twingle-drawer__empty" data-twingle-drawer-empty {% if cart.item_count > 0 %}hidden{% endif %}>
         <span class="twingle-drawer__empty-icon">
           <svg viewBox="0 0 24 24"><path d="M3 3h2l2.4 12.5a2 2 0 0 0 2 1.5h9.2a2 2 0 0 0 2-1.5L23 7H6"/><circle cx="9" cy="20" r="1"/><circle cx="19" cy="20" r="1"/></svg>
         </span>
@@ -313,13 +318,44 @@
         <p class="twingle-drawer__empty-desc">Premium ürünleri keşfet ve sevdiklerini sepete ekle.</p>
         <a href="{{ routes.all_products_collection_url | default: '/collections/all' }}" class="twingle-drawer__empty-cta" data-twingle-drawer-close>Alışverişe Başla</a>
       </div>
-      <ul class="twingle-drawer__items" data-twingle-drawer-items></ul>
+      <ul class="twingle-drawer__items" data-twingle-drawer-items>
+        {%- for item in cart.items -%}
+          <li class="twingle-drawer__item" data-key="{{ item.key }}">
+            {%- if item.image -%}
+              <img class="twingle-drawer__item-img" src="{{ item.image | image_url: width: 128 }}" alt="{{ item.product.title | escape }}" loading="lazy" width="64" height="64">
+            {%- else -%}
+              <div class="twingle-drawer__item-img"></div>
+            {%- endif -%}
+            <div class="twingle-drawer__item-info">
+              <a href="{{ item.url }}" class="twingle-drawer__item-title">{{ item.product.title }}</a>
+              {%- if item.variant.title != 'Default Title' and item.variant.title != blank -%}
+                <span class="twingle-drawer__item-variant">{{ item.variant.title }}</span>
+              {%- endif -%}
+              <div class="twingle-drawer__item-qty">
+                <button type="button" class="twingle-drawer__qty-btn" data-action="dec" aria-label="Azalt">−</button>
+                <span class="twingle-drawer__qty-val">{{ item.quantity }}</span>
+                <button type="button" class="twingle-drawer__qty-btn" data-action="inc" aria-label="Arttır">+</button>
+              </div>
+            </div>
+            <div class="twingle-drawer__item-side">
+              <span class="twingle-drawer__item-price">{{ item.final_line_price | money }}</span>
+              {%- if item.original_line_price > item.final_line_price -%}
+                <span class="twingle-drawer__item-compare">{{ item.original_line_price | money }}</span>
+              {%- endif -%}
+              <button type="button" class="twingle-drawer__item-remove" data-action="remove" aria-label="Kaldır">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                Kaldır
+              </button>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
     </div>
 
-    <footer class="twingle-drawer__footer" data-twingle-drawer-footer hidden>
+    <footer class="twingle-drawer__footer" data-twingle-drawer-footer {% if cart.item_count == 0 %}hidden{% endif %}>
       <div class="twingle-drawer__summary">
         <span class="twingle-drawer__summary-label">Ara Toplam</span>
-        <span class="twingle-drawer__summary-total" data-twingle-drawer-total>0,00 ₺</span>
+        <span class="twingle-drawer__summary-total" data-twingle-drawer-total>{{ cart.total_price | money }}</span>
       </div>
       <p class="twingle-drawer__shipping-note">Kargo & vergiler ödeme adımında hesaplanır.</p>
       <div class="twingle-drawer__actions">
@@ -360,19 +396,22 @@
   var footerEl = drawer.querySelector('[data-twingle-drawer-footer]');
   var totalEl = drawer.querySelector('[data-twingle-drawer-total]');
   var lastFocus = null;
+  var cartIsFresh = true;
 
   function openDrawer() {
     lastFocus = document.activeElement;
     drawer.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    refresh();
+    document.documentElement.classList.add('twingle-cart-locked');
+    if (!cartIsFresh) {
+      refresh();
+    }
   }
 
   function closeDrawer() {
     drawer.classList.remove('is-open');
     drawer.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    document.documentElement.classList.remove('twingle-cart-locked');
     if (lastFocus && typeof lastFocus.focus === 'function') {
       try { lastFocus.focus(); } catch (e) {}
     }
@@ -466,7 +505,11 @@
     drawer.classList.add('is-loading');
     return fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
       .then(function (r) { return r.json(); })
-      .then(function (cart) { render(cart); return cart; })
+      .then(function (cart) {
+        render(cart);
+        cartIsFresh = true;
+        return cart;
+      })
       .catch(function () {})
       .finally(function () { drawer.classList.remove('is-loading'); });
   }
@@ -481,6 +524,7 @@
       .then(function (r) { return r.json(); })
       .then(function (cart) {
         render(cart);
+        cartIsFresh = true;
         document.dispatchEvent(new CustomEvent('twingle:cart:updated', { detail: { cart: cart } }));
         return cart;
       })
@@ -506,11 +550,17 @@
     changeLine(key, next);
   });
 
-  document.addEventListener('twingle:cart:added', function () {
+  function invalidateCart() {
+    cartIsFresh = false;
     if (drawer.classList.contains('is-open')) refresh();
-  });
-
+  }
+  document.addEventListener('twingle:cart:added', invalidateCart);
+  document.addEventListener('twingle:cart:refresh', invalidateCart);
   document.addEventListener('twingle:cart:open', function () { openDrawer(); });
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) cartIsFresh = false;
+  });
 
   window.twingleCart = { open: openDrawer, close: closeDrawer, refresh: refresh };
 })();
