@@ -643,6 +643,12 @@ html.pet-drawer-locked { overflow: hidden; }
 html.pet-drawer-locked body { overflow: hidden; }
 
 .pet-drawer-{{ section.id }} {
+  --pp: {{ section.settings.primary_color }};
+  --pp-tint: #F5F3FF;
+  --ink: #0F0A26;
+  --muted: #8B82A0;
+  --line: #ECE9F5;
+  --soft: #F8F7FB;
   position: fixed; top: 0; left: 0;
   width: 320px; max-width: 85vw; height: 100dvh;
   background: #fff; z-index: 9999;
@@ -725,28 +731,29 @@ html.pet-drawer-locked body { overflow: hidden; }
 .pet-db-link-{{ section.id }}:hover { color: var(--pp); }
 .pet-db-link-{{ section.id }}.is-hl { color: #DC2626; }
 
-/* Drawer account: minimal greeting + 2 equal buttons */
-.pet-db-acc {
-  margin: 4px 0 16px;
-  padding: 0 0 14px;
-  border-bottom: 1px solid var(--line);
+/* Drawer account: greeting + 2 equal buttons */
+.pet-db-acc-{{ section.id }} {
+  margin: 4px 0 18px;
+  padding: 14px;
+  background: var(--soft, #F8F7FB);
+  border-radius: 12px;
 }
-.pet-db-acc-title {
-  margin: 0 0 10px;
-  font-size: 12.5px;
+.pet-db-acc-title-{{ section.id }} {
+  margin: 0 0 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--muted, #8B82A0);
   text-align: center;
   line-height: 1.35;
 }
-.pet-db-acc-title strong { color: var(--ink); font-weight: 800; }
-.pet-db-acc-actions {
+.pet-db-acc-title-{{ section.id }} strong { color: var(--ink, #0F0A26); font-weight: 800; }
+.pet-db-acc-actions-{{ section.id }} {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
-.pet-db-btn {
-  height: 42px;
+.pet-db-btn-{{ section.id }} {
+  height: 44px;
   padding: 0 12px;
   border-radius: 10px;
   font-size: 13.5px;
@@ -754,22 +761,26 @@ html.pet-drawer-locked body { overflow: hidden; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
-  transition: filter 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  text-decoration: none !important;
+  transition: filter 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.15s ease;
   box-sizing: border-box;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: 1;
 }
-.pet-db-btn--primary {
-  background: var(--pp);
-  color: #fff;
-  border: 1.5px solid var(--pp);
+.pet-db-btn-{{ section.id }}--primary {
+  background: {{ section.settings.primary_color }};
+  color: #ffffff !important;
+  border: 1.5px solid {{ section.settings.primary_color }};
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.18);
 }
-.pet-db-btn--primary:hover { filter: brightness(1.06); }
-.pet-db-btn--ghost {
-  background: #fff;
-  color: var(--ink);
-  border: 1.5px solid var(--line);
+.pet-db-btn-{{ section.id }}--primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.pet-db-btn-{{ section.id }}--ghost {
+  background: #ffffff;
+  color: var(--ink, #0F0A26) !important;
+  border: 1.5px solid var(--line, #ECE9F5);
 }
-.pet-db-btn--ghost:hover { border-color: var(--pp); color: var(--pp); }
+.pet-db-btn-{{ section.id }}--ghost:hover { border-color: {{ section.settings.primary_color }}; color: {{ section.settings.primary_color }} !important; }
 </style>
 
 <header class="pet-h-{{ section.id }}" id="PetH-{{ section.id }}">
@@ -1079,19 +1090,19 @@ html.pet-drawer-locked body { overflow: hidden; }
   <div class="pet-db-{{ section.id }}">
 
     {%- if customer -%}
-      <div class="pet-db-acc" role="region" aria-label="Hesap">
-        <p class="pet-db-acc-title">Merhaba, <strong>{{ customer.first_name | default: customer.email | truncate: 18 }}</strong> 👋</p>
-        <div class="pet-db-acc-actions">
-          <a href="{{ routes.account_url }}" class="pet-db-btn pet-db-btn--primary">Hesabım</a>
-          <a href="{{ routes.account_logout_url }}" class="pet-db-btn pet-db-btn--ghost">Çıkış</a>
+      <div class="pet-db-acc-{{ section.id }}" role="region" aria-label="Hesap">
+        <p class="pet-db-acc-title-{{ section.id }}">Merhaba, <strong>{{ customer.first_name | default: customer.email | truncate: 18 }}</strong> 👋</p>
+        <div class="pet-db-acc-actions-{{ section.id }}">
+          <a href="{{ routes.account_url }}" class="pet-db-btn-{{ section.id }} pet-db-btn-{{ section.id }}--primary">Hesabım</a>
+          <a href="{{ routes.account_logout_url }}" class="pet-db-btn-{{ section.id }} pet-db-btn-{{ section.id }}--ghost">Çıkış</a>
         </div>
       </div>
     {%- else -%}
-      <div class="pet-db-acc" role="region" aria-label="Giriş yap veya kayıt ol">
-        <p class="pet-db-acc-title">👋 Hoş geldin! Giriş yap veya üye ol</p>
-        <div class="pet-db-acc-actions">
-          <a href="{{ routes.account_login_url }}" class="pet-db-btn pet-db-btn--primary">Giriş Yap</a>
-          <a href="{{ routes.account_register_url }}" class="pet-db-btn pet-db-btn--ghost">Kayıt Ol</a>
+      <div class="pet-db-acc-{{ section.id }}" role="region" aria-label="Giriş yap veya kayıt ol">
+        <p class="pet-db-acc-title-{{ section.id }}">👋 Hoş geldin! Giriş yap veya üye ol</p>
+        <div class="pet-db-acc-actions-{{ section.id }}">
+          <a href="{{ routes.account_login_url }}" class="pet-db-btn-{{ section.id }} pet-db-btn-{{ section.id }}--primary">Giriş Yap</a>
+          <a href="{{ routes.account_register_url }}" class="pet-db-btn-{{ section.id }} pet-db-btn-{{ section.id }}--ghost">Kayıt Ol</a>
         </div>
       </div>
     {%- endif -%}
