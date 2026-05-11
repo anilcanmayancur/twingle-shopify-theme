@@ -36,6 +36,10 @@
     {% endif %}
 
     {{ content_for_header }}
+    <style>
+      body { overflow-x: clip; }
+      @supports not (overflow-x: clip) { body { overflow-x: hidden; } }
+    </style>
   </head>
 
   <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">

@@ -23,17 +23,18 @@
 
 /* Topbar */
 .pet-tb-{{ section.id }} {
-  background: linear-gradient(90deg, #0F0A26 0%, #1A1140 50%, #0F0A26 100%);
-  color: #fff;
+  background: linear-gradient(90deg, #FAF7FF 0%, #F0EBFF 50%, #FAF7FF 100%);
+  color: var(--ink);
   font-size: 12.5px;
   font-weight: 500;
   position: relative;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.1);
 }
 
 .pet-tb-inner-{{ section.id }} {
   max-width: {{ section.settings.max_width }}px;
   margin: 0 auto;
-  padding: 9px 24px;
+  padding: 8px 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,12 +46,12 @@
   align-items: center;
   gap: 7px;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.78);
-  transition: color 0.2s ease, transform 0.2s ease;
+  color: rgba(15, 10, 38, 0.7);
+  transition: color 0.2s ease;
   white-space: nowrap;
 }
 
-.pet-tb-item-{{ section.id }}:hover { color: #fff; }
+.pet-tb-item-{{ section.id }}:hover { color: var(--ink); }
 .pet-tb-item-{{ section.id }} .pet-tb-ico {
   font-size: 14px;
   line-height: 1;
@@ -60,30 +61,28 @@
 }
 
 .pet-tb-item-{{ section.id }}.is-promo {
-  color: #fff;
+  color: var(--ink);
   font-weight: 700;
-  background: linear-gradient(90deg, rgba(245, 158, 11, 0.18), rgba(124, 58, 237, 0.18));
-  padding: 5px 12px 5px 10px;
+  background: #fff;
+  padding: 4px 14px 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  box-shadow: 0 2px 8px -2px rgba(124, 58, 237, 0.15);
 }
 
 .pet-tb-item-{{ section.id }}.is-promo .pet-tb-ico {
   font-size: 15px;
-  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5));
 }
 
-.pet-tb-item-{{ section.id }}.is-promo b {
-  background: linear-gradient(90deg, #FCD34D, #F59E0B);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+.pet-tb-item-{{ section.id }}.is-promo b,
+.pet-tb-item-{{ section.id }}.is-promo strong {
+  color: var(--pp);
   font-weight: 800;
 }
 
 .pet-tb-dot-{{ section.id }} {
   width: 3px; height: 3px; border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(15, 10, 38, 0.2);
 }
 
 /* Main */
