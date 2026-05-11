@@ -1,21 +1,28 @@
-<div class="petibi-wrap">
+<div class="petibi-wrap ptabs-{{ section.id }}">
 
-  <div class="tabs" id="petibiTabNav">
-    <div class="tab act" onclick="petibiSwitchTab('desc')">{{ section.settings.tab1_label }}</div>
-    <div class="tab" onclick="petibiSwitchTab('nut')">{{ section.settings.tab2_label }}</div>
-    <div class="tab" onclick="petibiSwitchTab('rvw')">{{ section.settings.tab3_label }} ({{ section.settings.review_count }})</div>
-    <div class="tab" onclick="petibiSwitchTab('faq')">{{ section.settings.tab4_label }}</div>
+  <div class="tabs" id="petibiTabNav" role="tablist">
+    <button type="button" class="tab act" role="tab" aria-selected="true" onclick="petibiSwitchTab('desc')">{{ section.settings.tab1_label }}</button>
+    <button type="button" class="tab" role="tab" aria-selected="false" onclick="petibiSwitchTab('nut')">{{ section.settings.tab2_label }}</button>
+    <button type="button" class="tab" role="tab" aria-selected="false" onclick="petibiSwitchTab('rvw')">{{ section.settings.tab3_label }} <span class="tab-count">{{ section.settings.review_count }}</span></button>
+    <button type="button" class="tab" role="tab" aria-selected="false" onclick="petibiSwitchTab('faq')">{{ section.settings.tab4_label }}</button>
   </div>
 
-  <div class="tc act" id="petibiTab-desc">
-    <p class="desc-p">{{ product.description }}</p>
+  <div class="tc act" id="petibiTab-desc" role="tabpanel">
+    {% if product.description != blank %}
+      <div class="desc-p rte">{{ product.description }}</div>
+    {% endif %}
     {% if section.settings.description_features != blank %}
       <div class="feat-grid2">
         {% assign features = section.settings.description_features | newline_to_br | split: '<br />' %}
         {% for feat in features %}
           {% assign feat_clean = feat | strip %}
           {% if feat_clean != blank %}
-            <div class="fi"><span class="fc">✓</span>{{ feat_clean }}</div>
+            <div class="fi">
+              <span class="fc" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span class="fi-txt">{{ feat_clean }}</span>
+            </div>
           {% endif %}
         {% endfor %}
       </div>
@@ -114,14 +121,16 @@
     {% endif %}
   </div>
 
-  <div class="tc" id="petibiTab-faq">
+  <div class="tc" id="petibiTab-faq" role="tabpanel">
     {% for block in section.blocks %}
       {% if block.type == 'faq_item' %}
         <div class="faq-item" {{ block.shopify_attributes }}>
-          <div class="faq-q" onclick="petibiToggleFaq(this)">
-            {{ block.settings.question }}
-            <span class="far">▾</span>
-          </div>
+          <button type="button" class="faq-q" onclick="petibiToggleFaq(this)" aria-expanded="false">
+            <span>{{ block.settings.question }}</span>
+            <span class="far" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </button>
           <div class="faq-a">{{ block.settings.answer }}</div>
         </div>
       {% endif %}
@@ -131,68 +140,273 @@
 </div>
 
 <style>
-  .tabs { border-bottom: 1.5px solid var(--g200); display: flex; overflow-x: auto; margin-top: 8px; margin-bottom: 20px; }
-  .tab { padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--g500); border-bottom: 2px solid transparent; margin-bottom: -1.5px; transition: all .15s; white-space: nowrap; }
-  .tab.act { color: var(--p); border-bottom-color: var(--p); }
-  .tab:hover { color: var(--p); }
-  .tc { display: none; }
-  .tc.act { display: block; }
-  .desc-p { font-size: 13px; color: var(--g600); line-height: 1.7; margin-bottom: 14px; }
-  .feat-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 14px; }
-  .fi { display: flex; align-items: flex-start; gap: 6px; font-size: 13px; color: var(--g700); }
-  .fc { width: 17px; height: 17px; background: var(--green1); color: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-  .ng { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .nc { background: var(--g50); border: 1px solid var(--g200); border-radius: 9px; padding: 12px; }
-  .nc h4 { font-size: 10px; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
-  .nr { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--g100); font-size: 12px; }
-  .nr:last-child { border-bottom: none; }
-  .nr .v { font-weight: 700; color: var(--p); }
-  .rv-sum { display: grid; grid-template-columns: 90px 1fr; gap: 18px; background: var(--g50); border: 1px solid var(--g200); border-radius: 11px; padding: 14px; margin-bottom: 14px; }
-  .rv-big { font-size: 38px; font-weight: 800; color: var(--p); display: block; line-height: 1; text-align: center; }
-  .rv-st { font-size: 15px; color: var(--amber); display: block; text-align: center; margin: 3px 0; }
-  .br { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
-  .br span { font-size: 11px; color: var(--g500); width: 12px; text-align: right; }
-  .bb { flex: 1; height: 6px; background: var(--g200); border-radius: 3px; overflow: hidden; }
-  .bf { height: 100%; background: var(--amber); border-radius: 3px; }
-  .bc2 { font-size: 10px; color: var(--g400); width: 20px; }
-  .rv-card { background: white; border: 1px solid var(--g200); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
-  .rv-head { display: flex; justify-content: space-between; margin-bottom: 7px; }
-  .rv-av { width: 32px; height: 32px; border-radius: 50%; background: var(--p1); color: var(--p); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .rv-nm { font-size: 12px; font-weight: 700; color: var(--g800); }
-  .rv-pet { font-size: 10px; color: var(--g400); }
-  .rv-txt { font-size: 12px; color: var(--g600); line-height: 1.55; margin-bottom: 5px; }
-  .rv-b { font-size: 9px; background: var(--green1); color: #065F46; padding: 2px 6px; border-radius: 7px; font-weight: 600; display: inline-block; margin-right: 3px; }
-  .btn-all-reviews { width: 100%; background: white; border: 1.5px solid var(--g200); padding: 10px; border-radius: 9px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--p); margin-top: 5px; }
-  .faq-item { border-bottom: 1px solid var(--g200); }
-  .faq-q { padding: 12px 0; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; color: var(--g800); }
-  .faq-q:hover { color: var(--p); }
-  .far { font-size: 10px; color: var(--g400); transition: transform .2s; }
-  .far.open { transform: rotate(180deg); }
-  .faq-a { padding: 0 0 12px; font-size: 12px; color: var(--g600); line-height: 1.6; display: none; }
-  .faq-a.open { display: block; }
-  @media(max-width:600px) {
-    .feat-grid2 { grid-template-columns: 1fr; }
-    .ng { grid-template-columns: 1fr; }
-    .rv-sum { grid-template-columns: 1fr; }
+  .ptabs-{{ section.id }} {
+    --pp: var(--p, #7C3AED);
+    --pp-tint: var(--p1, #EDE9FE);
+    --ink: #1F1342;
+    --body: #4B5563;
+    --muted: #6B7280;
+    --line: #ECE9F5;
+    --soft: #FAF7FF;
+    --r-card: 14px;
+    --r-btn: 10px;
+    --r-chip: 8px;
+  }
+
+  /* ---- TAB BAR ---- */
+  .ptabs-{{ section.id }} .tabs {
+    position: relative;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 8px 0 20px;
+    gap: 4px;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .ptabs-{{ section.id }} .tabs::-webkit-scrollbar { display: none; }
+  .ptabs-{{ section.id }} .tab {
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: 12px 16px 13px;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    transition: color .18s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: -1px;
+  }
+  .ptabs-{{ section.id }} .tab::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 2.5px;
+    border-radius: 3px 3px 0 0;
+    background: transparent;
+    transition: background .2s ease;
+  }
+  .ptabs-{{ section.id }} .tab:hover { color: var(--ink); }
+  .ptabs-{{ section.id }} .tab.act { color: var(--pp); }
+  .ptabs-{{ section.id }} .tab.act::after { background: var(--pp); }
+  .ptabs-{{ section.id }} .tab-count {
+    background: var(--soft);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 99px;
+    transition: background .2s ease, color .2s ease;
+  }
+  .ptabs-{{ section.id }} .tab.act .tab-count { background: var(--pp-tint); color: var(--pp); }
+
+  /* ---- TAB PANELS ---- */
+  .ptabs-{{ section.id }} .tc { display: none; animation: tw-tab-in .22s ease both; }
+  .ptabs-{{ section.id }} .tc.act { display: block; }
+  @keyframes tw-tab-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- DESCRIPTION ---- */
+  .ptabs-{{ section.id }} .desc-p { font-size: 14px; color: var(--body); line-height: 1.75; margin-bottom: 18px; }
+  .ptabs-{{ section.id }} .desc-p p { margin: 0 0 12px; }
+  .ptabs-{{ section.id }} .desc-p p:last-child { margin-bottom: 0; }
+  .ptabs-{{ section.id }} .feat-grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 18px;
+    margin-bottom: 6px;
+  }
+  .ptabs-{{ section.id }} .fi {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--ink);
+    font-weight: 500;
+    padding: 8px 0;
+  }
+  .ptabs-{{ section.id }} .fc {
+    width: 24px; height: 24px;
+    flex-shrink: 0;
+    background: var(--pp-tint);
+    color: var(--pp);
+    border-radius: var(--r-chip);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ptabs-{{ section.id }} .fc svg { width: 14px; height: 14px; }
+  .ptabs-{{ section.id }} .fi-txt { line-height: 1.4; }
+
+  /* ---- NUTRITION ---- */
+  .ptabs-{{ section.id }} .ng { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ptabs-{{ section.id }} .nc {
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    padding: 16px 18px;
+  }
+  .ptabs-{{ section.id }} .nc h4 {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin: 0 0 10px;
+  }
+  .ptabs-{{ section.id }} .nr {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+    color: var(--body);
+  }
+  .ptabs-{{ section.id }} .nr:last-child { border-bottom: none; }
+  .ptabs-{{ section.id }} .nr .v { font-weight: 700; color: var(--ink); }
+
+  /* ---- REVIEWS ---- */
+  .ptabs-{{ section.id }} .rv-sum {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 22px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .ptabs-{{ section.id }} .rv-big { font-size: 44px; font-weight: 800; color: var(--ink); display: block; line-height: 1; text-align: center; }
+  .ptabs-{{ section.id }} .rv-st { font-size: 16px; color: #F59E0B; display: block; text-align: center; margin: 4px 0; letter-spacing: 1px; }
+  .ptabs-{{ section.id }} .br { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .ptabs-{{ section.id }} .br span { font-size: 11px; color: var(--muted); width: 12px; text-align: right; font-weight: 600; }
+  .ptabs-{{ section.id }} .bb { flex: 1; height: 6px; background: rgba(124, 58, 237, 0.08); border-radius: 999px; overflow: hidden; }
+  .ptabs-{{ section.id }} .bf { height: 100%; background: linear-gradient(90deg, #F59E0B, #FBBF24); border-radius: 999px; }
+  .ptabs-{{ section.id }} .bc2 { font-size: 11px; color: var(--muted); width: 24px; font-weight: 500; }
+  .ptabs-{{ section.id }} .rv-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); padding: 14px 16px; margin-bottom: 10px; }
+  .ptabs-{{ section.id }} .rv-head { display: flex; justify-content: space-between; margin-bottom: 9px; align-items: flex-start; }
+  .ptabs-{{ section.id }} .rv-av { width: 36px; height: 36px; border-radius: 10px; background: var(--pp-tint); color: var(--pp); font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; letter-spacing: -0.02em; }
+  .ptabs-{{ section.id }} .rv-nm { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+  .ptabs-{{ section.id }} .rv-pet { font-size: 11px; color: var(--muted); }
+  .ptabs-{{ section.id }} .rv-txt { font-size: 13px; color: var(--body); line-height: 1.6; margin-bottom: 7px; }
+  .ptabs-{{ section.id }} .rv-b { font-size: 10px; background: rgba(16, 185, 129, 0.1); color: #047857; padding: 3px 8px; border-radius: var(--r-chip); font-weight: 700; display: inline-block; margin-right: 4px; }
+  .ptabs-{{ section.id }} .btn-all-reviews {
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 12px;
+    border-radius: var(--r-btn);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--pp);
+    margin-top: 8px;
+    transition: background .18s ease, border-color .18s ease;
+  }
+  .ptabs-{{ section.id }} .btn-all-reviews:hover { background: var(--soft); border-color: var(--pp-tint); }
+
+  /* ---- FAQ ---- */
+  .ptabs-{{ section.id }} .faq-item {
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    margin-bottom: 8px;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color .18s ease, background .18s ease;
+  }
+  .ptabs-{{ section.id }} .faq-item.is-open { border-color: var(--pp-tint); background: var(--soft); }
+  .ptabs-{{ section.id }} .faq-q {
+    appearance: none;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 14px 16px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink);
+  }
+  .ptabs-{{ section.id }} .faq-q:hover { color: var(--pp); }
+  .ptabs-{{ section.id }} .far {
+    width: 24px; height: 24px;
+    border-radius: var(--r-chip);
+    background: var(--pp-tint);
+    color: var(--pp);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: transform .2s ease;
+    flex-shrink: 0;
+  }
+  .ptabs-{{ section.id }} .far.open { transform: rotate(180deg); }
+  .ptabs-{{ section.id }} .faq-a {
+    padding: 0 16px;
+    font-size: 13px;
+    color: var(--body);
+    line-height: 1.65;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height .25s ease, opacity .2s ease, padding .25s ease;
+  }
+  .ptabs-{{ section.id }} .faq-a.open {
+    padding: 0 16px 14px;
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .ptabs-{{ section.id }} .feat-grid2 { grid-template-columns: 1fr; gap: 4px 12px; }
+    .ptabs-{{ section.id }} .ng { grid-template-columns: 1fr; gap: 10px; }
+    .ptabs-{{ section.id }} .rv-sum { grid-template-columns: 1fr; gap: 14px; padding: 14px; }
+    .ptabs-{{ section.id }} .tab { font-size: 13px; padding: 10px 12px 11px; }
   }
 </style>
 
 <script>
   function petibiSwitchTab(id) {
     var nav = document.getElementById('petibiTabNav');
-    nav.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('act'); });
-    document.querySelectorAll('.tc').forEach(function(c) { c.classList.remove('act'); });
-    var tab = document.getElementById('petibiTab-' + id);
-    if (tab) tab.classList.add('act');
+    if (!nav) return;
+    nav.querySelectorAll('.tab').forEach(function(t) {
+      t.classList.remove('act');
+      t.setAttribute('aria-selected', 'false');
+    });
+    var scope = nav.closest('.petibi-wrap') || document;
+    scope.querySelectorAll('.tc').forEach(function(c) { c.classList.remove('act'); });
+    var panel = scope.querySelector('#petibiTab-' + id);
+    if (panel) panel.classList.add('act');
     var tabs = nav.querySelectorAll('.tab');
     var map = { desc: 0, nut: 1, rvw: 2, faq: 3 };
-    if (tabs[map[id]]) tabs[map[id]].classList.add('act');
+    if (tabs[map[id]]) {
+      tabs[map[id]].classList.add('act');
+      tabs[map[id]].setAttribute('aria-selected', 'true');
+    }
   }
   function petibiToggleFaq(el) {
+    var item = el.closest('.faq-item');
     var answer = el.nextElementSibling;
     var arrow = el.querySelector('.far');
-    answer.classList.toggle('open');
-    arrow.classList.toggle('open');
+    if (item) item.classList.toggle('is-open');
+    if (answer) answer.classList.toggle('open');
+    if (arrow) arrow.classList.toggle('open');
   }
 </script>
 

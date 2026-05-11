@@ -1,38 +1,68 @@
-<div class="petibi-wrap">
+<div class="petibi-wrap prel-{{ section.id }}">
   <div class="rec-sec">
     <div class="rec-hd">
       <h2 id="petibiRelTitle">{{ section.settings.default_title }}</h2>
       {% if section.settings.see_all_text != blank %}
-        <span class="see-all" onclick="petibiShowToast('⭐', '...')">{{ section.settings.see_all_text }}</span>
+        <a href="{{ routes.all_products_collection_url }}" class="see-all">
+          <span>{{ section.settings.see_all_text }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
       {% endif %}
     </div>
 
-    <div class="rtabs">
+    <div class="rtabs" role="tablist">
       {% for block in section.blocks %}
         {% if block.type == 'product_tab' %}
-          <div
+          {%- assign icon_key = block.settings.icon -%}
+          {%- if icon_key == blank or icon_key == 'auto' -%}
+            {%- case block.settings.tab_id -%}
+              {%- when 'same'  -%}{%- assign icon_key = 'paw'     -%}
+              {%- when 'comp'  -%}{%- assign icon_key = 'package' -%}
+              {%- when 'rec'   -%}{%- assign icon_key = 'clock'   -%}
+              {%- else         -%}{%- assign icon_key = 'paw'     -%}
+            {%- endcase -%}
+          {%- endif -%}
+          <button type="button"
             class="rtab {% if forloop.first %}act{% endif %}"
+            role="tab"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
             onclick="petibiShowRelated('{{ block.settings.tab_id }}', this, '{{ block.settings.heading | escape }}')"
             {{ block.shopify_attributes }}
           >
-            {{ block.settings.label }}
-          </div>
+            <span class="rtab-ico" aria-hidden="true">
+              {%- case icon_key -%}
+                {%- when 'paw' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg>
+                {%- when 'package' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                {%- when 'cart' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M3 3h2l3.4 12.2A2 2 0 0 0 10.3 17H18l3-9H6"/></svg>
+                {%- when 'clock' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                {%- when 'heart' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                {%- when 'star' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg>
+              {%- endcase -%}
+            </span>
+            <span class="rtab-lbl">{{ block.settings.label | replace: '🐱', '' | replace: '🛒', '' | replace: '🕐', '' | replace: '⭐', '' | replace: '💜', '' | strip }}</span>
+          </button>
         {% endif %}
       {% endfor %}
     </div>
 
     {% for block in section.blocks %}
       {% if block.type == 'product_tab' %}
-        <div class="rg" id="petibiRel-{{ block.settings.tab_id }}" {% unless forloop.first %}style="display:none"{% endunless %}>
+        <div class="rg" id="petibiRel-{{ block.settings.tab_id }}" role="tabpanel" {% unless forloop.first %}hidden{% endunless %}>
           {% assign rel_collection = collections[block.settings.collection] %}
           {% if rel_collection and rel_collection.products_count > 0 %}
             {% for rel_product in rel_collection.products limit: 4 %}
-              
               {% render 'product-card', product: rel_product %}
-              
             {% endfor %}
           {% else %}
-            <p style="color: #888; font-size: 14px; grid-column: 1 / -1;">Bu sekme için henüz ürün seçilmedi.</p>
+            <p class="rg-empty">Bu sekme için henüz ürün seçilmedi.</p>
           {% endif %}
         </div>
       {% endif %}
@@ -42,85 +72,150 @@
 </div>
 
 <style>
-  .rec-sec { margin-bottom: 24px; font-family: inherit; }
-  .rec-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-  .rec-hd h2 { font-size: 22px; font-weight: 800; margin: 0; color: #111; letter-spacing: -0.02em; }
-  
-  .see-all { 
-    font-size: 13px; 
-    color: #7B3FF2; 
-    font-weight: 600; 
-    background: #F4F0FF; 
-    padding: 8px 16px; 
-    border-radius: 50px; 
-    cursor: pointer; 
-    transition: opacity 0.2s; 
+  .prel-{{ section.id }} {
+    --pp: #7C3AED;
+    --pp-tint: #EDE9FE;
+    --ink: #1F1342;
+    --muted: #6B7280;
+    --line: #ECE9F5;
+    --soft: #FAF7FF;
+    --r-btn: 10px;
+    --r-chip: 8px;
+  }
+  .prel-{{ section.id }} .rec-sec { margin: 24px 0 8px; font-family: inherit; }
+  .prel-{{ section.id }} .rec-hd {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .prel-{{ section.id }} .rec-hd h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .prel-{{ section.id }} .see-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--pp);
+    font-weight: 700;
+    background: #fff;
+    border: 1px solid var(--pp-tint);
+    padding: 8px 14px;
+    border-radius: var(--r-btn);
+    text-decoration: none;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease;
     white-space: nowrap;
+    line-height: 1;
   }
-  .see-all:hover { opacity: 0.8; }
-  
-  .rtabs { 
-    display: flex; 
-    background: #FAFAFA; 
-    border: 1px solid #EAEAEA;
-    border-radius: 50px; 
-    padding: 6px; 
-    width: fit-content; 
-    margin-bottom: 24px; 
-    overflow-x: auto; 
-    scrollbar-width: none; 
+  .prel-{{ section.id }} .see-all svg { width: 14px; height: 14px; }
+  .prel-{{ section.id }} .see-all:hover { background: var(--soft); border-color: var(--pp); }
+  .prel-{{ section.id }} .see-all:hover svg { transform: translateX(2px); }
+  .prel-{{ section.id }} .see-all svg { transition: transform .18s ease; }
+
+  /* TAB BAR — siteye yakın 10px radius butonlar */
+  .prel-{{ section.id }} .rtabs {
+    display: inline-flex;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: var(--r-btn);
+    padding: 4px;
+    margin-bottom: 22px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 2px;
+    max-width: 100%;
   }
-  .rtabs::-webkit-scrollbar { display: none; }
-  
-  .rtab { 
-    padding: 10px 24px; 
-    font-size: 14px; 
-    font-weight: 600; 
-    border-radius: 50px; 
-    cursor: pointer; 
-    color: #666; 
-    transition: all .2s; 
-    white-space: nowrap; 
+  .prel-{{ section.id }} .rtabs::-webkit-scrollbar { display: none; }
+  .prel-{{ section.id }} .rtab {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 8px 14px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 7px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: background .18s ease, color .18s ease, box-shadow .18s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    line-height: 1;
   }
-  .rtab.act { 
-    background: #FFFFFF; 
-    color: #7B3FF2; 
-    box-shadow: 0 4px 12px rgba(0,0,0,.05); 
+  .prel-{{ section.id }} .rtab-ico {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
   }
-  
-  /* Ürün Kartı Grid Yapısı */
-  .rg { 
-    display: grid; 
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 24px; 
+  .prel-{{ section.id }} .rtab-ico svg { width: 100%; height: 100%; }
+  .prel-{{ section.id }} .rtab:hover { color: var(--ink); }
+  .prel-{{ section.id }} .rtab.act {
+    background: #fff;
+    color: var(--pp);
+    box-shadow: 0 1px 2px rgba(20, 14, 40, 0.04), 0 4px 12px -6px rgba(124, 58, 237, 0.2);
   }
-  
-  @media(max-width: 1024px) { 
-    .rg { grid-template-columns: repeat(3, 1fr); } 
+
+  /* GRID */
+  .prel-{{ section.id }} .rg {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
   }
-  @media(max-width: 768px) { 
-    .rg { grid-template-columns: repeat(2, 1fr); gap: 16px; } 
-    .rec-hd h2 { font-size: 18px; }
-    .rtab { padding: 8px 16px; font-size: 13px; }
+  .prel-{{ section.id }} .rg[hidden] { display: none; }
+  .prel-{{ section.id }} .rg-empty {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-size: 13.5px;
+    text-align: center;
+    padding: 32px;
+    background: var(--soft);
+    border: 1px dashed var(--line);
+    border-radius: var(--r-btn);
   }
-  @media(max-width: 480px) { 
-    .rg { gap: 12px; } 
+
+  @media (max-width: 1024px) {
+    .prel-{{ section.id }} .rg { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 768px) {
+    .prel-{{ section.id }} .rec-hd { margin-bottom: 12px; }
+    .prel-{{ section.id }} .rec-hd h2 { font-size: 17px; }
+    .prel-{{ section.id }} .see-all { font-size: 12px; padding: 7px 12px; }
+    .prel-{{ section.id }} .rtab { padding: 7px 11px; font-size: 12.5px; }
+    .prel-{{ section.id }} .rg { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  }
+  @media (max-width: 480px) {
+    .prel-{{ section.id }} .rg { gap: 10px; }
   }
 </style>
 
 <script>
   function petibiShowRelated(type, el, title) {
-    // Aktif tab'ı değiştir
-    document.querySelectorAll('.rtab').forEach(function(t) { t.classList.remove('act'); });
+    var scope = el.closest('[class*="prel-"]') || document;
+
+    scope.querySelectorAll('.rtab').forEach(function(t) {
+      t.classList.remove('act');
+      t.setAttribute('aria-selected', 'false');
+    });
     el.classList.add('act');
-    
-    // Tüm gridleri gizle ve sadece tıklananı göster
-    document.querySelectorAll('[id^="petibiRel-"]').forEach(function(g) { g.style.display = 'none'; });
-    var grid = document.getElementById('petibiRel-' + type);
-    if (grid) grid.style.display = 'grid';
-    
-    // Başlığı güncelle
-    var titleEl = document.getElementById('petibiRelTitle');
+    el.setAttribute('aria-selected', 'true');
+
+    scope.querySelectorAll('[id^="petibiRel-"]').forEach(function(g) { g.setAttribute('hidden', ''); });
+    var grid = scope.querySelector('#petibiRel-' + type);
+    if (grid) grid.removeAttribute('hidden');
+
+    var titleEl = scope.querySelector('#petibiRelTitle');
     if (titleEl && title) titleEl.textContent = title;
   }
 </script>
@@ -154,10 +249,26 @@
           "default": "same"
         },
         {
+          "type": "select",
+          "id": "icon",
+          "label": "İkon",
+          "info": "'Otomatik' tab_id'ye göre uygun ikonu seçer.",
+          "options": [
+            { "value": "auto",    "label": "Otomatik" },
+            { "value": "paw",     "label": "Pati" },
+            { "value": "package", "label": "Paket" },
+            { "value": "cart",    "label": "Sepet" },
+            { "value": "clock",   "label": "Saat" },
+            { "value": "heart",   "label": "Kalp" },
+            { "value": "star",    "label": "Yıldız" }
+          ],
+          "default": "auto"
+        },
+        {
           "type": "text",
           "id": "label",
           "label": "Tab Buton Yazısı",
-          "default": "🐱 Aynı Kategoriden"
+          "default": "Aynı Kategoriden"
         },
         {
           "type": "text",
@@ -177,9 +288,9 @@
     {
       "name": "Related Products Tabs",
       "blocks": [
-        { "type": "product_tab", "settings": { "tab_id": "same", "label": "🐱 Aynı Kategoriden", "heading": "Aynı Kategoriden Ürünler" } },
-        { "type": "product_tab", "settings": { "tab_id": "comp", "label": "🛒 Tamamlayıcı", "heading": "Tamamlayıcı Ürünler" } },
-        { "type": "product_tab", "settings": { "tab_id": "rec", "label": "🕐 Son Görüntülenenler", "heading": "Son Görüntülenenler" } }
+        { "type": "product_tab", "settings": { "tab_id": "same", "icon": "paw",     "label": "Aynı Kategoriden",    "heading": "Aynı Kategoriden Ürünler" } },
+        { "type": "product_tab", "settings": { "tab_id": "comp", "icon": "package", "label": "Tamamlayıcı",         "heading": "Tamamlayıcı Ürünler" } },
+        { "type": "product_tab", "settings": { "tab_id": "rec",  "icon": "clock",   "label": "Son Görüntülenenler", "heading": "Son Görüntülenenler" } }
       ]
     }
   ]
