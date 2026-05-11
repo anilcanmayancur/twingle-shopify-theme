@@ -31,80 +31,59 @@
 
   /* ============ HERO ============ */
   .tw-coll-{{ section.id }}__hero {
-    background:
-      radial-gradient(80% 120% at 100% 0%, rgba(123, 63, 242, 0.08) 0%, transparent 60%),
-      radial-gradient(60% 120% at 0% 100%, rgba(123, 63, 242, 0.05) 0%, transparent 60%),
-      linear-gradient(180deg, #faf7ff 0%, #ffffff 100%);
-    border-bottom: 1px solid var(--c-line);
-    padding: 32px 0 28px;
-    margin-bottom: 28px;
+    padding: 28px 0 22px;
+    margin-bottom: 14px;
   }
   .tw-coll-{{ section.id }}__crumbs {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
-    font-size: 12.5px;
+    gap: 4px;
+    font-size: 12px;
     color: var(--c-muted);
     margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
   }
   .tw-coll-{{ section.id }}__crumbs a {
     color: var(--c-muted);
     text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: background 0.18s ease, color 0.18s ease;
+    transition: color 0.18s ease;
   }
-  .tw-coll-{{ section.id }}__crumbs a:hover {
-    color: var(--c-primary);
-    background: var(--c-primary-tint);
-  }
-  .tw-coll-{{ section.id }}__crumbs .sep { color: #c0b9d1; font-size: 11px; }
-  .tw-coll-{{ section.id }}__crumbs .curr {
-    color: var(--c-ink);
-    font-weight: 700;
-    padding: 4px 8px;
-  }
+  .tw-coll-{{ section.id }}__crumbs a:hover { color: var(--c-primary); }
+  .tw-coll-{{ section.id }}__crumbs .sep { color: #d0c9de; margin: 0 6px; font-size: 10px; }
+  .tw-coll-{{ section.id }}__crumbs .curr { color: var(--c-ink); }
 
-  .tw-coll-{{ section.id }}__title-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    gap: 14px;
-  }
   .tw-coll-{{ section.id }}__title {
     margin: 0;
-    font-size: clamp(26px, 3.4vw, 36px);
-    font-weight: 800;
+    font-size: clamp(30px, 4vw, 46px);
+    font-weight: 700;
     color: var(--c-ink);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    letter-spacing: -0.028em;
+    line-height: 1.05;
   }
-  .tw-coll-{{ section.id }}__count-pill {
+  .tw-coll-{{ section.id }}__meta {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 11px;
-    background: #fff;
-    border: 1px solid var(--c-line);
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--c-primary);
-    box-shadow: 0 4px 12px -6px rgba(123, 63, 242, 0.18);
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--c-muted);
+    letter-spacing: 0.02em;
   }
-  .tw-coll-{{ section.id }}__count-pill::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--c-primary);
+  .tw-coll-{{ section.id }}__meta strong { color: var(--c-ink); font-weight: 700; }
+  .tw-coll-{{ section.id }}__meta-sep {
+    width: 3px; height: 3px;
+    background: #c8c1d6;
     border-radius: 50%;
   }
   .tw-coll-{{ section.id }}__desc {
-    margin: 12px 0 0;
+    margin: 14px 0 0;
     color: var(--c-muted);
-    font-size: 14px;
-    line-height: 1.55;
-    max-width: 720px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    max-width: 640px;
   }
 
   /* ============ BODY LAYOUT ============ */
@@ -320,75 +299,58 @@
     justify-content: space-between;
     align-items: center;
     gap: 14px;
-    padding: 12px 16px;
-    background: #fff;
-    border: 1px solid var(--c-line);
-    border-radius: var(--c-r-card);
-    margin-bottom: 16px;
+    padding: 10px 0 14px;
+    border-bottom: 1px solid var(--c-line);
+    margin-bottom: 20px;
     flex-wrap: wrap;
   }
-  .tw-coll-{{ section.id }}__count-line {
-    font-size: 13.5px;
+  .tw-coll-{{ section.id }}__tool-left {
+    font-size: 12.5px;
     color: var(--c-muted);
-  }
-  .tw-coll-{{ section.id }}__count-line strong {
-    color: var(--c-ink);
-    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 600;
   }
   .tw-coll-{{ section.id }}__tool-right {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 18px;
+  }
+  .tw-coll-{{ section.id }}__sort-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--c-ink);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tw-coll-{{ section.id }}__sort-label {
+    color: var(--c-muted);
+    font-weight: 500;
+    letter-spacing: 0.02em;
   }
   .tw-coll-{{ section.id }}__sort {
     appearance: none;
     -webkit-appearance: none;
-    padding: 9px 36px 9px 14px;
-    border: 1.5px solid var(--c-line);
-    border-radius: var(--c-r-btn);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--c-ink);
-    background-color: #fff;
-    cursor: pointer;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231f1342' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    transition: border-color 0.15s ease;
-    font-family: inherit;
-  }
-  .tw-coll-{{ section.id }}__sort:hover { border-color: var(--c-primary); }
-  .tw-coll-{{ section.id }}__sort:focus {
-    outline: none;
-    border-color: var(--c-primary);
-    box-shadow: 0 0 0 3px var(--c-primary-tint);
-  }
-  .tw-coll-{{ section.id }}__views {
-    display: inline-flex;
-    gap: 2px;
-    padding: 2px;
-    border: 1.5px solid var(--c-line);
-    border-radius: var(--c-r-btn);
-    background: #fff;
-  }
-  .tw-coll-{{ section.id }}__view-btn {
-    width: 32px; height: 32px;
+    padding: 6px 22px 6px 4px;
     border: none;
-    border-radius: 7px;
     background: transparent;
-    color: var(--c-muted);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-ink);
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s ease, color 0.15s ease;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%231f1342' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    font-family: inherit;
+    outline: none;
+    border-bottom: 1.5px solid transparent;
+    transition: border-color 0.18s ease;
   }
-  .tw-coll-{{ section.id }}__view-btn:hover { color: var(--c-ink); }
-  .tw-coll-{{ section.id }}__view-btn.is-active {
-    background: var(--c-primary-tint);
-    color: var(--c-primary);
-  }
-  .tw-coll-{{ section.id }}__view-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; }
+  .tw-coll-{{ section.id }}__sort:hover,
+  .tw-coll-{{ section.id }}__sort:focus { border-bottom-color: var(--c-ink); }
 
   /* Active filter chips */
   .tw-coll-{{ section.id }}__active {
@@ -528,25 +490,35 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    width: 100%;
-    padding: 13px;
-    background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
-    color: #fff;
-    border: none;
-    border-radius: var(--c-r-btn);
-    font-size: 14px;
+    padding: 9px 16px;
+    background: transparent;
+    color: var(--c-ink);
+    border: 1.5px solid var(--c-line);
+    border-radius: 100px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    margin-bottom: 16px;
-    box-shadow: 0 10px 24px -10px rgba(123, 63, 242, 0.4);
     font-family: inherit;
+    transition: border-color 0.18s ease, background 0.18s ease;
+    letter-spacing: 0.02em;
   }
-  .tw-coll-{{ section.id }}__mobile-toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+  .tw-coll-{{ section.id }}__mobile-toggle:hover {
+    border-color: var(--c-ink);
+    background: var(--c-soft);
+  }
+  .tw-coll-{{ section.id }}__mobile-toggle svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; }
   .tw-coll-{{ section.id }}__mobile-toggle-count {
-    background: rgba(255, 255, 255, 0.22);
-    padding: 1px 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--c-primary);
+    color: #fff;
     border-radius: 100px;
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 700;
     margin-left: 4px;
   }
 
@@ -702,16 +674,13 @@
     <div class="tw-coll-{{ section.id }}__inner">
       <nav class="tw-coll-{{ section.id }}__crumbs" aria-label="Breadcrumb">
         <a href="{{ routes.root_url }}">{{ section.settings.bc_home }}</a>
-        <span class="sep">›</span>
+        <span class="sep">/</span>
         <a href="{{ routes.all_products_collection_url }}">{{ section.settings.bc_shop }}</a>
-        <span class="sep">›</span>
+        <span class="sep">/</span>
         <span class="curr">{{ collection.title }}</span>
       </nav>
 
-      <div class="tw-coll-{{ section.id }}__title-row">
-        <h1 class="tw-coll-{{ section.id }}__title">{{ collection.title }}</h1>
-        <span class="tw-coll-{{ section.id }}__count-pill">{{ collection.products_count }} ürün</span>
-      </div>
+      <h1 class="tw-coll-{{ section.id }}__title">{{ collection.title }}</h1>
 
       {% if section.settings.show_description and collection.description != blank %}
         <p class="tw-coll-{{ section.id }}__desc">{{ collection.description | strip_html | truncate: 240 }}</p>
@@ -720,14 +689,6 @@
   </div>
 
   <div class="tw-coll-{{ section.id }}__inner">
-    <button type="button" class="tw-coll-{{ section.id }}__mobile-toggle" data-tw-filter-open>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="6" x2="14" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="10" y2="18"/><circle cx="17" cy="6" r="2.2"/><circle cx="7" cy="12" r="2.2"/><circle cx="13" cy="18" r="2.2"/></svg>
-      {{ section.settings.filter_btn_text }}
-      {% if active_filter_count > 0 %}
-        <span class="tw-coll-{{ section.id }}__mobile-toggle-count">{{ active_filter_count }}</span>
-      {% endif %}
-    </button>
-
     <div class="tw-coll-{{ section.id }}__overlay" data-tw-filter-overlay></div>
 
     <div class="tw-coll-{{ section.id }}__body">
@@ -829,28 +790,27 @@
         {% paginate collection.products by section.settings.products_per_page %}
 
           <div class="tw-coll-{{ section.id }}__toolbar">
-            <div class="tw-coll-{{ section.id }}__count-line">
-              <strong>{{ collection.products_count }}</strong> ürün gösteriliyor
-              {% if paginate.pages > 1 %}
-                · Sayfa {{ paginate.current_page }}/{{ paginate.pages }}
-              {% endif %}
+            <div class="tw-coll-{{ section.id }}__tool-left">
+              {{ collection.products_count }} ürün
+              {%- if paginate.pages > 1 %} · Sayfa {{ paginate.current_page }}/{{ paginate.pages }}{% endif -%}
             </div>
             <div class="tw-coll-{{ section.id }}__tool-right">
-              <select class="tw-coll-{{ section.id }}__sort" aria-label="Sırala"
-                      onchange="document.querySelector('#CollectionFiltersForm-{{ section.id }} input[name=sort_by]').value = this.value; document.getElementById('CollectionFiltersForm-{{ section.id }}').submit();">
-                {% for option in collection.sort_options %}
-                  <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
-                {% endfor %}
-              </select>
-
-              <div class="tw-coll-{{ section.id }}__views">
-                <button type="button" class="tw-coll-{{ section.id }}__view-btn is-active" data-tw-view="grid" aria-label="Izgara Görünümü">
-                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                </button>
-                <button type="button" class="tw-coll-{{ section.id }}__view-btn" data-tw-view="list" aria-label="Liste Görünümü">
-                  <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                </button>
-              </div>
+              <button type="button" class="tw-coll-{{ section.id }}__mobile-toggle" data-tw-filter-open>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="6" x2="14" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="10" y2="18"/><circle cx="17" cy="6" r="2.2"/><circle cx="7" cy="12" r="2.2"/><circle cx="13" cy="18" r="2.2"/></svg>
+                {{ section.settings.filter_btn_text }}
+                {% if active_filter_count > 0 %}
+                  <span class="tw-coll-{{ section.id }}__mobile-toggle-count">{{ active_filter_count }}</span>
+                {% endif %}
+              </button>
+              <label class="tw-coll-{{ section.id }}__sort-wrap">
+                <span class="tw-coll-{{ section.id }}__sort-label">Sırala</span>
+                <select class="tw-coll-{{ section.id }}__sort" aria-label="Sırala"
+                        onchange="document.querySelector('#CollectionFiltersForm-{{ section.id }} input[name=sort_by]').value = this.value; document.getElementById('CollectionFiltersForm-{{ section.id }}').submit();">
+                  {% for option in collection.sort_options %}
+                    <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
+                  {% endfor %}
+                </select>
+              </label>
             </div>
           </div>
 
