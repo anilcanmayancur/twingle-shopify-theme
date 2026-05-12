@@ -281,8 +281,20 @@
     var panel = ensurePanel(input);
     if (!panel) return;
     var content = panel.querySelector('[data-ps-content]');
+    if (!content) return;
     content.innerHTML = html;
     panel.classList.add('is-open');
+  }
+
+  function productThumbUrl(p) {
+    var fi = p.featured_image;
+    if (typeof fi === 'string' && fi) return fi;
+    if (fi && typeof fi === 'object' && fi.url) return fi.url;
+    if (p.image) {
+      if (typeof p.image === 'string') return p.image;
+      if (p.image.url) return p.image.url;
+    }
+    return '';
   }
 
   function renderInitial(input) {
@@ -300,7 +312,10 @@
     if (!html) html = '<div class="twingle-ps__empty">Aramaya başla, hızlı öneriler burada belirsin.</div>';
     show(input, html);
     var panel = input.__twPsPanel;
-    if (panel) panel.querySelector('[data-ps-footer]').hidden = true;
+    if (panel) {
+      var footerInit = panel.querySelector('[data-ps-footer]');
+      if (footerInit) footerInit.hidden = true;
+    }
   }
 
   function renderResults(input, query, data) {
@@ -328,14 +343,14 @@
       html += '<h6 class="twingle-ps__heading">Ürünler</h6>';
       html += '<div class="twingle-ps__products">';
       products.slice(0, 6).forEach(function (p) {
-        var img = p.featured_image || (p.image && p.image.url) || p.image || '';
+        var img = productThumbUrl(p);
         var price = formatMoney(p.price);
         var compare = '';
         if (p.compare_at_price && p.compare_at_price > p.price) {
           compare = '<span class="twingle-ps__product-compare">' + formatMoney(p.compare_at_price) + '</span>';
         }
         html += '<a href="' + (p.url || ('/products/' + p.handle)) + '" class="twingle-ps__product" role="option">';
-        html += img ? '<img class="twingle-ps__product-img" src="' + img + '" alt="' + escapeHtml(p.title) + '" loading="lazy">' : '<div class="twingle-ps__product-img"></div>';
+        html += img ? '<img class="twingle-ps__product-img" src="' + escapeHtml(img) + '" alt="' + escapeHtml(p.title) + '" loading="lazy">' : '<div class="twingle-ps__product-img"></div>';
         html += '<div class="twingle-ps__product-info">';
         html += '<p class="twingle-ps__product-title">' + highlight(p.title, query) + '</p>';
         if (p.vendor) html += '<span class="twingle-ps__product-vendor">' + escapeHtml(p.vendor) + '</span>';
@@ -354,13 +369,15 @@
     var panel = input.__twPsPanel;
     if (panel) {
       var footer = panel.querySelector('[data-ps-footer]');
-      footer.hidden = !(queries.length || products.length);
-      var btn = footer.querySelector('[data-ps-view-all]');
-      if (btn) {
-        btn.onclick = function () {
-          var form = input.closest('form');
-          if (form) form.submit();
-        };
+      if (footer) {
+        footer.hidden = !(queries.length || products.length);
+        var btn = footer.querySelector('[data-ps-view-all]');
+        if (btn) {
+          btn.onclick = function () {
+            var form = input.closest('form');
+            if (form) form.submit();
+          };
+        }
       }
     }
   }
@@ -368,7 +385,10 @@
   function renderLoading(input) {
     show(input, '<div class="twingle-ps__loading"><span class="twingle-ps__spinner"></span></div>');
     var panel = input.__twPsPanel;
-    if (panel) panel.querySelector('[data-ps-footer]').hidden = true;
+    if (panel) {
+      var footerLoad = panel.querySelector('[data-ps-footer]');
+      if (footerLoad) footerLoad.hidden = true;
+    }
   }
 
   function search(input, query) {
@@ -388,8 +408,18 @@
 
     input.addEventListener('focus', function () {
       var q = input.value.trim();
-      if (q.length < 2) renderInitial(input);
-      else renderResults(input, q, { resources: { results: {} } });
+      if (q.length < 2) {
+        renderInitial(input);
+        return;
+      }
+      renderLoading(input);
+      search(input, q)
+        .then(function (data) {
+          if (input.value.trim() === q) renderResults(input, q, data);
+        })
+        .catch(function () {
+          show(input, '<div class="twingle-ps__empty">Bir sorun oluştu. Tekrar dene.</div>');
+        });
     });
 
     input.addEventListener('input', function () {

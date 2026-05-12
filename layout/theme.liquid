@@ -30,6 +30,9 @@
 
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
+    {%- if template.name == 'product' -%}
+      {{ 'petibi-product.css' | asset_url | stylesheet_tag: preload: true }}
+    {%- endif -%}
     {%- render 'fonts' -%}
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}

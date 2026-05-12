@@ -571,6 +571,12 @@
 
   .header[data-sticky-state='idle'] {
     opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Scroll-up modunda tekrar görünen çubuğa hafif ayırım (sayfayı boğmaz) */
+  .header-section:has(> #header-component[sticky='scroll-up']) .header[data-sticky-state='active'] {
+    box-shadow: 0 1px 0 rgb(var(--color-foreground-rgb) / 0.06);
   }
 
   /* ================================
@@ -1396,6 +1402,7 @@
       "type": "select",
       "id": "enable_sticky_header",
       "label": "t:settings.sticky_header",
+      "info": "t:info.sticky_header_behavior",
       "options": [
         {
           "value": "always",
@@ -1410,7 +1417,7 @@
           "label": "t:options.never"
         }
       ],
-      "default": "always"
+      "default": "scroll-up"
     },
     {
       "type": "range",

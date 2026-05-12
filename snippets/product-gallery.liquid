@@ -1,13 +1,18 @@
 <div class="petibi-gallery">
   <div class="main-img">
     {%- if product.featured_image -%}
+      {%- assign fi = product.featured_image -%}
       <img
         id="petibiMainImg"
-        src="{{ product.featured_image | img_url: '800x800' }}"
-        alt="{{ product.featured_image.alt | escape }}"
+        src="{{ fi | image_url: width: 800, height: 800, crop: 'center' }}"
+        srcset="{{ fi | image_url: width: 400, height: 400, crop: 'center' }} 400w, {{ fi | image_url: width: 600, height: 600, crop: 'center' }} 600w, {{ fi | image_url: width: 800, height: 800, crop: 'center' }} 800w"
+        sizes="(max-width: 749px) min(100vw, 640px), min(52vw, 800px)"
+        alt="{{ fi.alt | escape }}"
         width="800"
         height="800"
         loading="eager"
+        fetchpriority="high"
+        decoding="async"
       >
     {%- else -%}
       <div class="no-img-placeholder">{{ 'image' | placeholder_svg_tag }}</div>
@@ -26,10 +31,13 @@
         <button
           class="th {% if forloop.first %}act{% endif %}"
           type="button"
-          onclick="petibiGallerySet(this, '{{ image | img_url: '800x800' }}', '{{ image.alt | escape }}')"
+          data-petibi-full-src="{{ image | image_url: width: 800, height: 800, crop: 'center' }}"
+          data-petibi-full-srcset="{{ image | image_url: width: 400, height: 400, crop: 'center' }} 400w, {{ image | image_url: width: 600, height: 600, crop: 'center' }} 600w, {{ image | image_url: width: 800, height: 800, crop: 'center' }} 800w"
+          data-petibi-full-alt="{{ image.alt | default: product.title | escape }}"
+          onclick="petibiGallerySet(this)"
           aria-label="{{ image.alt | default: product.title | escape }}"
         >
-          <img src="{{ image | img_url: '120x120', crop: 'center' }}" alt="{{ image.alt | escape }}" loading="lazy" width="120" height="120">
+          <img src="{{ image | image_url: width: 120, height: 120, crop: 'center' }}" alt="{{ image.alt | escape }}" loading="lazy" decoding="async" width="120" height="120">
         </button>
       {%- endfor -%}
     </div>
@@ -37,10 +45,20 @@
 </div>
 
 <script>
-  function petibiGallerySet(el, src, alt) {
-    document.querySelectorAll('.th').forEach(function(t) { t.classList.remove('act'); });
+  function petibiGallerySet(el) {
+    if (!el || !el.getAttribute) return;
+    var src = el.getAttribute('data-petibi-full-src');
+    var srcset = el.getAttribute('data-petibi-full-srcset');
+    var alt = el.getAttribute('data-petibi-full-alt') || '';
+    if (!src) return;
+    document.querySelectorAll('.petibi-gallery .th').forEach(function(t) { t.classList.remove('act'); });
     el.classList.add('act');
     var img = document.getElementById('petibiMainImg');
-    if (img) { img.src = src; img.alt = alt; }
+    if (img) {
+      img.src = src;
+      if (srcset) img.setAttribute('srcset', srcset);
+      else img.removeAttribute('srcset');
+      img.alt = alt;
+    }
   }
 </script>

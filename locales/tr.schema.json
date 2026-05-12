@@ -1089,7 +1089,8 @@
     "hide_logo_on_home_page_help": "Yapışkan üstbilgi etkinken logo görünür kalır",
     "media_type_info": "Özellikler, menü bağlantılarınız kullanılarak oluşturulur",
     "logo_height": "Yalnızca üstbilgi logosunu etkiler",
-    "actions_display_style": "Mobilde her zaman simgeler kullanılır"
+    "actions_display_style": "Mobilde her zaman simgeler kullanılır",
+    "sticky_header_behavior": "“Yukarı kaydırıldığında”: Aşağı inerken üst çubuk gizlenir, yukarı çıkınca tekrar belirir; “Her zaman”dan daha az baskıcıdır. “Her zaman”: Üst çubuk sürekli sabittir."
   },
   "categories": {
     "product_list": "Öne çıkan koleksiyon",
