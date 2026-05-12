@@ -44,8 +44,16 @@
 
     {{ content_for_header }}
     <style>
-      body { overflow-x: clip; }
-      @supports not (overflow-x: clip) { body { overflow-x: hidden; } }
+      /* Yatay taşmayı yalnızca main+footer'da kes; body'de overflow sticky header'ı kırar */
+      .layout-horizontal-clip {
+        overflow-x: clip;
+        max-width: 100%;
+      }
+      @supports not (overflow-x: clip) {
+        .layout-horizontal-clip {
+          overflow-x: hidden;
+        }
+      }
       img { max-width: 100%; height: auto; }
       @supports (content-visibility: auto) {
         #MainContent > .shopify-section:nth-child(n+4) {
@@ -134,20 +142,22 @@
       })();
     </script>
 
-    <main
-      id="MainContent"
-      class="content-for-layout"
-      role="main"
-      data-page-transition-enabled="{{ settings.page_transition_enabled }}"
-      data-product-transition="{{ settings.transition_to_main_product }}"
-      data-template="{{ template }}"
-    >
-      {{ content_for_layout }}
-    </main>
+    <div class="layout-horizontal-clip">
+      <main
+        id="MainContent"
+        class="content-for-layout"
+        role="main"
+        data-page-transition-enabled="{{ settings.page_transition_enabled }}"
+        data-product-transition="{{ settings.transition_to_main_product }}"
+        data-template="{{ template }}"
+      >
+        {{ content_for_layout }}
+      </main>
 
-    <footer>
-      {% sections 'footer-group' %}
-    </footer>
+      <footer>
+        {% sections 'footer-group' %}
+      </footer>
+    </div>
 
     {% render 'search-modal' %}
 
