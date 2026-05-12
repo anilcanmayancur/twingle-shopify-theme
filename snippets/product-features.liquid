@@ -9,7 +9,13 @@
 {%- endcomment -%}
 
 {%- assign meta_features = product.metafields.custom.features -%}
-{%- assign meta_text = meta_features | default: '' -%}
+{%- if meta_features != blank and meta_features.value != blank -%}
+  {%- assign meta_text = meta_features.value -%}
+{%- elsif meta_features != blank -%}
+  {%- assign meta_text = meta_features | metafield_text -%}
+{%- else -%}
+  {%- assign meta_text = '' -%}
+{%- endif -%}
 
 <div class="sec" {{ block.shopify_attributes }}>
   <div class="feats">

@@ -1,9 +1,26 @@
+{%- liquid
+  assign v_icon = block.settings.icon
+  assign v_title = block.settings.title
+  assign v_quote = block.settings.quote
+  assign mf_i = product.metafields.custom.vet_icon
+  assign mf_t = product.metafields.custom.vet_title
+  assign mf_q = product.metafields.custom.vet_quote
+  if mf_i != blank and mf_i.value != blank
+    assign v_icon = mf_i.value
+  endif
+  if mf_t != blank and mf_t.value != blank
+    assign v_title = mf_t.value
+  endif
+  if mf_q != blank and mf_q.value != blank
+    assign v_quote = mf_q.value
+  endif
+-%}
 <div class="sec" {{ block.shopify_attributes }}>
   <div class="vet-note">
-    <span class="vet-note-icon" aria-hidden="true">{{ block.settings.icon }}</span>
+    <span class="vet-note-icon" aria-hidden="true">{{ v_icon }}</span>
     <div class="vet-note-text">
-      <strong>{{ block.settings.title }}</strong>
-      {{ block.settings.quote }}
+      <strong>{{ v_title }}</strong>
+      {{ v_quote }}
     </div>
   </div>
 </div>

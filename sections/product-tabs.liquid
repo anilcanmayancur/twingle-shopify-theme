@@ -1,5 +1,65 @@
 <div class="petibi-wrap ptabs-{{ section.id }}">
 
+  {%- comment -%}
+    Ürün bazlı içerik: Admin > Ayarlar > Özel veri > Ürünler altında metafield tanımlayıp ürün düzenleme sayfasından doldurun.
+    Boş bırakılan alanlarda bu bölümün tema ayarları (varsayılan metinler) kullanılır.
+
+    | Metafield (namespace: custom, tür: çok satırlı metin önerilir) | Açıklama |
+    | details_bullets | Açıklama sekmesindeki tikli madde listesi — satır başına bir madde |
+    | nutrition_rows | Beslenme sekmesi sol tablo — satır başına Etiket|Değer |
+    | analytics_heading | Sol sütun başlığı (tek satır, opsiyonel) |
+    | ingredients_heading | Sağ sütun başlığı (opsiyonel) |
+    | ingredients_body | İçindekiler paragrafı |
+    | ingredients_rows | Sağ alttaki Etiket|Değer satırları |
+    | feeding_note_title, feeding_note | Sarı besleme uyarısı |
+    | faq_items | Her satır: Soru|||Cevap (üç adet pipe) — doluysa tema SSS blokları yerine bunu gösterir |
+  {%- endcomment -%}
+  {%- liquid
+    assign bullets_src = section.settings.description_features
+    if product.metafields.custom.details_bullets != blank and product.metafields.custom.details_bullets.value != blank
+      assign bullets_src = product.metafields.custom.details_bullets.value
+    endif
+
+    assign analytics_src = section.settings.analytics_rows
+    if product.metafields.custom.nutrition_rows != blank and product.metafields.custom.nutrition_rows.value != blank
+      assign analytics_src = product.metafields.custom.nutrition_rows.value
+    endif
+
+    assign analytics_h = section.settings.analytics_title
+    if product.metafields.custom.analytics_heading != blank and product.metafields.custom.analytics_heading.value != blank
+      assign analytics_h = product.metafields.custom.analytics_heading.value
+    endif
+
+    assign ing_title = section.settings.ingredients_title
+    if product.metafields.custom.ingredients_heading != blank and product.metafields.custom.ingredients_heading.value != blank
+      assign ing_title = product.metafields.custom.ingredients_heading.value
+    endif
+
+    assign ing_body = section.settings.ingredients_text
+    if product.metafields.custom.ingredients_body != blank and product.metafields.custom.ingredients_body.value != blank
+      assign ing_body = product.metafields.custom.ingredients_body.value
+    endif
+
+    assign ing_extras_src = section.settings.ingredients_extras
+    if product.metafields.custom.ingredients_rows != blank and product.metafields.custom.ingredients_rows.value != blank
+      assign ing_extras_src = product.metafields.custom.ingredients_rows.value
+    endif
+
+    assign feed_note = section.settings.feeding_note
+    if product.metafields.custom.feeding_note != blank and product.metafields.custom.feeding_note.value != blank
+      assign feed_note = product.metafields.custom.feeding_note.value
+    endif
+    assign feed_title = section.settings.feeding_note_title
+    if product.metafields.custom.feeding_note_title != blank and product.metafields.custom.feeding_note_title.value != blank
+      assign feed_title = product.metafields.custom.feeding_note_title.value
+    endif
+
+    assign faq_from_meta = false
+    if product.metafields.custom.faq_items != blank and product.metafields.custom.faq_items.value != blank
+      assign faq_from_meta = true
+    endif
+  %}
+
   <div class="tabs" id="petibiTabNav" role="tablist">
     <button type="button" class="tab act" role="tab" aria-selected="true" onclick="petibiSwitchTab('desc')">{{ section.settings.tab1_label }}</button>
     <button type="button" class="tab" role="tab" aria-selected="false" onclick="petibiSwitchTab('nut')">{{ section.settings.tab2_label }}</button>
@@ -11,9 +71,9 @@
     {% if product.description != blank %}
       <div class="desc-p rte">{{ product.description }}</div>
     {% endif %}
-    {% if section.settings.description_features != blank %}
+    {% if bullets_src != blank %}
       <div class="feat-grid2">
-        {% assign features = section.settings.description_features | newline_to_br | split: '<br />' %}
+        {% assign features = bullets_src | newline_to_br | split: '<br />' %}
         {% for feat in features %}
           {% assign feat_clean = feat | strip %}
           {% if feat_clean != blank %}
@@ -32,8 +92,8 @@
   <div class="tc" id="petibiTab-nut">
     <div class="ng">
       <div class="nc">
-        <h4>{{ section.settings.analytics_title }}</h4>
-        {% assign analytics = section.settings.analytics_rows | newline_to_br | split: '<br />' %}
+        <h4>{{ analytics_h }}</h4>
+        {% assign analytics = analytics_src | newline_to_br | split: '<br />' %}
         {% for row in analytics %}
           {% assign row_clean = row | strip %}
           {% if row_clean != blank %}
@@ -43,9 +103,9 @@
         {% endfor %}
       </div>
       <div class="nc">
-        <h4>{{ section.settings.ingredients_title }}</h4>
-        <p style="font-size:11px;color:var(--g600);line-height:1.6;margin-bottom:8px">{{ section.settings.ingredients_text }}</p>
-        {% assign extras = section.settings.ingredients_extras | newline_to_br | split: '<br />' %}
+        <h4>{{ ing_title }}</h4>
+        <p style="font-size:11px;color:var(--g600);line-height:1.6;margin-bottom:8px">{{ ing_body }}</p>
+        {% assign extras = ing_extras_src | newline_to_br | split: '<br />' %}
         {% for row in extras %}
           {% assign row_clean = row | strip %}
           {% if row_clean != blank %}
@@ -55,9 +115,9 @@
         {% endfor %}
       </div>
     </div>
-    {% if section.settings.feeding_note != blank %}
+    {% if feed_note != blank %}
       <div style="margin-top:12px;background:#FEF3C7;border-radius:9px;padding:11px;font-size:12px;color:#92400E;line-height:1.5">
-        <strong>⚠️ {{ section.settings.feeding_note_title }}:</strong> {{ section.settings.feeding_note }}
+        <strong>⚠️ {{ feed_title }}:</strong> {{ feed_note }}
       </div>
     {% endif %}
   </div>
@@ -122,19 +182,41 @@
   </div>
 
   <div class="tc" id="petibiTab-faq" role="tabpanel">
-    {% for block in section.blocks %}
-      {% if block.type == 'faq_item' %}
-        <div class="faq-item" {{ block.shopify_attributes }}>
+    {%- if faq_from_meta -%}
+      {%- assign faq_blob = product.metafields.custom.faq_items.value -%}
+      {%- assign faq_lines = faq_blob | strip | newline_to_br | replace: '<br />', '###NL###' | replace: '<br/>', '###NL###' | replace: '<br>', '###NL###' | split: '###NL###' -%}
+      {%- for raw_line in faq_lines -%}
+        {%- assign fq = raw_line | strip -%}
+        {%- if fq == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign seg = fq | split: '|||' -%}
+        {%- assign fq_q = seg[0] | strip -%}
+        {%- assign fq_a = seg[1] | strip -%}
+        {%- if fq_q == blank -%}{%- continue -%}{%- endif -%}
+        <div class="faq-item">
           <button type="button" class="faq-q" onclick="petibiToggleFaq(this)" aria-expanded="false">
-            <span>{{ block.settings.question }}</span>
+            <span>{{ fq_q | escape }}</span>
             <span class="far" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </span>
           </button>
-          <div class="faq-a">{{ block.settings.answer }}</div>
+          <div class="faq-a">{{ fq_a | newline_to_br }}</div>
         </div>
-      {% endif %}
-    {% endfor %}
+      {%- endfor -%}
+    {%- else -%}
+      {% for block in section.blocks %}
+        {% if block.type == 'faq_item' %}
+          <div class="faq-item" {{ block.shopify_attributes }}>
+            <button type="button" class="faq-q" onclick="petibiToggleFaq(this)" aria-expanded="false">
+              <span>{{ block.settings.question }}</span>
+              <span class="far" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </button>
+            <div class="faq-a">{{ block.settings.answer }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {%- endif -%}
   </div>
 
 </div>
@@ -414,6 +496,10 @@
 {
   "name": "Product Tabs",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "Ürün bazlı içerik: Ayarlar > Özel veri > Ürünler’de custom namespace ile tanımlayın. Dolu metafield, aşağıdaki varsayılanı geçersiz kılar: details_bullets (satır başına madde), nutrition_rows (Etiket|Değer), analytics_heading, ingredients_heading, ingredients_body, ingredients_rows, feeding_note_title, feeding_note, faq_items (satır: Soru|||Cevap — üç pipe; doluysa SSS blokları yerine bu kullanılır)."
+    },
     {
       "type": "header",
       "content": "Tab Labels"

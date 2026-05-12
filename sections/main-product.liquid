@@ -41,7 +41,7 @@
           -%}
 
         {%- when 'vet_note' -%}
-          {%- render 'product-vet-note', block: block -%}
+          {%- render 'product-vet-note', product: product, block: block -%}
 
         {%- when 'features' -%}
           {%- render 'product-features', product: product, block: block -%}
@@ -199,6 +199,10 @@
       "name": "Vet Note",
       "limit": 1,
       "settings": [
+        {
+          "type": "paragraph",
+          "content": "Ürün sayfasından özelleştirmek için metafield: custom.vet_icon (tek satır), custom.vet_title, custom.vet_quote (çok satırlı). Boşsa blok ayarları kullanılır."
+        },
         {
           "type": "text",
           "id": "icon",
