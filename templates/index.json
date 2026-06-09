@@ -9,6 +9,62 @@
  */
 {
   "sections": {
+    "hero_trio_top": {
+      "type": "hero-trio",
+      "blocks": {
+        "main": {
+          "type": "tw_hero_card",
+          "settings": {
+            "image": "shopify://shop_images/dfe38c20-6a7e-49a8-a85b-201fa4240bb0.png",
+            "tag": "Tam & dengeli",
+            "title": "Patilerin için premium beslenme",
+            "subtitle": "Sağlıklı patiler için doğal beslenme. Parlak tüy ve sağlıklı bir yaşam.",
+            "cta_text": "Hemen Keşfet",
+            "link": "/collections/all",
+            "price_caption": "",
+            "price_label": ""
+          }
+        },
+        "a": {
+          "type": "tw_hero_card",
+          "settings": {
+            "image": "shopify://shop_images/u5678915646_Top-down_flat_lay_photograph_shot_directly_from_a_ae6d2711-58bf-4fe5-9e34-15026ec7bc63_1.png",
+            "tag": "Çok Satan",
+            "title": "Yavru Kedi Maması",
+            "subtitle": "Sağlıklı gelişim için özel formül",
+            "cta_text": "Şimdi Al",
+            "link": "/collections/all",
+            "price_caption": "Başlangıç",
+            "price_label": "199₺"
+          }
+        },
+        "b": {
+          "type": "tw_hero_card",
+          "settings": {
+            "image": "shopify://shop_images/u5678915646_Editorial_lifestyle_photograph_of_one_adorable_fl_a1d4e942-2485-472c-8f3e-51d3b5e5b650_0.png",
+            "tag": "Aynı Gün Kargo",
+            "title": "Köpek Maması",
+            "subtitle": "Her ırk için doğru beslenme",
+            "cta_text": "İncele",
+            "link": "/collections/all",
+            "price_caption": "",
+            "price_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "main",
+        "a",
+        "b"
+      ],
+      "settings": {
+        "bg_color": "#ffffff",
+        "max_width": 1400,
+        "height_desktop": 480,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
     "custom_col_card_nB99Xb": {
       "type": "custom-col-card",
       "name": "Twinkle Top Categories",
@@ -345,42 +401,48 @@
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/04.png",
-            "link": ""
+            "link": "",
+            "height_override": 0
           }
         },
         "logo_nEBY3W": {
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/04.png",
-            "link": ""
+            "link": "",
+            "height_override": 0
           }
         },
         "logo_CQ3cFM": {
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/04.png",
-            "link": ""
+            "link": "",
+            "height_override": 0
           }
         },
         "logo_4Mn4TF": {
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/04.png",
-            "link": ""
+            "link": "",
+            "height_override": 0
           }
         },
         "logo_MRFBAJ": {
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/04.png",
-            "link": ""
+            "link": "",
+            "height_override": 0
           }
         },
         "logo_wEDRPp": {
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/04.png",
-            "link": ""
+            "link": "",
+            "height_override": 0
           }
         }
       },
@@ -396,6 +458,10 @@
       "settings": {
         "title": "Sattığımız Markalar",
         "bg_color": "#ffffff",
+        "logo_max_height": 44,
+        "logo_max_height_mobile": 32,
+        "logo_max_width": 140,
+        "grayscale": false,
         "padding_top": 10,
         "padding_bottom": 10
       }
@@ -460,53 +526,6 @@
       "type": "pet-recommender",
       "name": "Pet Öneri Asistanı",
       "settings": {}
-    },
-    "hero_trio_top": {
-      "type": "hero-trio",
-      "blocks": {
-        "main": {
-          "type": "tw_hero_card",
-          "settings": {
-            "tag": "Yeni Sezon",
-            "title": "Patilerin için <em>premium</em> beslenme",
-            "subtitle": "Veteriner onaylı, %85 hayvansal protein içerikli mamalarda büyük indirim.",
-            "cta_text": "Hemen Keşfet",
-            "link": "/collections/all"
-          }
-        },
-        "a": {
-          "type": "tw_hero_card",
-          "settings": {
-            "tag": "Çok Satan",
-            "title": "Yavru Kedi Maması",
-            "subtitle": "Sağlıklı gelişim için özel formül",
-            "cta_text": "Şimdi Al",
-            "link": "/collections/all",
-            "price_caption": "Başlangıç",
-            "price_label": "199₺"
-          }
-        },
-        "b": {
-          "type": "tw_hero_card",
-          "settings": {
-            "tag": "Aynı Gün Kargo",
-            "title": "Köpek Maması",
-            "subtitle": "Her ırk için doğru beslenme",
-            "cta_text": "İncele",
-            "link": "/collections/all",
-            "price_caption": "Başlangıç",
-            "price_label": "249₺"
-          }
-        }
-      },
-      "block_order": [
-        "main",
-        "a",
-        "b"
-      ],
-      "settings": {
-        "max_width": 1400
-      }
     }
   },
   "order": [
