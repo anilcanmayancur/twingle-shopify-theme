@@ -1,0 +1,296 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main-product": {
+      "type": "main-product",
+      "blocks": {
+        "product_header": {
+          "type": "product_header",
+          "settings": {
+            "brand_name": "Twinkle",
+            "sold_count_text": "",
+            "rating_value": 49,
+            "rating_count": 128,
+            "reviews_label": "yorum",
+            "show_vet_badge": false,
+            "vet_badge_text": ""
+          }
+        },
+        "product_price": {
+          "type": "product_price",
+          "settings": {
+            "discount_label": "İndirim",
+            "price_note": ""
+          }
+        },
+        "vet_note": {
+          "type": "vet_note",
+          "settings": {
+            "icon": "",
+            "title": "Neden etkili?",
+            "quote": "Kuzu, tavuğa hassas köpeklerde iyi tolere edilen alternatif bir protein kaynağıdır; Omega 3 ve 6 tüy ile deri sağlığını destekler."
+          }
+        },
+        "features": {
+          "type": "features",
+          "settings": {
+            "feat_1_icon": "",
+            "feat_1_title": "Kuzu Proteini",
+            "feat_1_desc": "Hassasiyet için alternatif",
+            "feat_2_icon": "",
+            "feat_2_title": "Parlak Tüy ve Deri",
+            "feat_2_desc": "Omega 3 ve Omega 6",
+            "feat_3_icon": "",
+            "feat_3_title": "Kas Gelişimi",
+            "feat_3_desc": "%24 ham protein",
+            "feat_4_icon": "",
+            "feat_4_title": "Dengeli Lif",
+            "feat_4_desc": "Düzenli sindirim"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "label": "Gramaj",
+            "selected_suffix": "seçildi"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_urgency": false,
+            "urgency_prefix": "",
+            "urgency_suffix": "",
+            "viewers_start": 0,
+            "viewers_min": 0,
+            "viewers_max": 0,
+            "countdown_hours": 0,
+            "countdown_minutes": 0,
+            "countdown_seconds": 0,
+            "hours_label": "saat",
+            "minutes_label": "dak",
+            "seconds_label": "sn",
+            "add_to_cart_text": "Sepete Ekle",
+            "added_text": "Eklendi!",
+            "wishlist_added": "Favorilere eklendi!",
+            "wishlist_removed": "Favorilerden çıkarıldı"
+          }
+        },
+        "delivery_info": {
+          "type": "delivery_info",
+          "settings": {
+            "row1_icon": "",
+            "row1_title": "Hızlı Kargo",
+            "row1_desc": "İş günü siparişlerinde",
+            "row2_icon": "",
+            "row2_title": "Tahmini Teslimat",
+            "row2_desc": "1-3 iş günü",
+            "row3_icon": "",
+            "row3_title": "İade Hakkı",
+            "row3_desc": "Koşullara göre",
+            "row4_icon": "",
+            "row4_title": "Stok Durumu",
+            "row4_highlight": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_header",
+        "product_price",
+        "vet_note",
+        "features",
+        "variant_picker",
+        "buy_buttons",
+        "delivery_info"
+      ],
+      "settings": {
+        "gallery_show_zoom_hint": true,
+        "gallery_zoom_label": "Büyüt"
+      }
+    },
+    "product-tabs": {
+      "type": "product-tabs",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "initials": "AY",
+            "name": "Ayşe Yılmaz",
+            "location": "İstanbul",
+            "stars": 5,
+            "date": "12 Nisan 2026",
+            "text": "Kedim bu mamayı çok seviyor, tüyleri çok daha parlak oldu!",
+            "tag": "Tüy sağlığı",
+            "verified": true
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "initials": "EÇ",
+            "name": "Elif Çelik",
+            "location": "Ankara",
+            "stars": 5,
+            "date": "8 Nisan 2026",
+            "text": "Quiz özelliğinden bu mamayı önerdiler, mükemmel seçim oldu!",
+            "tag": "Quiz ile buldu",
+            "verified": true
+          }
+        },
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Twinkle kuzulu köpek maması hangi köpekler için uygundur?",
+            "answer": "Twinkle Kuzulu Köpek Maması 1-7 yaş arası tüm ırk yetişkin köpekler için uygundur. Tavuk gibi yaygın proteinlere hassasiyeti olan köpekler için iyi bir alternatiftir."
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Köpek mamasında neden kuzu eti tercih edilir?",
+            "answer": "Kuzu, tavuk ve diğer bazı proteinlere hassasiyeti olan köpeklerde genellikle iyi tolere edilen bir protein kaynağıdır. Bu, hassas sindirimli köpekler için kuzulu formülü uygun bir seçenek yapar."
+          }
+        },
+        "faq_3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Diğer mamadan Twinkle'a nasıl geçiş yapılmalıdır?",
+            "answer": "Yeni mamaya 5-7 gün içinde kademeli geçiş önerilir. Eski mamayı her gün biraz azaltıp yenisini artırarak köpeğinizin sindirim sisteminin uyum sağlamasına yardımcı olun."
+          }
+        },
+        "faq_4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Kuzulu köpek maması tüy ve deri sağlığını nasıl destekler?",
+            "answer": "Formüldeki Omega 3 ve Omega 6 yağ asitleri köpeklerde tüy parlaklığını ve deri sağlığını destekler. Düzenli beslenmeyle birlikte tüy dökümünün azalmasına yardımcı olabilir."
+          }
+        },
+        "faq_5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Twinkle köpek maması nerede üretiliyor?",
+            "answer": "Twinkle köpek mamaları Türkiye'de, yerel kaynaklarla üretilmektedir."
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5"
+      ],
+      "settings": {
+        "tab1_label": "Ürün Açıklaması",
+        "tab2_label": "Beslenme Değerleri",
+        "tab3_label": "Yorumlar",
+        "tab4_label": "Sıkça Sorulanlar",
+        "description_features": "%24 ham protein\n%12 ham yağ\nOmega 3 ve 6\nDengeli lif\nKuzu proteini",
+        "analytics_title": "Garanti Analiz",
+        "analytics_rows": "Ham protein|%24\nHam yağ|%12\nHam selüloz|%3\nHam kül|%8\nYağ asitleri|Omega 3 ve Omega 6",
+        "ingredients_title": "İçindekiler",
+        "ingredients_text": "",
+        "ingredients_extras": "",
+        "feeding_note_title": "Besleme Talimatı",
+        "feeding_note": "Daima taze su bulundurun. Yeni mamaya 5-7 günde kademeli geçiş yapın.",
+        "review_avg": "4.9",
+        "review_count": 128,
+        "reviews_label": "yorum",
+        "rating_bars": "5|88|113\n4|9|11\n3|2|3\n2|1|1\n1|0|0",
+        "verified_label": "Doğrulanmış Alım",
+        "show_all_reviews_text": "Tüm Yorumları Gör"
+      }
+    },
+    "product-related": {
+      "type": "product-related",
+      "blocks": {
+        "tab_same": {
+          "type": "product_tab",
+          "settings": {
+            "tab_id": "same",
+            "label": "Aynı Kategoriden",
+            "heading": "Aynı Kategoriden Ürünler",
+            "collection": "kopek-mamalari"
+          }
+        },
+        "tab_comp": {
+          "type": "product_tab",
+          "settings": {
+            "tab_id": "comp",
+            "label": "Tamamlayıcı",
+            "heading": "Tamamlayıcı Ürünler",
+            "collection": "kum"
+          }
+        }
+      },
+      "block_order": [
+        "tab_same",
+        "tab_comp"
+      ],
+      "settings": {
+        "default_title": "Aynı Kategoriden Ürünler",
+        "see_all_text": "Tümünü Gör"
+      }
+    },
+    "guven_area_product": {
+      "type": "guven-area",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "truck",
+            "text": "Hızlı Kargo",
+            "desc": "İş günü siparişlerinde"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "text": "Güvenli Ödeme",
+            "desc": "SSL şifreleme"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "refresh",
+            "text": "İade Hakkı",
+            "desc": "Koşullara göre"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "icon": "headphones",
+            "text": "Destek",
+            "desc": "Sorularınız için yanınızdayız"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main-product",
+    "product-tabs",
+    "product-related",
+    "guven_area_product"
+  ]
+}
