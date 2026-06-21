@@ -148,29 +148,36 @@
         "faq_1": {
           "type": "faq_item",
           "settings": {
-            "question": "Hangi yaş kediler için uygun?",
-            "answer": "1-7 yaş yetişkin kediler için. Yavrular için Twinkle Yavru Kedi serisi önerilir."
+            "question": "Twinkle yetişkin kedi maması hangi yaştaki kediler için uygundur?",
+            "answer": "Twinkle Yetişkin Kedi Maması 1-7 yaş arası yetişkin kediler için uygundur. 12 aydan küçük yavrular için Twinkle Yavru Kedi serisini, kısırlaştırılmış kediler için Kısır Kedi serisini öneririz."
           }
         },
         "faq_2": {
           "type": "faq_item",
           "settings": {
-            "question": "Tahılsız mı?",
-            "answer": "Düşük tahıllı bir formüldür; tahıl hassasiyeti olan kedilerde sindirimi rahatlatmaya yardımcı olur."
+            "question": "Yetişkin kedi maması tahıl içerir mi?",
+            "answer": "Bu mama düşük tahıllı bir formüldür ve ana protein kaynağı ağırlıklı olarak hayvansaldır. Tahıla hassasiyeti olan kedilerde sindirimi rahatlatmaya yardımcı olur."
           }
         },
         "faq_3": {
           "type": "faq_item",
           "settings": {
-            "question": "Taurin neden önemli?",
-            "answer": "Taurin kediler için esansiyel bir amino asittir; kalp ve göz sağlığı için gereklidir ve bu formülde bulunur."
+            "question": "Kedi mamasında taurin neden gereklidir?",
+            "answer": "Taurin, kedilerin kendi vücutlarında yeterince üretemediği esansiyel bir amino asittir. Kalp kası ve göz sağlığı için gereklidir; bu nedenle Twinkle yetişkin formülünde taurin bulunur."
           }
         },
         "faq_4": {
           "type": "faq_item",
           "settings": {
-            "question": "Nerede üretiliyor?",
-            "answer": "Türkiye'de yerel kaynaklarla üretilmektedir."
+            "question": "Yeni mamaya nasıl geçiş yapılmalıdır?",
+            "answer": "Yeni mamaya 5-7 gün içinde kademeli geçiş önerilir. Her gün eski mamanın bir kısmını yenisiyle değiştirerek sindirim sisteminin uyum sağlamasına yardımcı olun ve daima taze su bulundurun."
+          }
+        },
+        "faq_5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Twinkle kedi maması nerede üretiliyor?",
+            "answer": "Twinkle kedi mamaları Türkiye'de, yerel kaynaklarla üretilmektedir."
           }
         }
       },
@@ -180,7 +187,8 @@
         "faq_1",
         "faq_2",
         "faq_3",
-        "faq_4"
+        "faq_4",
+        "faq_5"
       ],
       "settings": {
         "tab1_label": "Ürün Açıklaması",
