@@ -82,6 +82,12 @@
       .petibi-assure .pa-item{display:inline-flex;align-items:center;gap:5px;}
       .petibi-assure svg{width:14px;height:14px;flex:0 0 auto;opacity:.8;}
       .petibi-assure .pa-dot{opacity:.4;}
+      @media (max-width:600px){
+        .petibi-assure{gap:8px;margin-top:9px;}
+        .petibi-assure .pa-dot{display:none;}
+        .petibi-assure .pa-item{flex:1 1 0;min-width:0;flex-direction:column;gap:4px;text-align:center;font-size:11.5px;line-height:1.25;}
+        .petibi-assure svg{width:17px;height:17px;opacity:.85;}
+      }
     </style>
     <script>
       (function(){
