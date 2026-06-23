@@ -50,10 +50,14 @@
       .petibi-buy-top .qty-wrap{flex:0 0 auto;}
       .petibi-buy-top .btn-wl{margin-left:auto;flex:0 0 auto;}
       #petibiCartBtn{width:100%!important;flex:0 0 auto!important;min-height:58px;border-radius:14px;}
-      .btn-buynow{width:100%;min-height:58px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 22px;border:1px solid rgba(201,168,106,.55);border-radius:14px;cursor:pointer;font-weight:700;font-size:16px;letter-spacing:.2px;line-height:1;color:#E8C97F;background:linear-gradient(135deg,#241a3a,#191230);box-shadow:0 6px 18px rgba(25,18,48,.28);transition:transform .15s ease,box-shadow .15s ease,background .2s ease;}
-      .btn-buynow:hover{transform:translateY(-1px);background:linear-gradient(135deg,#2c2147,#201838);box-shadow:0 10px 26px rgba(25,18,48,.4);}
+      .btn-buynow{position:relative;overflow:hidden;width:100%;min-height:58px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 22px;border:none;border-radius:14px;cursor:pointer;font-weight:700;font-size:16px;letter-spacing:.3px;line-height:1;color:#fff;background:linear-gradient(135deg,#4A2A9E 0%,#2C1862 100%);box-shadow:0 8px 22px rgba(109,40,224,.45),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .15s ease,box-shadow .15s ease;}
+      .btn-buynow:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(109,40,224,.6),inset 0 1px 0 rgba(255,255,255,.22);}
       .btn-buynow:active{transform:translateY(0);}
-      .btn-buynow:disabled{opacity:.6;cursor:default;}
+      .btn-buynow:disabled{opacity:.65;cursor:default;}
+      .btn-buynow > svg,.btn-buynow > span{position:relative;z-index:1;}
+      .btn-buynow::before{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;background:linear-gradient(115deg,transparent 0%,rgba(255,255,255,.42) 50%,transparent 100%);transform:skewX(-20deg);animation:petibiShine 3.4s ease-in-out infinite;}
+      @keyframes petibiShine{0%{left:-60%}40%{left:130%}100%{left:130%}}
+      @media (prefers-reduced-motion:reduce){.btn-buynow::before{display:none;}}
     </style>
     <script>
       (function(){
