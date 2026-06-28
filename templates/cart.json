@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -23,10 +32,10 @@
         "btn_apply": "Kuponu Uygula",
         "coupon_alert_text": "Kupon kodu ödeme adımında (Checkout) uygulanacaktır. Lütfen ödemeye geçiniz.",
         "btn_update": "Sepeti Güncelle",
-        "show_shipping_bar": true,
+        "show_shipping_bar": false,
         "shipping_threshold": 1000,
-        "shipping_text": "Bedava kargo için sepete <strong>[amount]</strong> değerinde ürün ekleyin!",
-        "shipping_success_text": "<strong>Tebrikler!</strong> Bedava kargo kazandınız.",
+        "shipping_text": "Bedava kargo için sepete [amount] değerinde ürün ekleyin!",
+        "shipping_success_text": "Tebrikler! Bedava kargo kazandınız.",
         "totals_title": "Sipariş Özeti",
         "lbl_subtotal": "Ara Toplam",
         "lbl_total": "Toplam",
