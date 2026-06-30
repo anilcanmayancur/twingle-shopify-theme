@@ -1252,6 +1252,7 @@ html.pet-drawer-locked body { overflow: hidden; }
                       <span class="pet-mega-card-tag-{{ section.id }}">{{ mega_block.settings.card_tag }}</span>
                     {% endif %}
                     <div>
+                     {% if mega_block.settings.card_image != blank %}<img src="{{ mega_block.settings.card_image | image_url: width: 600 }}" alt="" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;margin-bottom:10px;display:block;">{% endif %}
                       <h5 class="pet-mega-card-title-{{ section.id }}">{{ mega_block.settings.card_title }}</h5>
                       {% if mega_block.settings.card_subtitle != blank %}
                         <p class="pet-mega-card-sub-{{ section.id }}">{{ mega_block.settings.card_subtitle }}</p>
