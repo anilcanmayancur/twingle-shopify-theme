@@ -288,10 +288,10 @@
           "type": "compare_row",
           "settings": {
             "row_icon": "star",
-            "feature": "Premium Marka Seçkisi",
+            "feature": "Premium Kalite",
             "other_value": "maybe",
-            "other_text": "Karışık",
-            "us_text": "Sadece lüks"
+            "other_text": "Belirsiz",
+            "us_text": "Her üründe"
           }
         },
         "compare_row_DmyPnc": {
@@ -325,7 +325,7 @@
         "primary_deep_color": "#5b2fb2",
         "max_width": 1400,
         "badge_text": "Farkımız",
-        "title": "Neden [Binlerce] Pet Sahibi Bizi Tercih Ediyor?",
+        "title": "Çünkü Dostun [En İyisini] Hak Ediyor",
         "subtitle": "Sıradan değil, premium. Her detayda farkı hissedin.",
         "compare_feature_label": "Özellik",
         "compare_other_label": "Diğer Mağazalar",
