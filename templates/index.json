@@ -15,7 +15,7 @@
         "main": {
           "type": "tw_hero_card",
           "settings": {
-            "image": "shopify://shop_images/dfe38c20-6a7e-49a8-a85b-201fa4240bb0.png",
+            "image": "shopify://shop_images/Gemini_Generated_Image_16qz2n16qz2n16qz.png",
             "tag": "Tam & dengeli",
             "title": "Sağlıklı patiler için doğal beslenme",
             "subtitle": "Parlak tüy, bol enerji ve dengeli bir yaşam için özenle hazırlandı.",
@@ -207,31 +207,31 @@
         "stat_UgqTiD": {
           "type": "stat",
           "settings": {
-            "icon": "users",
+            "icon": "award",
             "icon_bg": "#f0ebff",
             "icon_color": "#7b3ff2",
-            "number": "50K+",
-            "label": "Mutlu Müşteri"
+            "number": "%100",
+            "label": "Orijinal Ürün Garantisi"
           }
         },
         "stat_JcLqpb": {
           "type": "stat",
           "settings": {
-            "icon": "package",
+            "icon": "heart",
             "icon_bg": "#e8f8ee",
             "icon_color": "#22c55e",
-            "number": "500+",
-            "label": "Premium Ürün"
+            "number": "Doğal",
+            "label": "Temiz İçerikli Ürünler"
           }
         },
         "stat_jFCDmU": {
           "type": "stat",
           "settings": {
-            "icon": "star",
+            "icon": "shield",
             "icon_bg": "#fef3e2",
             "icon_color": "#f59e0b",
-            "number": "4.9",
-            "label": "Ortalama Puan"
+            "number": "14 Gün",
+            "label": "Koşulsuz İade"
           }
         },
         "stat_q8Mwgm": {
@@ -240,8 +240,8 @@
             "icon": "truck",
             "icon_bg": "#ebf3fe",
             "icon_color": "#3b82f6",
-            "number": "24sa",
-            "label": "Hızlı Kargo"
+            "number": "Ücretsiz Kargo",
+            "label": "Hızlı & Ekspres Teslimat"
           }
         },
         "compare_row_3KWhUW": {
